@@ -75,6 +75,10 @@ DerivedDataCache/*
 
 Content/EchoContent
 Content/Maps
+Content/Collections
+Content/Developers
+Content/__ExternalActors__
+Content/__ExternalObjects__
 
 **/BlackAlder
 **/Landscape
