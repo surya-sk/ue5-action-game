@@ -35,6 +35,16 @@ void AMainCharacter::MoveForward(float Value)
 	}
 }
 
+void AMainCharacter::Turn(float Value)
+{
+	AddControllerYawInput(Value);
+}
+
+void AMainCharacter::LookUp(float Value)
+{
+	AddControllerPitchInput(Value);
+}
+
 // Called every frame
 void AMainCharacter::Tick(float DeltaTime)
 {
@@ -48,5 +58,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	PlayerInputComponent->BindAxis(FName("MoveForward"), this, &AMainCharacter::MoveForward);
+	PlayerInputComponent->BindAxis(FName("Turn"), this, &AMainCharacter::Turn);
+	PlayerInputComponent->BindAxis(FName("LookUp"), this, &AMainCharacter::LookUp);
 }
 
