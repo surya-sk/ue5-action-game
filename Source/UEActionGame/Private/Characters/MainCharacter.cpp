@@ -39,6 +39,15 @@ void AMainCharacter::MoveForward(float Value)
 	}
 }
 
+void AMainCharacter::MoveRight(float Value)
+{
+	if (Controller && (Value != 0.f))
+	{
+		FVector Right = GetActorRightVector();
+		AddMovementInput(Right, Value);
+	}
+}
+
 void AMainCharacter::Turn(float Value)
 {
 	AddControllerYawInput(Value);
@@ -62,6 +71,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	PlayerInputComponent->BindAxis(FName("MoveForward"), this, &AMainCharacter::MoveForward);
+	PlayerInputComponent->BindAxis(FName("MoveRight"), this, &AMainCharacter::MoveRight);
 	PlayerInputComponent->BindAxis(FName("Turn"), this, &AMainCharacter::Turn);
 	PlayerInputComponent->BindAxis(FName("LookUp"), this, &AMainCharacter::LookUp);
 }
