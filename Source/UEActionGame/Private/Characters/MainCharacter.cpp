@@ -18,12 +18,12 @@ void AMainCharacter::BeginPlay()
 	
 }
 
-void AMainCharacter::MoveForward(float value)
+void AMainCharacter::MoveForward(float Value)
 {
-	if (Controller && (value != 0.f))
+	if (Controller && (Value != 0.f))
 	{
 		FVector Forward = GetActorForwardVector();
-		AddMovementInput(Forward, value);
+		AddMovementInput(Forward, Value);
 	}
 }
 
