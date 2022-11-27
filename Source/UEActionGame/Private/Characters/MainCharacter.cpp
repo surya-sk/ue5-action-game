@@ -8,6 +8,7 @@
 #include "GroomComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Components/CapsuleComponent.h"
 
 // Sets default values
 AMainCharacter::AMainCharacter()
@@ -75,11 +76,13 @@ void AMainCharacter::LookUp(float Value)
 
 void AMainCharacter::Vault()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Vaulting!!"));
 	bool bShouldClimb;
 	bool bWallThick = true;
 	const FVector Start = FVector(GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z - 44.f);
 	const FVector End = (GetActorForwardVector() * 70.f) + Start;
-	const TArray<TEnumAsByte<EObjectTypeQuery>> TraceObjects;
+	TArray<TEnumAsByte<EObjectTypeQuery>> TraceObjects = TArray<TEnumAsByte<EObjectTypeQuery>>();
+	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_WorldStatic));
 	FHitResult BreakHitResult;
 	TArray<AActor*> ActorsToIgnore;
 	ActorsToIgnore.Add(NULL);
@@ -87,6 +90,7 @@ void AMainCharacter::Vault()
 		BreakHitResult, true);
 	if (bLineTrace)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("First line trace successfull"));
 		FVector WallLocation = BreakHitResult.Location;
 		FVector Normal = BreakHitResult.Normal;
 		auto Rot = UKismetMathLibrary::MakeRotFromX(Normal);
@@ -98,30 +102,83 @@ void AMainCharacter::Vault()
 			EDrawDebugTrace::ForDuration, HitResult, true);
 		if (bVLineTrace)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("Second line trace successfull"));
 			FVector WallHeight = HitResult.Location;
 			FVector Diff = WallHeight - WallLocation;
-			if (Diff.Z > 60.f)
+			bShouldClimb = Diff.Z > 60.f;
+			const FVector CStart = (ForwardVector * (-50.f)) + WallLocation + FVector(0, 0, 250.f);
+			const FVector CEnd = CStart - FVector(0, 0, 300.f);
+			FHitResult CHitResult;
+			bool CLineTrace = UKismetSystemLibrary::LineTraceSingleForObjects(this, CStart, CEnd, TraceObjects, false, ActorsToIgnore,
+				EDrawDebugTrace::ForDuration, CHitResult, true);
+			if (CLineTrace)
 			{
-				bShouldClimb = true;
-				auto CRot = UKismetMathLibrary::MakeRotFromX(Normal);
-				FVector CForwardVector = UKismetMathLibrary::GetForwardVector(CRot);
-				const FVector CStart = (CForwardVector * (-50.f)) + WallLocation + FVector(0, 0, 250.f);
-				const FVector CEnd = CStart - FVector(0, 0, 300.f);
-				FHitResult CHitResult;
-				bool CLineTrace = UKismetSystemLibrary::LineTraceSingleForObjects(this, CStart, CEnd, TraceObjects, false, ActorsToIgnore,
-					EDrawDebugTrace::ForDuration, CHitResult, true);
-				if (CLineTrace)
+				UE_LOG(LogTemp, Warning, TEXT("Third line trace"));
+				FVector CWallHeight = CHitResult.Location;
+				FVector CDiff = WallHeight - CWallHeight;
+				bWallThick = CDiff.Z < 30.f;
+				float MontageSeconds;
+				if (!bShouldClimb)
 				{
-					FVector CWallHeight = CHitResult.Location;
-					FVector CDiff = WallHeight - CWallHeight;
-					bWallThick = CDiff.Z > 30.f ? false : true;
-				}
-				else
-				{
-					bWallThick = false;
+					UE_LOG(LogTemp, Warning, TEXT("Shouldn't climb"));
+					GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+					GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
+					//SetActorLocation((ForwardVector * 50.f) + GetActorLocation());
+					if (!bWallThick)
+					{
+						MontageSeconds = this->PlayAnimMontage(GettingUp);
+					}
+					else
+					{
+						//SetActorLocation(FVector(GetActorLocation().X, GetActorLocation().Y, CWallHeight.Z - 0.5f));
+						UE_LOG(LogTemp, Warning, TEXT("Play vaulting animation montage"));
+						MontageSeconds = this->PlayAnimMontage(VaultMontage);
+					}
+					FTimerDelegate Delegate;
+					Delegate.BindLambda([&]()
+						{
+							UE_LOG(LogTemp, Warning, TEXT("Delegate!"));
+							GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+							GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+							//SetActorRotation(FRotator(GetActorRotation().Roll, GetActorRotation().Pitch, Rot.Yaw + 180.f));
+						}
+					);
+					FTimerHandle handle;
+
+					GetWorld()->GetTimerManager().SetTimer(handle, Delegate, MontageSeconds - 0.2f , false);
 				}
 			}
+			else
+			{
+				bWallThick = false;
+				if (!bShouldClimb)
+				{
+					GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+					GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
+					SetActorLocation((ForwardVector * 50.f) + GetActorLocation());
+					if (bWallThick)
+					{
+						this->PlayAnimMontage(GettingUp);
+					}
+					else
+					{
+						UE_LOG(LogTemp, Warning, TEXT("Play vaulting animation montage"));
+						SetActorLocation(FVector(GetActorLocation().X, GetActorLocation().Y, WallHeight.Z));
+						this->PlayAnimMontage(VaultMontage);
+					}
+					FTimerDelegate Delegate;
+					Delegate.BindLambda([&]()
+						{
+							GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+					GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+					SetActorRotation(FRotator(GetActorRotation().Roll, GetActorRotation().Pitch, Rot.Yaw + 100.f));
+						}
+					);
+					FTimerHandle handle;
 
+					GetWorld()->GetTimerManager().SetTimer(handle, Delegate, 2.f, false);
+				}
+			}
 		}
 	}
 }
@@ -144,5 +201,6 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis(FName("LookUp"), this, &AMainCharacter::LookUp);
 
 	PlayerInputComponent->BindAction(FName("Jump"), IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction(FName("Vault"), IE_Pressed, this, &AMainCharacter::Vault);
 }
 
