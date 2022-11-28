@@ -78,7 +78,8 @@ void AMainCharacter::Vault()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Vaulting!!"));
 	bool bShouldClimb;
-	bool bWallThick = true;
+	bool bWallThick;
+	bool bCanClimb = true;
 	const FVector Start = FVector(GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z - 44.f);
 	const FVector End = (GetActorForwardVector() * 70.f) + Start;
 	TArray<TEnumAsByte<EObjectTypeQuery>> TraceObjects = TArray<TEnumAsByte<EObjectTypeQuery>>();
@@ -121,8 +122,7 @@ void AMainCharacter::Vault()
 				if (!bShouldClimb)
 				{
 					UE_LOG(LogTemp, Warning, TEXT("Shouldn't climb"));
-					GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-					GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
+					SetVaultingCollision();
 					//SetActorLocation((ForwardVector * 50.f) + GetActorLocation());
 					if (!bWallThick)
 					{
@@ -130,7 +130,7 @@ void AMainCharacter::Vault()
 					}
 					else
 					{
-						//SetActorLocation(FVector(GetActorLocation().X, GetActorLocation().Y, CWallHeight.Z - 0.5f));
+						//SetActorLocation(FVector(GetActorLocation().X, GetActorLocation().Y, CWallHeight.Z - 44.f));
 						UE_LOG(LogTemp, Warning, TEXT("Play vaulting animation montage"));
 						MontageSeconds = this->PlayAnimMontage(VaultMontage);
 					}
@@ -138,14 +138,62 @@ void AMainCharacter::Vault()
 					Delegate.BindLambda([&]()
 						{
 							UE_LOG(LogTemp, Warning, TEXT("Delegate!"));
-							GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-							GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+							ResetCollisionAndMovement();
 							//SetActorRotation(FRotator(GetActorRotation().Roll, GetActorRotation().Pitch, Rot.Yaw + 180.f));
 						}
 					);
 					FTimerHandle handle;
 
-					GetWorld()->GetTimerManager().SetTimer(handle, Delegate, MontageSeconds - 0.2f , false);
+					GetWorld()->GetTimerManager().SetTimer(handle, Delegate, MontageSeconds - 0.5f , false);
+				}
+				else
+				{
+					FHitResult CheckHitResult;
+					const FVector CheckStart = GetActorLocation() + FVector(0, 0, 200.f);
+					const FVector CheckEnd = (GetActorForwardVector() * 70.f) + CheckStart;
+					bool CheckLineTrace = UKismetSystemLibrary::LineTraceSingleForObjects(this, CheckStart, CheckEnd, TraceObjects, false, ActorsToIgnore,
+						EDrawDebugTrace::ForDuration, CheckHitResult, true);
+					if (CheckLineTrace)
+					{
+						bCanClimb = false;
+					}
+					const FVector CheckStart2 = GetActorLocation();
+					const FVector CheckEnd2 = CheckStart2 + FVector(0, 0, 200.f);
+					bool bCheckLineTrace2 = UKismetSystemLibrary::LineTraceSingleForObjects(this, CheckStart2, CheckEnd2, TraceObjects, false, ActorsToIgnore,
+						EDrawDebugTrace::ForDuration, CheckHitResult, true);
+
+					if (bCanClimb)
+					{
+						SetVaultingCollision();
+						//SetActorRotation(FRotator(GetActorRotation().Roll, GetActorRotation().Pitch, Rot.Yaw + 180.f));
+						SetActorLocation((ForwardVector * 50.f) + GetActorLocation());
+						SetActorLocation(FVector(GetActorLocation().X, GetActorLocation().Y, CWallHeight.Z - 44.f));
+						MontageSeconds = this->PlayAnimMontage(ClimbUpMontage);
+						FTimerDelegate Delegate;
+						Delegate.BindLambda([&]()
+							{
+								if (bWallThick)
+								{
+									ResetCollisionAndMovement();
+									GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Falling);
+								}
+								else
+								{
+									auto MontageLen = this->PlayAnimMontage(JumpDownMontage);
+									FTimerDelegate Del;
+									Del.BindLambda([&]()
+										{
+											ResetCollisionAndMovement();
+										});
+									FTimerHandle h;
+									GetWorld()->GetTimerManager().SetTimer(h, Del, MontageLen, false);
+								}
+							}
+						);
+						FTimerHandle handle;
+
+						GetWorld()->GetTimerManager().SetTimer(handle, Delegate, MontageSeconds, false);
+					}
 				}
 			}
 			else
@@ -154,8 +202,7 @@ void AMainCharacter::Vault()
 				if (!bShouldClimb)
 				{
 					float MontageSeconds = 0.f;
-					GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-					GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
+					SetVaultingCollision();
 					SetActorLocation((ForwardVector * 50.f) + GetActorLocation());
 					if (!bWallThick)
 					{
@@ -170,8 +217,7 @@ void AMainCharacter::Vault()
 					FTimerDelegate Delegate;
 					Delegate.BindLambda([&]()
 						{
-							GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-					GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+							ResetCollisionAndMovement();
 					//SetActorRotation(FRotator(GetActorRotation().Roll, GetActorRotation().Pitch, Rot.Yaw + 100.f));
 						}
 					);
@@ -203,5 +249,17 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	PlayerInputComponent->BindAction(FName("Jump"), IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction(FName("Vault"), IE_Pressed, this, &AMainCharacter::Vault);
+}
+
+void AMainCharacter::ResetCollisionAndMovement()
+{
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+}
+
+void AMainCharacter::SetVaultingCollision()
+{
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
 }
 

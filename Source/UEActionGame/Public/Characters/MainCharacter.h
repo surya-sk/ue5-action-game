@@ -52,4 +52,14 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = Animation)
 	UAnimMontage* VaultMontage;
+
+	UPROPERTY(EditAnywhere, Category = Animation)
+	UAnimMontage* ClimbUpMontage;
+
+	UPROPERTY(EditAnywhere, Category = Animation)
+	UAnimMontage* JumpDownMontage;
+
+	void ResetCollisionAndMovement();
+
+	void SetVaultingCollision();
 };
