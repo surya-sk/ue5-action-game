@@ -153,30 +153,31 @@ void AMainCharacter::Vault()
 				bWallThick = false;
 				if (!bShouldClimb)
 				{
+					float MontageSeconds = 0.f;
 					GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 					GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
 					SetActorLocation((ForwardVector * 50.f) + GetActorLocation());
-					if (bWallThick)
+					if (!bWallThick)
 					{
-						this->PlayAnimMontage(GettingUp);
+						MontageSeconds =  this->PlayAnimMontage(GettingUp);
 					}
 					else
 					{
 						UE_LOG(LogTemp, Warning, TEXT("Play vaulting animation montage"));
-						SetActorLocation(FVector(GetActorLocation().X, GetActorLocation().Y, WallHeight.Z));
-						this->PlayAnimMontage(VaultMontage);
+						//SetActorLocation(FVector(GetActorLocation().X, GetActorLocation().Y, WallHeight.Z));
+						MontageSeconds = this->PlayAnimMontage(VaultMontage);
 					}
 					FTimerDelegate Delegate;
 					Delegate.BindLambda([&]()
 						{
 							GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 					GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
-					SetActorRotation(FRotator(GetActorRotation().Roll, GetActorRotation().Pitch, Rot.Yaw + 100.f));
+					//SetActorRotation(FRotator(GetActorRotation().Roll, GetActorRotation().Pitch, Rot.Yaw + 100.f));
 						}
 					);
 					FTimerHandle handle;
 
-					GetWorld()->GetTimerManager().SetTimer(handle, Delegate, 2.f, false);
+					GetWorld()->GetTimerManager().SetTimer(handle, Delegate, MontageSeconds, false);
 				}
 			}
 		}
