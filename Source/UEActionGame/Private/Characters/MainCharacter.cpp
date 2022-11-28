@@ -131,6 +131,23 @@ void AMainCharacter::Vault()
 	}
 }
 
+void AMainCharacter::Slide()
+{
+	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+
+	float MontageLen = this->PlayAnimMontage(SlideMontage);
+	FTimerDelegate Delegate;
+	Delegate.BindLambda([&]()
+		{
+			ResetCollisionAndMovement();
+		}
+	);
+
+	FTimerHandle Handle;
+	GetWorld()->GetTimerManager().SetTimer(Handle, Delegate, MontageLen, false);
+}
+
 // Called every frame
 void AMainCharacter::Tick(float DeltaTime)
 {
@@ -150,6 +167,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	PlayerInputComponent->BindAction(FName("Jump"), IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction(FName("Vault"), IE_Pressed, this, &AMainCharacter::Vault);
+	PlayerInputComponent->BindAction(FName("Slide"), IE_Pressed, this, &AMainCharacter::Slide);
 }
 
 void AMainCharacter::ResetCollisionAndMovement()

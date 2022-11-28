@@ -28,6 +28,7 @@ protected:
 	void LookUp(float Value);
 
 	void Vault();
+	void Slide();
 
 public:	
 	// Called every frame
@@ -58,6 +59,9 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = Animation)
 	UAnimMontage* JumpDownMontage;
+
+	UPROPERTY(EditAnywhere, Category = Animation)
+	UAnimMontage* SlideMontage;
 
 	bool bIsClimbing = false;
 
