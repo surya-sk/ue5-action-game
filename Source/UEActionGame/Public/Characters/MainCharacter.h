@@ -59,7 +59,11 @@ private:
 	UPROPERTY(EditAnywhere, Category = Animation)
 	UAnimMontage* JumpDownMontage;
 
+	bool bIsClimbing = false;
+
 	void ResetCollisionAndMovement();
 
 	void SetVaultingCollision();
+
+	void VaultOrClimb(bool bShouldClimb, bool bWallThick, bool bCanClimb, FVector ForwardVector, FVector CWallHeight);
 };
