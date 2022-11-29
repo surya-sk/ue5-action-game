@@ -10,6 +10,7 @@
 class USpringArmComponent;
 class UCameraComponent;
 class AItem;
+class UAnimMontage;
 
 UCLASS()
 class UEACTIONGAME_API AMainCharacter : public ACharacter
@@ -41,6 +42,7 @@ protected:
 	void Vault();
 	void Slide();
 	void InteractKeyPressed();
+	void Attack();
 
 private:
 
@@ -55,6 +57,12 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	USkeletalMeshComponent* HairMesh;
 
+	UPROPERTY(VisibleInstanceOnly)
+	AItem* OverlappingItem;
+
+	/// <summary>
+	/// Animation montages
+	/// </summary>
 	UPROPERTY(EditAnywhere, Category = Animation)
 	UAnimMontage* GettingUp;
 
@@ -70,8 +78,8 @@ private:
 	UPROPERTY(EditAnywhere, Category = Animation)
 	UAnimMontage* SlideMontage;
 
-	UPROPERTY(VisibleInstanceOnly)
-	AItem* OverlappingItem;
+	UPROPERTY(EditDefaultsOnly, Category = Montages)
+	UAnimMontage* AttackMontage;
 
 	bool bIsClimbing = false;
 
