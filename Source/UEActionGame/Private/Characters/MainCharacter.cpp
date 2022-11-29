@@ -163,7 +163,7 @@ void AMainCharacter::InteractKeyPressed()
 
 void AMainCharacter::Attack()
 {
-	if (CharacterActionState == ECharacterActionState::ECAS_Unoccupied)
+	if (CanAttack())
 	{
 		PlayAttackMontage();
 		CharacterActionState = ECharacterActionState::ECAS_Attacking;
@@ -199,6 +199,11 @@ void AMainCharacter::PlayAttackMontage()
 void AMainCharacter::AttackEnd()
 {
 	CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
+}
+
+bool AMainCharacter::CanAttack()
+{
+	return CharacterActionState == ECharacterActionState::ECAS_Unoccupied && CharacterWeaponState != ECharacterWeaponState::ECWS_Unequipped;
 }
 
 // Called every frame

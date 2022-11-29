@@ -59,6 +59,8 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void AttackEnd();
 
+	bool CanAttack();
+
 private:
 
 	ECharacterWeaponState CharacterWeaponState = ECharacterWeaponState::ECWS_Unequipped;
