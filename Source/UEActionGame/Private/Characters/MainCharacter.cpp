@@ -45,6 +45,7 @@ void AMainCharacter::BeginPlay()
 
 void AMainCharacter::MoveForward(float Value)
 {
+	if (CharacterActionState == ECharacterActionState::ECAS_Attacking) return;
 	if (Controller && (Value != 0.f))
 	{
 		const FRotator ControlRotation = GetControlRotation();
@@ -57,6 +58,7 @@ void AMainCharacter::MoveForward(float Value)
 
 void AMainCharacter::MoveRight(float Value)
 {
+	if (CharacterActionState == ECharacterActionState::ECAS_Attacking) return;
 	if (Controller && (Value != 0.f))
 	{
 		const FRotator ControlRotation = GetControlRotation();
@@ -79,6 +81,7 @@ void AMainCharacter::LookUp(float Value)
 
 void AMainCharacter::Vault()
 {
+	if (CharacterActionState == ECharacterActionState::ECAS_Attacking) return;
 	bool bShouldClimb;
 	bool bWallThick;
 	bool bCanClimb = true;
