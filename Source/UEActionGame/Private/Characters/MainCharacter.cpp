@@ -163,11 +163,20 @@ void AMainCharacter::InteractKeyPressed()
 
 void AMainCharacter::Attack()
 {
+	if (CharacterActionState == ECharacterActionState::ECAS_Unoccupied)
+	{
+		PlayAttackMontage();
+		CharacterActionState = ECharacterActionState::ECAS_Attacking;
+	}
+}
+
+void AMainCharacter::PlayAttackMontage()
+{
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (AnimInstance && AttackMontage)
 	{
 		AnimInstance->Montage_Play(AttackMontage);
-		int32 RandomAnimSelection = FMath::RandRange(0, 2);
+		const int32 RandomAnimSelection = FMath::RandRange(0, 2);
 		FName SectionName = FName();
 		switch (RandomAnimSelection)
 		{

@@ -34,19 +34,32 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	/// <summary>
+	/// Input axis mapping callback
+	/// </summary>
+	/// <param name="Value"></param>
 	void MoveForward(float Value);
 	void MoveRight(float Value);
 	void Turn(float Value);
 	void LookUp(float Value);
 
+	/// <summary>
+	/// Input action mapping callbacks
+	/// </summary>
 	void Vault();
 	void Slide();
 	void InteractKeyPressed();
 	void Attack();
 
+	/// <summary>
+	/// Play montage functions
+	/// </summary>
+	void PlayAttackMontage();
+
 private:
 
 	ECharacterWeaponState CharacterWeaponState = ECharacterWeaponState::ECWS_Unequipped;
+	ECharacterActionState CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
 
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* CameraBoom;
