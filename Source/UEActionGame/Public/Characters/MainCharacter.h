@@ -6,6 +6,9 @@
 #include "GameFramework/Character.h"
 #include "MainCharacter.generated.h"
 
+class USpringArmComponent;
+class UCameraComponent;
+
 UCLASS()
 class UEACTIONGAME_API AMainCharacter : public ACharacter
 {
@@ -20,6 +23,12 @@ protected:
 	virtual void BeginPlay() override;
 
 	void MoveForward(float Value);
+	void MoveRight(float Value);
+	void Turn(float Value);
+	void LookUp(float Value);
+
+	void Vault();
+	void Slide();
 
 public:	
 	// Called every frame
@@ -28,4 +37,37 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+private:
+
+	UPROPERTY(VisibleAnywhere)
+	USpringArmComponent* CameraBoom;
+
+	UPROPERTY(VisibleAnywhere)
+	UCameraComponent* ViewCamera;
+
+	UPROPERTY(VisibleAnywhere)
+	USkeletalMeshComponent* HairMesh;
+
+	UPROPERTY(EditAnywhere, Category = Animation)
+	UAnimMontage* GettingUp;
+
+	UPROPERTY(EditAnywhere, Category = Animation)
+	UAnimMontage* VaultMontage;
+
+	UPROPERTY(EditAnywhere, Category = Animation)
+	UAnimMontage* ClimbUpMontage;
+
+	UPROPERTY(EditAnywhere, Category = Animation)
+	UAnimMontage* JumpDownMontage;
+
+	UPROPERTY(EditAnywhere, Category = Animation)
+	UAnimMontage* SlideMontage;
+
+	bool bIsClimbing = false;
+
+	void ResetCollisionAndMovement();
+
+	void SetVaultingCollision();
+
+	void VaultOrClimb(bool bShouldClimb, bool bWallThick, bool bCanClimb, FVector ForwardVector, FVector CWallHeight);
 };
