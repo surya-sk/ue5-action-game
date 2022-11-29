@@ -59,6 +59,8 @@ protected:
 private:
 
 	ECharacterWeaponState CharacterWeaponState = ECharacterWeaponState::ECWS_Unequipped;
+
+	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	ECharacterActionState CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
 
 	UPROPERTY(VisibleAnywhere)
