@@ -8,6 +8,7 @@
 
 class USpringArmComponent;
 class UCameraComponent;
+class AItem;
 
 UCLASS()
 class UEACTIONGAME_API AMainCharacter : public ACharacter
@@ -17,6 +18,14 @@ class UEACTIONGAME_API AMainCharacter : public ACharacter
 public:
 	// Sets default values for this character's properties
 	AMainCharacter();
+
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
 
 protected:
 	// Called when the game starts or when spawned
@@ -29,13 +38,7 @@ protected:
 
 	void Vault();
 	void Slide();
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	void InteractKeyPressed();
 
 private:
 
@@ -62,6 +65,9 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = Animation)
 	UAnimMontage* SlideMontage;
+
+	UPROPERTY(VisibleInstanceOnly)
+	AItem* OverlappingItem;
 
 	bool bIsClimbing = false;
 

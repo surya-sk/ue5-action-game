@@ -148,6 +148,10 @@ void AMainCharacter::Slide()
 	GetWorld()->GetTimerManager().SetTimer(Handle, Delegate, MontageLen, false);
 }
 
+void AMainCharacter::InteractKeyPressed()
+{
+}
+
 // Called every frame
 void AMainCharacter::Tick(float DeltaTime)
 {
@@ -168,6 +172,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction(FName("Jump"), IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction(FName("Vault"), IE_Pressed, this, &AMainCharacter::Vault);
 	PlayerInputComponent->BindAction(FName("Slide"), IE_Pressed, this, &AMainCharacter::Slide);
+	PlayerInputComponent->BindAction(FName("Interact"), IE_Pressed, this, &AMainCharacter::InteractKeyPressed);
 }
 
 void AMainCharacter::ResetCollisionAndMovement()
