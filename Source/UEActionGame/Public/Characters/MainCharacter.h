@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "CharacterTypes.h"
 #include "MainCharacter.generated.h"
 
 class USpringArmComponent;
@@ -26,6 +27,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
+	FORCEINLINE ECharacterWeaponState GetCharacterWeaponState() const { return CharacterWeaponState; }
 
 protected:
 	// Called when the game starts or when spawned
@@ -41,6 +43,8 @@ protected:
 	void InteractKeyPressed();
 
 private:
+
+	ECharacterWeaponState CharacterWeaponState = ECharacterWeaponState::ECWS_Unequipped;
 
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* CameraBoom;
