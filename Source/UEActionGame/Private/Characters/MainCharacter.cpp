@@ -9,6 +9,8 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Components/CapsuleComponent.h"
+#include "Items/Item.h"
+#include "Items/Weapons/Weapon.h"
 
 // Sets default values
 AMainCharacter::AMainCharacter()
@@ -150,6 +152,11 @@ void AMainCharacter::Slide()
 
 void AMainCharacter::InteractKeyPressed()
 {
+	AWeapon* OverlappingWeapon = Cast<AWeapon>(OverlappingItem);
+	if (OverlappingWeapon)
+	{
+		OverlappingWeapon->Equip(this->GetMesh(), FName("LeftHandSocket"));
+	}
 }
 
 // Called every frame
