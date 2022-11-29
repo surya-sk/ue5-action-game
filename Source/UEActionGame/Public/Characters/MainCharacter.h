@@ -56,6 +56,9 @@ protected:
 	/// </summary>
 	void PlayAttackMontage();
 
+	UFUNCTION(BlueprintCallable)
+	void AttackEnd();
+
 private:
 
 	ECharacterWeaponState CharacterWeaponState = ECharacterWeaponState::ECWS_Unequipped;

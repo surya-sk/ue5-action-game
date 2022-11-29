@@ -196,6 +196,11 @@ void AMainCharacter::PlayAttackMontage()
 	}
 }
 
+void AMainCharacter::AttackEnd()
+{
+	CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
+}
+
 // Called every frame
 void AMainCharacter::Tick(float DeltaTime)
 {
