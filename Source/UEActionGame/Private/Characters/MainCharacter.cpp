@@ -9,6 +9,9 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Components/CapsuleComponent.h"
+#include "Items/Item.h"
+#include "Items/Weapons/Weapon.h"
+#include "Animation/AnimMontage.h"
 
 // Sets default values
 AMainCharacter::AMainCharacter()
@@ -42,6 +45,7 @@ void AMainCharacter::BeginPlay()
 
 void AMainCharacter::MoveForward(float Value)
 {
+	if (CharacterActionState != ECharacterActionState::ECAS_Unoccupied) return;
 	if (Controller && (Value != 0.f))
 	{
 		const FRotator ControlRotation = GetControlRotation();
@@ -54,6 +58,7 @@ void AMainCharacter::MoveForward(float Value)
 
 void AMainCharacter::MoveRight(float Value)
 {
+	if (CharacterActionState != ECharacterActionState::ECAS_Unoccupied) return;
 	if (Controller && (Value != 0.f))
 	{
 		const FRotator ControlRotation = GetControlRotation();
@@ -76,6 +81,7 @@ void AMainCharacter::LookUp(float Value)
 
 void AMainCharacter::Vault()
 {
+	if (CharacterActionState != ECharacterActionState::ECAS_Unoccupied) return;
 	bool bShouldClimb;
 	bool bWallThick;
 	bool bCanClimb = true;
@@ -148,6 +154,115 @@ void AMainCharacter::Slide()
 	GetWorld()->GetTimerManager().SetTimer(Handle, Delegate, MontageLen, false);
 }
 
+void AMainCharacter::InteractKeyPressed()
+{
+	AWeapon* OverlappingWeapon = Cast<AWeapon>(OverlappingItem);
+	if (OverlappingWeapon)
+	{
+		EquippedWeapon = OverlappingWeapon;
+		EquippedWeapon->Equip(this->GetMesh(), FName("LeftHandSocket"));
+		CharacterWeaponState = ECharacterWeaponState::ECWS_Equipped;
+		OverlappingItem = nullptr;
+	}
+}
+
+void AMainCharacter::Attack()
+{
+	if (CanAttack())
+	{
+		PlayAttackMontage();
+		CharacterActionState = ECharacterActionState::ECAS_Attacking;
+	}
+}
+
+void AMainCharacter::Equip()
+{
+	bool bCanUnequip = CharacterActionState == ECharacterActionState::ECAS_Unoccupied &&
+		CharacterWeaponState != ECharacterWeaponState::ECWS_Unequipped;
+	bool bCanEquip = CharacterActionState == ECharacterActionState::ECAS_Unoccupied &&
+		CharacterWeaponState == ECharacterWeaponState::ECWS_Unequipped && EquippedWeapon;
+	if (bCanUnequip)
+	{
+		PlayEquipMontage(FName("Unequip"));
+		CharacterWeaponState = ECharacterWeaponState::ECWS_Unequipped;
+		CharacterActionState = ECharacterActionState::ECAS_EquippingWeapon;
+	}
+	else if (bCanEquip)
+	{
+		PlayEquipMontage(FName("Equip"));
+		CharacterWeaponState = ECharacterWeaponState::ECWS_Equipped;
+		CharacterActionState = ECharacterActionState::ECAS_EquippingWeapon;
+	}
+}
+
+void AMainCharacter::PlayAttackMontage()
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && AttackMontage)
+	{
+		AnimInstance->Montage_Play(AttackMontage);
+		const int32 RandomAnimSelection = FMath::RandRange(0, 2);
+		FName SectionName = FName();
+		switch (RandomAnimSelection)
+		{
+		case 0:
+			SectionName = FName("Attack1");
+			break;
+		case 1:
+			SectionName = FName("Attack2");
+			break;
+		case 2:
+			SectionName = FName("Attack3");
+			break;
+		default:
+			break;
+		}
+		AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
+	}
+}
+
+void AMainCharacter::PlayEquipMontage(FName Section)
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && EquipMontage)
+	{
+		AnimInstance->Montage_Play(EquipMontage);
+		AnimInstance->Montage_JumpToSection(Section, EquipMontage);
+	}
+}
+
+
+void AMainCharacter::AttackEnd()
+{
+	CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
+}
+
+void AMainCharacter::UnarmWeapon()
+{
+	if (EquippedWeapon)
+	{
+		EquippedWeapon->AttachMeshToSocket(this->GetMesh(), FName("SpineSocket"));
+	}
+}
+
+void AMainCharacter::ArmWeapon()
+{
+	if (EquippedWeapon)
+	{
+		EquippedWeapon->AttachMeshToSocket(this->GetMesh(), FName("LeftHandSocket"));
+	}
+}
+
+void AMainCharacter::FinishEquip()
+{
+	CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
+}
+
+bool AMainCharacter::CanAttack()
+{
+	return CharacterActionState == ECharacterActionState::ECAS_Unoccupied && CharacterWeaponState != ECharacterWeaponState::ECWS_Unequipped;
+}
+
 // Called every frame
 void AMainCharacter::Tick(float DeltaTime)
 {
@@ -168,6 +283,9 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction(FName("Jump"), IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction(FName("Vault"), IE_Pressed, this, &AMainCharacter::Vault);
 	PlayerInputComponent->BindAction(FName("Slide"), IE_Pressed, this, &AMainCharacter::Slide);
+	PlayerInputComponent->BindAction(FName("Interact"), IE_Pressed, this, &AMainCharacter::InteractKeyPressed);
+	PlayerInputComponent->BindAction(FName("Attack"), IE_Pressed, this, &AMainCharacter::Attack);
+	PlayerInputComponent->BindAction(FName("Equip"), IE_Pressed, this, &AMainCharacter::Equip);
 }
 
 void AMainCharacter::ResetCollisionAndMovement()
