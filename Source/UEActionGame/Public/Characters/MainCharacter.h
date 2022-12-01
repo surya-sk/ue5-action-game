@@ -51,6 +51,7 @@ protected:
 	void Slide();
 	void InteractKeyPressed();
 	void Attack();
+	void Equip();
 
 	/// <summary>
 	/// Play montage functions

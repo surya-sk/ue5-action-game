@@ -164,26 +164,6 @@ void AMainCharacter::InteractKeyPressed()
 		OverlappingItem = nullptr;
 		EquippedWeapon = OverlappingWeapon;
 	}
-	else
-	{
-		bool bCanUnequip = CharacterActionState == ECharacterActionState::ECAS_Unoccupied &&
-			CharacterWeaponState != ECharacterWeaponState::ECWS_Unequipped;
-		bool bCanEquip = CharacterActionState == ECharacterActionState::ECAS_Unoccupied &&
-			CharacterWeaponState == ECharacterWeaponState::ECWS_Unequipped && EquippedWeapon;
-		UE_LOG(LogTemp, Warning, TEXT("No overlapping weapon"));
-		if (bCanUnequip)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Unequipping"));
-			PlayEquipMontage(FName("Unequip"));
-			CharacterWeaponState = ECharacterWeaponState::ECWS_Unequipped;
-		}
-		else if (bCanEquip)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Equipping"));
-			PlayEquipMontage(FName("Equip"));
-			CharacterWeaponState = ECharacterWeaponState::ECWS_Equipped;
-		}
-	}
 }
 
 void AMainCharacter::Attack()
@@ -192,6 +172,27 @@ void AMainCharacter::Attack()
 	{
 		PlayAttackMontage();
 		CharacterActionState = ECharacterActionState::ECAS_Attacking;
+	}
+}
+
+void AMainCharacter::Equip()
+{
+	bool bCanUnequip = CharacterActionState == ECharacterActionState::ECAS_Unoccupied &&
+		CharacterWeaponState != ECharacterWeaponState::ECWS_Unequipped;
+	bool bCanEquip = CharacterActionState == ECharacterActionState::ECAS_Unoccupied &&
+		CharacterWeaponState == ECharacterWeaponState::ECWS_Unequipped && EquippedWeapon;
+	UE_LOG(LogTemp, Warning, TEXT("No overlapping weapon"));
+	if (bCanUnequip)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Unequipping"));
+		PlayEquipMontage(FName("Unequip"));
+		CharacterWeaponState = ECharacterWeaponState::ECWS_Unequipped;
+	}
+	else if (bCanEquip)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Equipping"));
+		PlayEquipMontage(FName("Equip"));
+		CharacterWeaponState = ECharacterWeaponState::ECWS_Equipped;
 	}
 }
 
@@ -264,6 +265,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction(FName("Slide"), IE_Pressed, this, &AMainCharacter::Slide);
 	PlayerInputComponent->BindAction(FName("Interact"), IE_Pressed, this, &AMainCharacter::InteractKeyPressed);
 	PlayerInputComponent->BindAction(FName("Attack"), IE_Pressed, this, &AMainCharacter::Attack);
+	PlayerInputComponent->BindAction(FName("Equip"), IE_Pressed, this, &AMainCharacter::Equip);
 }
 
 void AMainCharacter::ResetCollisionAndMovement()
