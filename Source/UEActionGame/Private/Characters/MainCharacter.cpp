@@ -45,7 +45,7 @@ void AMainCharacter::BeginPlay()
 
 void AMainCharacter::MoveForward(float Value)
 {
-	if (CharacterActionState == ECharacterActionState::ECAS_Attacking) return;
+	if (CharacterActionState != ECharacterActionState::ECAS_Unoccupied) return;
 	if (Controller && (Value != 0.f))
 	{
 		const FRotator ControlRotation = GetControlRotation();
@@ -58,7 +58,7 @@ void AMainCharacter::MoveForward(float Value)
 
 void AMainCharacter::MoveRight(float Value)
 {
-	if (CharacterActionState == ECharacterActionState::ECAS_Attacking) return;
+	if (CharacterActionState != ECharacterActionState::ECAS_Unoccupied) return;
 	if (Controller && (Value != 0.f))
 	{
 		const FRotator ControlRotation = GetControlRotation();
@@ -81,7 +81,7 @@ void AMainCharacter::LookUp(float Value)
 
 void AMainCharacter::Vault()
 {
-	if (CharacterActionState == ECharacterActionState::ECAS_Attacking) return;
+	if (CharacterActionState != ECharacterActionState::ECAS_Unoccupied) return;
 	bool bShouldClimb;
 	bool bWallThick;
 	bool bCanClimb = true;
@@ -185,11 +185,13 @@ void AMainCharacter::Equip()
 	{
 		PlayEquipMontage(FName("Unequip"));
 		CharacterWeaponState = ECharacterWeaponState::ECWS_Unequipped;
+		CharacterActionState = ECharacterActionState::ECAS_EquippingWeapon;
 	}
 	else if (bCanEquip)
 	{
 		PlayEquipMontage(FName("Equip"));
 		CharacterWeaponState = ECharacterWeaponState::ECWS_Equipped;
+		CharacterActionState = ECharacterActionState::ECAS_EquippingWeapon;
 	}
 }
 
@@ -249,6 +251,11 @@ void AMainCharacter::ArmWeapon()
 	{
 		EquippedWeapon->AttachMeshToSocket(this->GetMesh(), FName("LeftHandSocket"));
 	}
+}
+
+void AMainCharacter::FinishEquip()
+{
+	CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
 }
 
 bool AMainCharacter::CanAttack()
