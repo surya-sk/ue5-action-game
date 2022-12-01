@@ -161,6 +161,28 @@ void AMainCharacter::InteractKeyPressed()
 	{
 		OverlappingWeapon->Equip(this->GetMesh(), FName("LeftHandSocket"));
 		CharacterWeaponState = ECharacterWeaponState::ECWS_Equipped;
+		OverlappingItem = nullptr;
+		EquippedWeapon = OverlappingWeapon;
+	}
+	else
+	{
+		bool bCanUnequip = CharacterActionState == ECharacterActionState::ECAS_Unoccupied &&
+			CharacterWeaponState != ECharacterWeaponState::ECWS_Unequipped;
+		bool bCanEquip = CharacterActionState == ECharacterActionState::ECAS_Unoccupied &&
+			CharacterWeaponState == ECharacterWeaponState::ECWS_Unequipped && EquippedWeapon;
+		UE_LOG(LogTemp, Warning, TEXT("No overlapping weapon"));
+		if (bCanUnequip)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Unequipping"));
+			PlayEquipMontage(FName("Unequip"));
+			CharacterWeaponState = ECharacterWeaponState::ECWS_Unequipped;
+		}
+		else if (bCanEquip)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Equipping"));
+			PlayEquipMontage(FName("Equip"));
+			CharacterWeaponState = ECharacterWeaponState::ECWS_Equipped;
+		}
 	}
 }
 
@@ -198,6 +220,17 @@ void AMainCharacter::PlayAttackMontage()
 		AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
 	}
 }
+
+void AMainCharacter::PlayEquipMontage(FName Section)
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && EquipMontage)
+	{
+		AnimInstance->Montage_Play(EquipMontage);
+		AnimInstance->Montage_JumpToSection(Section, EquipMontage);
+	}
+}
+
 
 void AMainCharacter::AttackEnd()
 {

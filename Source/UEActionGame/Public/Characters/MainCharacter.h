@@ -11,6 +11,7 @@ class USpringArmComponent;
 class UCameraComponent;
 class AItem;
 class UAnimMontage;
+class AWeapon;
 
 UCLASS()
 class UEACTIONGAME_API AMainCharacter : public ACharacter
@@ -55,6 +56,7 @@ protected:
 	/// Play montage functions
 	/// </summary>
 	void PlayAttackMontage();
+	void PlayEquipMontage(FName Section);
 
 	UFUNCTION(BlueprintCallable)
 	void AttackEnd();
@@ -100,6 +102,12 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = Montages)
 	UAnimMontage* AttackMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = Montages)
+	UAnimMontage* EquipMontage;
+
+	UPROPERTY(VisibleAnywhere, Category = Weapon)
+	AWeapon* EquippedWeapon;
 
 	bool bIsClimbing = false;
 
