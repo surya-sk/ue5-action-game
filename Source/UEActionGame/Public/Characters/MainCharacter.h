@@ -62,6 +62,12 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void AttackEnd();
 
+	UFUNCTION(BlueprintCallable)
+	void UnarmWeapon();
+
+	UFUNCTION(BlueprintCallable)
+	void ArmWeapon();
+
 	bool CanAttack();
 
 private:
