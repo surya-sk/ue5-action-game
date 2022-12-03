@@ -2,13 +2,22 @@
 
 
 #include "Enemy/Enemy.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "Components/CapsuleComponent.h"
 
 // Sets default values
 AEnemy::AEnemy()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	USkeletalMeshComponent* EnemyMesh = this->GetMesh();
+	EnemyMesh->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+	EnemyMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Block);
+	// Prevent camera from zooming in when collided with enemy
+	EnemyMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+
+	EnemyMesh->SetGenerateOverlapEvents(true);
 }
 
 // Called when the game starts or when spawned
