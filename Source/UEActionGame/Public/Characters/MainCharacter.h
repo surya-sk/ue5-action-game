@@ -31,6 +31,9 @@ public:
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
 	FORCEINLINE ECharacterWeaponState GetCharacterWeaponState() const { return CharacterWeaponState; }
 
+	UFUNCTION(BlueprintCallable)
+	void SetWeaponCollision(ECollisionEnabled::Type CollisionEnabled);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
