@@ -31,6 +31,9 @@ public:
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
 	FORCEINLINE ECharacterWeaponState GetCharacterWeaponState() const { return CharacterWeaponState; }
 
+	UFUNCTION(BlueprintCallable)
+	void SetWeaponCollision(ECollisionEnabled::Type CollisionEnabled);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -57,7 +60,7 @@ protected:
 	/// Play montage functions
 	/// </summary>
 	void PlayAttackMontage();
-	void PlayEquipMontage(FName Section);
+	void PlayEquipMontage(const FName Section);
 
 	UFUNCTION(BlueprintCallable)
 	void AttackEnd();

@@ -22,12 +22,22 @@ public:
 	void Equip(USceneComponent* InParent, FName InSocketName);
 
 	void AttachMeshToSocket(USceneComponent* InParent, const FName& InSocketName);
+
+	FORCEINLINE UBoxComponent* GetWeaponBox() const { return WeaponBox; }
+
+	TArray<AActor*> ActorsToIgnore;
 	
 protected:
+	virtual void BeginPlay() override;
+
 	virtual void OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, 
 		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;
 	virtual void OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, 
 		int32 OtherBodyIndex) override;
+
+	UFUNCTION()
+	void OnWeaponBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 private:
 	UPROPERTY(EditAnywhere)
@@ -35,4 +45,10 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	UBoxComponent* WeaponBox;
+
+	UPROPERTY(VisibleAnywhere)
+	USceneComponent* BoxTraceStart;
+
+	UPROPERTY(VisibleAnywhere)
+	USceneComponent* BoxTraceEnd;
 };
