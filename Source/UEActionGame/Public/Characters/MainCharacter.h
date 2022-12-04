@@ -60,7 +60,7 @@ protected:
 	/// Play montage functions
 	/// </summary>
 	void PlayAttackMontage();
-	void PlayEquipMontage(FName Section);
+	void PlayEquipMontage(const FName Section);
 
 	UFUNCTION(BlueprintCallable)
 	void AttackEnd();
