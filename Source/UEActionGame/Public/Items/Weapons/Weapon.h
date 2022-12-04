@@ -49,4 +49,6 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	USceneComponent* BoxTraceEnd;
+
+	TArray<AActor*> ActorsToIgnore;
 };

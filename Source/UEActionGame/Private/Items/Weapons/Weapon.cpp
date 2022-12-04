@@ -68,7 +68,6 @@ void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 	const FVector Start = BoxTraceStart->GetComponentLocation();
 	const FVector End = BoxTraceEnd->GetComponentLocation();
 
-	TArray<AActor*> ActorsToIgnore;
 	ActorsToIgnore.Add(this);
 
 	FHitResult BoxHit;
@@ -84,5 +83,6 @@ void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 		{
 			HitInterface->GetHit(BoxHit.ImpactPoint);
 		}
+		ActorsToIgnore.AddUnique(BoxHit.GetActor());
 	}
 }
