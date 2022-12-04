@@ -55,8 +55,6 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AEnemy::GetHit(const FVector& ImpactPoint)
 {
-	this->PLayHitReactMontage(FName("ReactLeft"));
-
 	const FVector Forward = GetActorForwardVector();
 	const FVector ImpactLowered(ImpactPoint.X, ImpactPoint.Y, GetActorLocation().Z);
 	const FVector ToHit = (ImpactLowered - GetActorLocation()).GetSafeNormal();
@@ -64,6 +62,26 @@ void AEnemy::GetHit(const FVector& ImpactPoint)
 	const double CosTheta = FVector::DotProduct(Forward, ToHit);
 	double Theta = FMath::Acos(CosTheta);
 	Theta = FMath::RadiansToDegrees(Theta);
+
+	// if CrossProduct points down, Theta should be negative
+	const FVector CrossProduct = FVector::CrossProduct(Forward, ToHit);
+	if (CrossProduct.Z < 0)
+	{
+		Theta *= -1.f;
+		UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + CrossProduct * 100.f, 5.f,
+			FColor::Blue, 5.f);
+	}
+
+	FName SectionName("ReactBack"); // Because 135 > Theta < -135 means needs to react to the back
+
+	if (Theta >= -45.f && Theta < 45.f)
+		SectionName = FName("ReactFront");
+	else if (Theta >= -135 && Theta < 45)
+		SectionName = FName("ReactLeft");
+	else if (Theta >= 45 && Theta < 135)
+		SectionName = FName("ReactRight");
+
+	this->PLayHitReactMontage(SectionName);
 
 	if (GEngine)
 	{
