@@ -58,7 +58,8 @@ void AEnemy::GetHit(const FVector& ImpactPoint)
 	this->PLayHitReactMontage(FName("ReactLeft"));
 
 	const FVector Forward = GetActorForwardVector();
-	const FVector ToHit = (ImpactPoint - GetActorLocation()).GetSafeNormal();
+	const FVector ImpactLowered(ImpactPoint.X, ImpactPoint.Y, GetActorLocation().Z);
+	const FVector ToHit = (ImpactLowered - GetActorLocation()).GetSafeNormal();
 
 	const double CosTheta = FVector::DotProduct(Forward, ToHit);
 	double Theta = FMath::Acos(CosTheta);
