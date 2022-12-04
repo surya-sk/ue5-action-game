@@ -62,6 +62,10 @@ void AEnemy::GetHit(const FVector& ImpactPoint)
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, HitSound, ImpactPoint);
 	}
+	if (HitParticles)
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(this->GetWorld(), HitParticles, ImpactPoint);
+	}
 }
 
 void AEnemy::DirectionalHitReact(const FVector& ImpactPoint)
@@ -79,8 +83,8 @@ void AEnemy::DirectionalHitReact(const FVector& ImpactPoint)
 	if (CrossProduct.Z < 0)
 	{
 		Theta *= -1.f;
-		UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + CrossProduct * 100.f, 5.f,
-			FColor::Blue, 5.f);
+		//UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + CrossProduct * 100.f, 5.f,
+		//	FColor::Blue, 5.f);
 	}
 
 	FName SectionName("ReactBack"); // Because 135 > Theta < -135 means needs to react to the back
@@ -94,13 +98,13 @@ void AEnemy::DirectionalHitReact(const FVector& ImpactPoint)
 
 	this->PLayHitReactMontage(SectionName);
 
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Green, FString::Printf(TEXT("Theta: %f"), Theta));
-	}
-	UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + Forward * 60.f, 5.f,
-		FColor::Red, 5.f);
-	UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + ToHit * 60, 5.f,
-		FColor::Green, 5.f);
+	//if (GEngine)
+	//{
+	//	GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Green, FString::Printf(TEXT("Theta: %f"), Theta));
+	//}
+	//UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + Forward * 60.f, 5.f,
+	//	FColor::Red, 5.f);
+	//UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + ToHit * 60, 5.f,
+	//	FColor::Green, 5.f);
 }
 
