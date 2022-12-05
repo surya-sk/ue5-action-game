@@ -30,3 +30,7 @@ void ABreakableActor::Tick(float DeltaTime)
 
 }
 
+void ABreakableActor::GetHit(const FVector& ImpactPoint)
+{
+}
+
