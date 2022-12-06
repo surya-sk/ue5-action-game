@@ -45,7 +45,9 @@ private:
 	UAnimMontage* HitReactMontage;
 
 
-	UPROPERTY(EditAnywhere, Category = Sounds)
+	UPROPERTY(EditAnywhere, Category = Effects)
 	USoundBase* HitSound;
+	UPROPERTY(EditAnywhere, Category = Effects)
+	UParticleSystem* HitParticles;
 
 };
