@@ -50,4 +50,7 @@ private:
 	UPROPERTY(EditAnywhere, Category = Effects)
 	UParticleSystem* HitParticles;
 
+	UPROPERTY(VisibleAnywhere)
+	class UAttributeComponent* Attributes;
+
 };
