@@ -170,7 +170,7 @@ void AMainCharacter::InteractKeyPressed()
 	if (OverlappingWeapon)
 	{
 		EquippedWeapon = OverlappingWeapon;
-		EquippedWeapon->Equip(this->GetMesh(), FName("LeftHandSocket"));
+		EquippedWeapon->Equip(this->GetMesh(), FName("LeftHandSocket"), this, this);
 		CharacterWeaponState = ECharacterWeaponState::ECWS_Equipped;
 		OverlappingItem = nullptr;
 	}
