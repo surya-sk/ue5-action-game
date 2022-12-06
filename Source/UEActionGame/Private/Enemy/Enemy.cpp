@@ -32,12 +32,43 @@ void AEnemy::BeginPlay()
 	
 }
 
-void AEnemy::PLayHitReactMontage(const FName SectionName)
+void AEnemy::PlayHitReactMontage(const FName SectionName)
 {
 	UAnimInstance* AnimInstance = this->GetMesh()->GetAnimInstance();
 	if (AnimInstance && HitReactMontage)
 	{
 		AnimInstance->Montage_Play(HitReactMontage);
+		AnimInstance->Montage_JumpToSection(SectionName, HitReactMontage);
+	}
+}
+
+void AEnemy::Die() const
+{
+	UAnimInstance* AnimInstance = this->GetMesh()->GetAnimInstance();
+	if (AnimInstance && DeathMontage)
+	{
+		AnimInstance->Montage_Play(DeathMontage);
+		
+		const int32 RandomSelection = FMath::RandRange(0, 4);
+		FName SectionName = FName();
+		switch (RandomSelection)
+		{
+		case 0:
+			SectionName = FName("Death1");
+			break;
+		case 1:
+			SectionName = FName("Death2");
+			break;
+		case 2:
+			SectionName = FName("Death3");
+			break;
+		case 3:
+			SectionName = FName("Death4");
+			break;
+		case 4:
+			SectionName = FName("Death5");
+			break;
+		}
 		AnimInstance->Montage_JumpToSection(SectionName, HitReactMontage);
 	}
 }
@@ -58,7 +89,14 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AEnemy::GetHit(const FVector& ImpactPoint)
 {
-	DirectionalHitReact(ImpactPoint);
+	if (Attributes && Attributes->IsDead())
+	{
+		Die();
+	}
+	else
+	{
+		DirectionalHitReact(ImpactPoint);
+	}
 
 	if (HitSound)
 	{
@@ -98,7 +136,7 @@ void AEnemy::DirectionalHitReact(const FVector& ImpactPoint)
 	else if (Theta >= 45 && Theta < 135)
 		SectionName = FName("ReactRight");
 
-	this->PLayHitReactMontage(SectionName);
+	this->PlayHitReactMontage(SectionName);
 
 	//if (GEngine)
 	//{

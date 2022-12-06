@@ -18,6 +18,7 @@ public:
 
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	void ReceieveDamage(float Damage);
+	bool IsDead() const;
 
 protected:
 	// Called when the game starts

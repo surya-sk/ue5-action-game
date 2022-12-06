@@ -36,7 +36,9 @@ protected:
 	/// <summary>
 	/// Play montage functions
 	/// </summary>
-	void PLayHitReactMontage(const FName SectionName);
+	void PlayHitReactMontage(const FName SectionName);
+
+	void Die() const;
 
 private:
 	/// <summary>
@@ -44,6 +46,9 @@ private:
 	/// </summary>
 	UPROPERTY(EditDefaultsOnly, Category = Animation)
 	UAnimMontage* HitReactMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = Animation)
+	UAnimMontage* DeathMontage;
 
 
 	UPROPERTY(EditAnywhere, Category = Effects)

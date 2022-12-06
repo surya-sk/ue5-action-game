@@ -88,6 +88,9 @@ void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 
 	if (BoxHit.GetActor())
 	{
+		UGameplayStatics::ApplyDamage(BoxHit.GetActor(), Damage, GetInstigator()->GetController(), this,
+			UDamageType::StaticClass());
+
 		// Check if actor implements the hit interface, like enemy
 		IHitInterface* HitInterface = Cast<IHitInterface>(BoxHit.GetActor());
 		if (HitInterface)
@@ -97,8 +100,5 @@ void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 		ActorsToIgnore.AddUnique(BoxHit.GetActor());
 
 		CreateTransientFields(BoxHit.ImpactPoint);
-
-		UGameplayStatics::ApplyDamage(BoxHit.GetActor(), Damage, GetInstigator()->GetController(), this,
-			UDamageType::StaticClass());
 	}
 }
