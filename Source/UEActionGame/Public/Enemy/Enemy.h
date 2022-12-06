@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Interfaces/HitInterface.h"
+#include "Characters/CharacterTypes.h"
 #include "Enemy.generated.h"
 
 class UAnimMontage;
@@ -38,7 +39,10 @@ protected:
 	/// </summary>
 	void PlayHitReactMontage(const FName SectionName);
 
-	void Die() const;
+	void Die();
+
+	UPROPERTY(BlueprintReadOnly)
+	EDeathPose DeathPose = EDeathPose::EDP_Alive;
 
 private:
 	/// <summary>
@@ -58,5 +62,4 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	class UAttributeComponent* Attributes;
-
 };
