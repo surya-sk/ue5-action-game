@@ -3,6 +3,7 @@
 
 #include "Breakable/BreakableActor.h"
 #include "GeometryCollection/GeometryCollectionComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ABreakableActor::ABreakableActor()
@@ -32,5 +33,7 @@ void ABreakableActor::Tick(float DeltaTime)
 
 void ABreakableActor::GetHit(const FVector& ImpactPoint)
 {
+	if(BreakSound)
+		UGameplayStatics::PlaySoundAtLocation(this, BreakSound, ImpactPoint);
 }
 
