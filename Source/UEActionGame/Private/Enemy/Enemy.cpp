@@ -76,6 +76,8 @@ void AEnemy::Die()
 		}
 		AnimInstance->Montage_JumpToSection(SectionName, HitReactMontage);
 	}
+
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 // Called every frame
