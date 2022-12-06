@@ -110,3 +110,10 @@ void AEnemy::DirectionalHitReact(const FVector& ImpactPoint)
 	//	FColor::Green, 5.f);
 }
 
+float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, 
+	AActor* DamageCauser)
+{
+
+	return 0.0f;
+}
+
