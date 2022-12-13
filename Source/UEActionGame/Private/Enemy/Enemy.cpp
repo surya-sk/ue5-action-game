@@ -4,6 +4,7 @@
 #include "Enemy/Enemy.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "UEActionGame/DebugMacros.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/GameplayStatics.h"
@@ -23,6 +24,11 @@ AEnemy::AEnemy()
 	EnemyMesh->SetGenerateOverlapEvents(true);
 
 	Attributes = CreateDefaultSubobject<UAttributeComponent>(TEXT("Attributes"));
+
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationRoll = false;
+	bUseControllerRotationYaw = false;
 }
 
 // Called when the game starts or when spawned
