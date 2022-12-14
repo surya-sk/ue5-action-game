@@ -10,6 +10,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/AttributeComponent.h"
 
+
 // Sets default values
 AEnemy::AEnemy()
 {
@@ -35,6 +36,7 @@ AEnemy::AEnemy()
 void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+	
 	
 }
 

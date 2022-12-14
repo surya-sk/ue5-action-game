@@ -62,4 +62,16 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	class UAttributeComponent* Attributes;
+
+	UPROPERTY()
+	AActor* CombatTarget;
+
+	UPROPERTY(EditAnywhere, Category = AI)
+	double CombatRadius = 500.f;
+
+	UPROPERTY(EditInstanceOnly, Category = AI)
+	AActor* CurrentPatrolTarget;
+
+	UPROPERTY(EditInstanceOnly, Category = AI)
+	TArray<AActor*> PatrolTargets;
 };
