@@ -5,12 +5,13 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "UEActionGame/DebugMacros.h"
+#include "Perception/PawnSensingComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/AttributeComponent.h"
 #include "AIController.h"
 
+#include "UEActionGame/DebugMacros.h"
 
 // Sets default values
 AEnemy::AEnemy()
@@ -27,6 +28,8 @@ AEnemy::AEnemy()
 
 	Attributes = CreateDefaultSubobject<UAttributeComponent>(TEXT("Attributes"));
 
+	PawnSensing = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensing"));
+
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
@@ -40,6 +43,11 @@ void AEnemy::BeginPlay()
 	
 	EnemyController = Cast<AAIController>(GetController());
 	MoveToTarget(CurrentPatrolTarget);
+
+	if (PawnSensing)
+	{
+		PawnSensing->OnSeePawn.AddDynamic(this, &AEnemy::PawnSeen);
+	}
 }
 
 void AEnemy::PlayHitReactMontage(const FName SectionName)
@@ -123,6 +131,11 @@ AActor* AEnemy::ChoosePatrolTarget()
 
 	const auto RandomTargetIndex = FMath::RandRange(0, ValidTargets.Num() - 1);
 	return ValidTargets[RandomTargetIndex];
+}
+
+void AEnemy::PawnSeen(APawn* SeenPawn)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Seen"));
 }
 
 void AEnemy::PatrolTimerFinished()

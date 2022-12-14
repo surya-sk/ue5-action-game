@@ -9,6 +9,8 @@
 #include "Enemy.generated.h"
 
 class UAnimMontage;
+class UAttributeComponent;
+class UPawnSensingComponent;
 
 UCLASS()
 class UEACTIONGAME_API AEnemy : public ACharacter, public IHitInterface
@@ -21,6 +23,10 @@ public:
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	void CheckPatrolTarget();
+
+	void CheckCombatTarget();
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -47,6 +53,9 @@ protected:
 
 	AActor* ChoosePatrolTarget();
 
+	UFUNCTION()
+	void PawnSeen(APawn* SeenPawn);
+
 	UPROPERTY(BlueprintReadOnly)
 	EDeathPose DeathPose = EDeathPose::EDP_Alive;
 
@@ -67,7 +76,10 @@ private:
 	UParticleSystem* HitParticles;
 
 	UPROPERTY(VisibleAnywhere)
-	class UAttributeComponent* Attributes;
+	UAttributeComponent* Attributes;
+
+	UPROPERTY(VisibleAnywhere)
+	UPawnSensingComponent* PawnSensing;
 
 	UPROPERTY()
 	AActor* CombatTarget;
