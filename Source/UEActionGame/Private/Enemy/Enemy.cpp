@@ -103,11 +103,38 @@ void AEnemy::Die()
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
+bool AEnemy::IsInTargetRange(AActor* Target, double AcceptanceRadius)
+{
+	const double DistanceToTarget = (Target->GetActorLocation() - this->GetActorLocation()).Size();
+	return DistanceToTarget <= AcceptanceRadius;
+}
+
 // Called every frame
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (CombatTarget)
+	{
+		if (!IsInTargetRange(CombatTarget, CombatRadius))
+		{
+			CombatTarget = nullptr;
+		}
+	}
+
+	if (CurrentPatrolTarget && EnemyController)
+	{
+		if (IsInTargetRange(CurrentPatrolTarget, PatrolRadius))
+		{
+			const auto RandomTargetIndex = FMath::RandRange(0, PatrolTargets.Num() - 1);
+			CurrentPatrolTarget = PatrolTargets[RandomTargetIndex];
+
+			FAIMoveRequest MoveRequest;
+			MoveRequest.SetGoalActor(CurrentPatrolTarget);
+			MoveRequest.SetAcceptanceRadius(15.f);
+			EnemyController->MoveTo(MoveRequest);
+		}
+	}
 }
 
 // Called to bind functionality to input

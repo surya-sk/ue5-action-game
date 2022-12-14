@@ -41,6 +41,8 @@ protected:
 
 	void Die();
 
+	bool IsInTargetRange(AActor* Target, double AcceptanceRadius);
+
 	UPROPERTY(BlueprintReadOnly)
 	EDeathPose DeathPose = EDeathPose::EDP_Alive;
 
@@ -74,6 +76,9 @@ private:
 
 	UPROPERTY(EditInstanceOnly, Category = AI)
 	TArray<AActor*> PatrolTargets;
+
+	UPROPERTY(EditAnywhere)
+	double PatrolRadius = 200.f;
 
 	UPROPERTY()
 	class AAIController* EnemyController;
