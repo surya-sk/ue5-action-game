@@ -74,4 +74,7 @@ private:
 
 	UPROPERTY(EditInstanceOnly, Category = AI)
 	TArray<AActor*> PatrolTargets;
+
+	UPROPERTY()
+	class AAIController* EnemyController;
 };
