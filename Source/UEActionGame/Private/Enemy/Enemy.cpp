@@ -145,7 +145,8 @@ void AEnemy::CheckPatrolTarget()
 	if (IsInTargetRange(CurrentPatrolTarget, PatrolRadius))
 	{
 		CurrentPatrolTarget = ChoosePatrolTarget();
-		GetWorldTimerManager().SetTimer(PatrolTimer, this, &AEnemy::PatrolTimerFinished, 5.f);
+		const float WaitTime = FMath::RandRange(5.f, 10.f);
+		GetWorldTimerManager().SetTimer(PatrolTimer, this, &AEnemy::PatrolTimerFinished, WaitTime);
 	}
 }
 
