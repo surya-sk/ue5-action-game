@@ -40,8 +40,6 @@ void AEnemy::BeginPlay()
 	
 	EnemyController = Cast<AAIController>(GetController());
 	MoveToTarget(CurrentPatrolTarget);
-
-	//GetWorldTimerManager().SetTimer(PatrolTimer, this, &AEnemy::PatrolTimerFinished, 5.f);
 }
 
 void AEnemy::PlayHitReactMontage(const FName SectionName)
@@ -137,19 +135,25 @@ void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (CombatTarget)
-	{
-		if (!IsInTargetRange(CombatTarget, CombatRadius))
-		{
-			CombatTarget = nullptr;
-		}
-	}
+	CheckCombatTarget();
 
+	CheckPatrolTarget();
+}
 
+void AEnemy::CheckPatrolTarget()
+{
 	if (IsInTargetRange(CurrentPatrolTarget, PatrolRadius))
 	{
 		CurrentPatrolTarget = ChoosePatrolTarget();
-		MoveToTarget(CurrentPatrolTarget);
+		GetWorldTimerManager().SetTimer(PatrolTimer, this, &AEnemy::PatrolTimerFinished, 5.f);
+	}
+}
+
+void AEnemy::CheckCombatTarget()
+{
+	if (!IsInTargetRange(CombatTarget, CombatRadius))
+	{
+		CombatTarget = nullptr;
 	}
 }
 
