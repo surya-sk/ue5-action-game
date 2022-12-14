@@ -106,6 +106,8 @@ void AEnemy::Die()
 bool AEnemy::IsInTargetRange(AActor* Target, double AcceptanceRadius)
 {
 	const double DistanceToTarget = (Target->GetActorLocation() - this->GetActorLocation()).Size();
+	DRAW_SPHERE_SingleFrame(this->GetActorLocation());
+	DRAW_SPHERE_SingleFrame(Target->GetActorLocation());
 	return DistanceToTarget <= AcceptanceRadius;
 }
 
@@ -126,8 +128,17 @@ void AEnemy::Tick(float DeltaTime)
 	{
 		if (IsInTargetRange(CurrentPatrolTarget, PatrolRadius))
 		{
-			const auto RandomTargetIndex = FMath::RandRange(0, PatrolTargets.Num() - 1);
-			CurrentPatrolTarget = PatrolTargets[RandomTargetIndex];
+			TArray<AActor*> ValidTargets;
+			for (auto Target : PatrolTargets)
+			{
+				if (Target != CurrentPatrolTarget)
+				{
+					ValidTargets.AddUnique(Target);
+				}
+			}
+
+			const auto RandomTargetIndex = FMath::RandRange(0, ValidTargets.Num() - 1);
+			CurrentPatrolTarget = ValidTargets[RandomTargetIndex];
 
 			FAIMoveRequest MoveRequest;
 			MoveRequest.SetGoalActor(CurrentPatrolTarget);
