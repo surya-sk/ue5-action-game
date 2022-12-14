@@ -43,6 +43,10 @@ protected:
 
 	bool IsInTargetRange(AActor* Target, double AcceptanceRadius);
 
+	void MoveToTarget(AActor* Target);
+
+	AActor* ChoosePatrolTarget();
+
 	UPROPERTY(BlueprintReadOnly)
 	EDeathPose DeathPose = EDeathPose::EDP_Alive;
 
@@ -80,6 +84,11 @@ private:
 	UPROPERTY(EditAnywhere)
 	double PatrolRadius = 200.f;
 
+	FTimerHandle PatrolTimer;
+
 	UPROPERTY()
 	class AAIController* EnemyController;
+
+
+	void PatrolTimerFinished();
 };

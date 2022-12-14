@@ -39,20 +39,9 @@ void AEnemy::BeginPlay()
 	Super::BeginPlay();
 	
 	EnemyController = Cast<AAIController>(GetController());
-	if (EnemyController && CurrentPatrolTarget)
-	{
-		FAIMoveRequest MoveRequest;
-		MoveRequest.SetGoalActor(CurrentPatrolTarget);
-		MoveRequest.SetAcceptanceRadius(15.f);
-		FNavPathSharedPtr NavPath;
-		EnemyController->MoveTo(MoveRequest, &NavPath);
-		TArray<FNavPathPoint>& PathPoints =  NavPath->GetPathPoints();
-		for (auto& Point : PathPoints)
-		{
-			const FVector& Location = Point.Location;
-			DrawDebugSphere(GetWorld(), Location, 12.f, 12, FColor::Green, false, 10.f);
-		}
-	}
+	MoveToTarget(CurrentPatrolTarget);
+
+	//GetWorldTimerManager().SetTimer(PatrolTimer, this, &AEnemy::PatrolTimerFinished, 5.f);
 }
 
 void AEnemy::PlayHitReactMontage(const FName SectionName)
@@ -105,10 +94,42 @@ void AEnemy::Die()
 
 bool AEnemy::IsInTargetRange(AActor* Target, double AcceptanceRadius)
 {
+	if (Target == nullptr) return false;
 	const double DistanceToTarget = (Target->GetActorLocation() - this->GetActorLocation()).Size();
 	DRAW_SPHERE_SingleFrame(this->GetActorLocation());
 	DRAW_SPHERE_SingleFrame(Target->GetActorLocation());
 	return DistanceToTarget <= AcceptanceRadius;
+}
+
+void AEnemy::MoveToTarget(AActor* Target)
+{
+	if (EnemyController == nullptr || Target == nullptr) return;
+
+	FAIMoveRequest MoveRequest;
+	MoveRequest.SetGoalActor(Target);
+	MoveRequest.SetAcceptanceRadius(15.f);
+
+	EnemyController->MoveTo(MoveRequest);
+}
+
+AActor* AEnemy::ChoosePatrolTarget()
+{
+	TArray<AActor*> ValidTargets;
+	for (auto Target : PatrolTargets)
+	{
+		if (Target != CurrentPatrolTarget)
+		{
+			ValidTargets.AddUnique(Target);
+		}
+	}
+
+	const auto RandomTargetIndex = FMath::RandRange(0, ValidTargets.Num() - 1);
+	return ValidTargets[RandomTargetIndex];
+}
+
+void AEnemy::PatrolTimerFinished()
+{
+	MoveToTarget(CurrentPatrolTarget);
 }
 
 // Called every frame
@@ -124,27 +145,11 @@ void AEnemy::Tick(float DeltaTime)
 		}
 	}
 
-	if (CurrentPatrolTarget && EnemyController)
+
+	if (IsInTargetRange(CurrentPatrolTarget, PatrolRadius))
 	{
-		if (IsInTargetRange(CurrentPatrolTarget, PatrolRadius))
-		{
-			TArray<AActor*> ValidTargets;
-			for (auto Target : PatrolTargets)
-			{
-				if (Target != CurrentPatrolTarget)
-				{
-					ValidTargets.AddUnique(Target);
-				}
-			}
-
-			const auto RandomTargetIndex = FMath::RandRange(0, ValidTargets.Num() - 1);
-			CurrentPatrolTarget = ValidTargets[RandomTargetIndex];
-
-			FAIMoveRequest MoveRequest;
-			MoveRequest.SetGoalActor(CurrentPatrolTarget);
-			MoveRequest.SetAcceptanceRadius(15.f);
-			EnemyController->MoveTo(MoveRequest);
-		}
+		CurrentPatrolTarget = ChoosePatrolTarget();
+		MoveToTarget(CurrentPatrolTarget);
 	}
 }
 
