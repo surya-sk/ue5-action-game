@@ -7,6 +7,7 @@
 #include "UEActionGame/DebugMacros.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/AttributeComponent.h"
 
 // Sets default values
 AEnemy::AEnemy()
@@ -19,8 +20,9 @@ AEnemy::AEnemy()
 	// Prevent camera from zooming in when collided with enemy
 	EnemyMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
-
 	EnemyMesh->SetGenerateOverlapEvents(true);
+
+	Attributes = CreateDefaultSubobject<UAttributeComponent>(TEXT("Attributes"));
 }
 
 // Called when the game starts or when spawned
@@ -30,7 +32,7 @@ void AEnemy::BeginPlay()
 	
 }
 
-void AEnemy::PLayHitReactMontage(const FName SectionName)
+void AEnemy::PlayHitReactMontage(const FName SectionName)
 {
 	UAnimInstance* AnimInstance = this->GetMesh()->GetAnimInstance();
 	if (AnimInstance && HitReactMontage)
@@ -38,6 +40,44 @@ void AEnemy::PLayHitReactMontage(const FName SectionName)
 		AnimInstance->Montage_Play(HitReactMontage);
 		AnimInstance->Montage_JumpToSection(SectionName, HitReactMontage);
 	}
+}
+
+void AEnemy::Die()
+{
+	UAnimInstance* AnimInstance = this->GetMesh()->GetAnimInstance();
+	if (AnimInstance && DeathMontage)
+	{
+		AnimInstance->Montage_Play(DeathMontage);
+		
+		const int32 RandomSelection = FMath::RandRange(0, 4);
+		FName SectionName = FName();
+		switch (RandomSelection)
+		{
+		case 0:
+			SectionName = FName("Death1");
+			DeathPose = EDeathPose::EDP_Death1;
+			break;
+		case 1:
+			SectionName = FName("Death2");
+			DeathPose = EDeathPose::EDP_Death2;
+			break;
+		case 2:
+			SectionName = FName("Death3");
+			DeathPose = EDeathPose::EDP_Death3;
+			break;
+		case 3:
+			SectionName = FName("Death4");
+			DeathPose = EDeathPose::EDP_Death4;
+			break;
+		case 4:
+			SectionName = FName("Death5");
+			DeathPose = EDeathPose::EDP_Death5;
+			break;
+		}
+		AnimInstance->Montage_JumpToSection(SectionName, HitReactMontage);
+	}
+
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 // Called every frame
@@ -56,7 +96,14 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AEnemy::GetHit(const FVector& ImpactPoint)
 {
-	DirectionalHitReact(ImpactPoint);
+	if (Attributes && Attributes->IsDead())
+	{
+		Die();
+	}
+	else
+	{
+		DirectionalHitReact(ImpactPoint);
+	}
 
 	if (HitSound)
 	{
@@ -96,7 +143,7 @@ void AEnemy::DirectionalHitReact(const FVector& ImpactPoint)
 	else if (Theta >= 45 && Theta < 135)
 		SectionName = FName("ReactRight");
 
-	this->PLayHitReactMontage(SectionName);
+	this->PlayHitReactMontage(SectionName);
 
 	//if (GEngine)
 	//{
@@ -106,5 +153,15 @@ void AEnemy::DirectionalHitReact(const FVector& ImpactPoint)
 	//	FColor::Red, 5.f);
 	//UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + ToHit * 60, 5.f,
 	//	FColor::Green, 5.f);
+}
+
+float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, 
+	AActor* DamageCauser)
+{
+	if (Attributes)
+	{
+		Attributes->ReceieveDamage(DamageAmount);
+	}
+	return DamageAmount;
 }
 
