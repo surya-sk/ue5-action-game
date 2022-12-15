@@ -37,14 +37,6 @@ AMainCharacter::AMainCharacter()
 	HairMesh->SetupAttachment(GetMesh(), TEXT("headSocket"));
 }
 
-void AMainCharacter::SetWeaponCollision(ECollisionEnabled::Type CollisionEnabled)
-{
-	if (EquippedWeapon && EquippedWeapon->GetWeaponBox())
-	{
-		EquippedWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionEnabled);
-		EquippedWeapon->ActorsToIgnore.Empty();
-	}
-}
 
 // Called when the game starts or when spawned
 void AMainCharacter::BeginPlay()

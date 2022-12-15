@@ -2,6 +2,8 @@
 
 
 #include "Characters/BaseCharacter.h"
+#include "Components/BoxComponent.h"
+#include "Items/Weapons/Weapon.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()
@@ -25,10 +27,13 @@ void ABaseCharacter::Tick(float DeltaTime)
 
 }
 
-// Called to bind functionality to input
-void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void ABaseCharacter::SetWeaponCollision(ECollisionEnabled::Type CollisionEnabled)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
+	if (EquippedWeapon && EquippedWeapon->GetWeaponBox())
+	{
+		EquippedWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionEnabled);
+		EquippedWeapon->ActorsToIgnore.Empty();
+	}
 }
+
 
