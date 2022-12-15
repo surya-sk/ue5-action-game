@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
+#include "BaseCharacter.h"
 #include "CharacterTypes.h"
 #include "MainCharacter.generated.h"
 
@@ -14,7 +14,7 @@ class UAnimMontage;
 class AWeapon;
 
 UCLASS()
-class UEACTIONGAME_API AMainCharacter : public ACharacter
+class UEACTIONGAME_API AMainCharacter : public ABaseCharacter
 {
 	GENERATED_BODY()
 
