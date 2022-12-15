@@ -51,6 +51,7 @@ void AMainCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	Tags.Add(FName("PlayerCharacter"));
 }
 
 void AMainCharacter::MoveForward(float Value)
