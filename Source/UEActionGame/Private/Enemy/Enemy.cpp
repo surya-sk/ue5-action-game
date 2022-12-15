@@ -187,6 +187,20 @@ void AEnemy::PatrolTimerFinished()
 	MoveToTarget(CurrentPatrolTarget);
 }
 
+void AEnemy::StartPatrolling()
+{
+	EnemyState = EEnemyState::EES_Patrolling;
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+	MoveToTarget(CurrentPatrolTarget);
+}
+
+void AEnemy::StartChasing()
+{
+	EnemyState = EEnemyState::EES_Chasing;
+	GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
+	MoveToTarget(CombatTarget);
+}
+
 // Called every frame
 void AEnemy::Tick(float DeltaTime)
 {
@@ -217,15 +231,11 @@ void AEnemy::CheckCombatTarget()
 	if (!IsInTargetRange(CombatTarget, CombatRadius))
 	{
 		CombatTarget = nullptr;
-		EnemyState = EEnemyState::EES_Patrolling;
-		GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
-		MoveToTarget(CurrentPatrolTarget);
+		StartPatrolling();
 	}
 	else if (!IsInTargetRange(CombatTarget, AttackRadius) && EnemyState != EEnemyState::EES_Chasing)
 	{
-		EnemyState = EEnemyState::EES_Chasing;
-		GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
-		MoveToTarget(CombatTarget);
+		StartChasing();
 	}
 	else if (IsInTargetRange(CombatTarget, AttackRadius) && EnemyState != EEnemyState::EES_Attacking)
 	{

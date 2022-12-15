@@ -59,6 +59,8 @@ protected:
 
 private:
 	void PatrolTimerFinished();
+	void StartPatrolling();
+	void StartChasing();
 
 	UPROPERTY(VisibleAnywhere)
 	UPawnSensingComponent* PawnSensing;
