@@ -51,6 +51,8 @@ protected:
 	EDeathPose DeathPose = EDeathPose::EDP_Alive;
 
 private:
+	void PatrolTimerFinished();
+
 	UPROPERTY(VisibleAnywhere)
 	UPawnSensingComponent* PawnSensing;
 
@@ -85,6 +87,6 @@ private:
 
 	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 
-
-	void PatrolTimerFinished();
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AWeapon> WeaponClass;
 };
