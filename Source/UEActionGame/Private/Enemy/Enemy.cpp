@@ -139,12 +139,16 @@ void AEnemy::PawnSeen(APawn* SeenPawn)
 	if (EnemyState == EEnemyState::EES_Chasing) return;
 	if (SeenPawn->ActorHasTag(FName("PlayerCharacter")))
 	{
-		EnemyState = EEnemyState::EES_Chasing;
+		
 		GetWorldTimerManager().ClearTimer(PatrolTimer);
 		GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
 		CombatTarget = SeenPawn;
-		MoveToTarget(CombatTarget);
 	}
+		if (EnemyState != EEnemyState::EES_Attacking)
+		{
+			EnemyState = EEnemyState::EES_Chasing;
+			MoveToTarget(CombatTarget);
+		}
 }
 
 void AEnemy::PatrolTimerFinished()
