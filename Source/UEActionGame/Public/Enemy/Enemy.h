@@ -101,6 +101,8 @@ private:
 	UPROPERTY()
 	class AAIController* EnemyController;
 
+	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
+
 
 	void PatrolTimerFinished();
 };
