@@ -30,6 +30,7 @@ AEnemy::AEnemy()
 
 	PawnSensing = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensing"));
 
+	GetCharacterMovement()->MaxWalkSpeed = 125.f;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
@@ -181,6 +182,9 @@ void AEnemy::CheckCombatTarget()
 	if (!IsInTargetRange(CombatTarget, CombatRadius))
 	{
 		CombatTarget = nullptr;
+		EnemyState = EEnemyState::EES_Patrolling;
+		GetCharacterMovement()->MaxWalkSpeed = 125.f;
+		MoveToTarget(CurrentPatrolTarget);
 	}
 }
 
