@@ -25,12 +25,10 @@ public:
 
 	void CheckCombatTarget();
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 	virtual void GetHit(const FVector& ImpactPoint) override;
 
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+	virtual void HandleDamage(float DamageAmount) override;
 
 protected:
 	// Called when the game starts or when spawned
@@ -47,6 +45,7 @@ protected:
 	virtual void Attack() override;
 
 	virtual void PlayAttackMontage() override;
+	virtual bool CanAttack() override;
 
 	UFUNCTION()
 	void PawnSeen(APawn* SeenPawn);
@@ -55,12 +54,14 @@ protected:
 	EDeathPose DeathPose;
 
 	UPROPERTY(BlueprintReadOnly)
-		EEnemyState EnemyState = EEnemyState::EES_Patrolling;
+	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 
 private:
 	void PatrolTimerFinished();
 	void StartPatrolling();
-	void StartChasing();
+	void ChaseTarget();
+
+	void StartAttackTimer();
 
 	UPROPERTY(VisibleAnywhere)
 	UPawnSensingComponent* PawnSensing;
@@ -96,4 +97,11 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AWeapon> WeaponClass;
+
+	FTimerHandle AttackTimer;
+
+	UPROPERTY(EditAnywhere, Category = Combat)
+	float AttacDelaykMin = 0.5f;
+	UPROPERTY(EditAnywhere, Category = Combat)
+	float AttackDelayMax = 1.f;
 };
