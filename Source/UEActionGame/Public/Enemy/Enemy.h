@@ -87,14 +87,23 @@ private:
 	UPROPERTY(EditAnywhere, Category = AI)
 	double CombatRadius = 500.f;
 
+	UPROPERTY(EditAnywhere, Category = AI)
+	double AttackRadius = 150.f;
+
 	UPROPERTY(EditInstanceOnly, Category = AI)
 	AActor* CurrentPatrolTarget;
 
 	UPROPERTY(EditInstanceOnly, Category = AI)
 	TArray<AActor*> PatrolTargets;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = AI)
 	double PatrolRadius = 200.f;
+
+	UPROPERTY(EditAnywhere, Category = AI)
+	double WalkSpeed = 125.f;
+
+	UPROPERTY(EditAnywhere, Category = AI)
+	double RunSpeed = 300.f;
 
 	FTimerHandle PatrolTimer;
 

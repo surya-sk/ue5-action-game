@@ -30,7 +30,7 @@ AEnemy::AEnemy()
 
 	PawnSensing = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensing"));
 
-	GetCharacterMovement()->MaxWalkSpeed = 125.f;
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
@@ -141,7 +141,7 @@ void AEnemy::PawnSeen(APawn* SeenPawn)
 	{
 		EnemyState = EEnemyState::EES_Chasing;
 		GetWorldTimerManager().ClearTimer(PatrolTimer);
-		GetCharacterMovement()->MaxWalkSpeed = 300.f;
+		GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
 		CombatTarget = SeenPawn;
 		MoveToTarget(CombatTarget);
 	}
@@ -183,8 +183,19 @@ void AEnemy::CheckCombatTarget()
 	{
 		CombatTarget = nullptr;
 		EnemyState = EEnemyState::EES_Patrolling;
-		GetCharacterMovement()->MaxWalkSpeed = 125.f;
+		GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 		MoveToTarget(CurrentPatrolTarget);
+	}
+	else if (!IsInTargetRange(CombatTarget, AttackRadius) && EnemyState != EEnemyState::EES_Chasing)
+	{
+		EnemyState = EEnemyState::EES_Chasing;
+		GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
+		MoveToTarget(CombatTarget);
+	}
+	else if (IsInTargetRange(CombatTarget, AttackRadius) && EnemyState != EEnemyState::EES_Attacking)
+	{
+		EnemyState = EEnemyState::EES_Attacking;
+		// TODO: Attack player
 	}
 }
 
