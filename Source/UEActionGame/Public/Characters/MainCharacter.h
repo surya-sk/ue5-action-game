@@ -50,17 +50,18 @@ protected:
 	void Vault();
 	void Slide();
 	void InteractKeyPressed();
-	void Attack();
+	virtual void Attack() override;
 	void Equip();
 
 	/// <summary>
 	/// Play montage functions
 	/// </summary>
-	void PlayAttackMontage();
+	virtual void PlayAttackMontage() override;
 	void PlayEquipMontage(const FName Section);
 
-	UFUNCTION(BlueprintCallable)
-	void AttackEnd();
+	virtual void AttackEnd() override;
+
+	virtual void GetHit(const FVector& ImpactPoint) override;
 
 	UFUNCTION(BlueprintCallable)
 	void UnarmWeapon();
@@ -71,7 +72,7 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void FinishEquip();
 
-	bool CanAttack();
+	virtual bool CanAttack() override;
 
 private:
 
@@ -109,9 +110,6 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = Animation)
 	UAnimMontage* SlideMontage;
-
-	UPROPERTY(EditDefaultsOnly, Category = Montages)
-	UAnimMontage* AttackMontage;
 
 	UPROPERTY(EditDefaultsOnly, Category = Montages)
 	UAnimMontage* EquipMontage;

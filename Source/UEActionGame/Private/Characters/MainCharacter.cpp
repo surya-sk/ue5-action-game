@@ -240,6 +240,10 @@ void AMainCharacter::AttackEnd()
 	CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
 }
 
+void AMainCharacter::GetHit(const FVector& ImpactPoint)
+{
+}
+
 void AMainCharacter::UnarmWeapon()
 {
 	if (EquippedWeapon)
