@@ -52,7 +52,10 @@ protected:
 	void PawnSeen(APawn* SeenPawn);
 
 	UPROPERTY(BlueprintReadOnly)
-	EDeathPose DeathPose = EDeathPose::EDP_Alive;
+	EDeathPose DeathPose;
+
+	UPROPERTY(BlueprintReadOnly)
+		EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 
 private:
 	void PatrolTimerFinished();
@@ -88,8 +91,6 @@ private:
 
 	UPROPERTY()
 	class AAIController* EnemyController;
-
-	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AWeapon> WeaponClass;
