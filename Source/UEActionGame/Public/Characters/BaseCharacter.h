@@ -28,8 +28,6 @@ protected:
 
 	virtual void Attack();
 
-	virtual void PlayAttackMontage();
-
 	void PlayHitReactMontage(const FName SectionName);
 
 	void DirectionalHitReact(const FVector& ImpactPoint);
@@ -49,6 +47,9 @@ protected:
 	void SpawnHitParticles(const FVector& ImpactPoint);
 
 	virtual void HandleDamage(float DamageAmount);
+	void PlayMontageSection(UAnimMontage* Montage, const FName& SectionName);
+
+	void PlayAttackMontage();
 
 	UPROPERTY(VisibleAnywhere, Category = Weapon)
 	AWeapon* EquippedWeapon;
@@ -64,6 +65,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	UAttributeComponent* Attributes;
+
+	UPROPERTY(EditAnywhere, Category = Combat)
+	TArray<FName> AttackMontageSections;
 
 private:
 	UPROPERTY(EditAnywhere, Category = Effects)

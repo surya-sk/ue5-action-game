@@ -91,7 +91,7 @@ void AEnemy::Die()
 		}
 		AnimInstance->Montage_JumpToSection(SectionName, HitReactMontage);
 	}
-
+	EnemyState = EEnemyState::EES_Dead;
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
@@ -134,34 +134,6 @@ void AEnemy::Attack()
 {
 	Super::Attack();
 	PlayAttackMontage();
-}
-
-void AEnemy::PlayAttackMontage()
-{
-	Super::PlayAttackMontage();
-
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	if (AnimInstance && AttackMontage)
-	{
-		AnimInstance->Montage_Play(AttackMontage);
-		const int32 RandomAnimSelection = FMath::RandRange(0, 2);
-		FName SectionName = FName();
-		switch (RandomAnimSelection)
-		{
-		case 0:
-			SectionName = FName("Attack1");
-			break;
-		case 1:
-			SectionName = FName("Attack2");
-			break;
-		case 2:
-			SectionName = FName("Attack3");
-			break;
-		default:
-			break;
-		}
-		AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
-	}
 }
 
 bool AEnemy::CanAttack()
