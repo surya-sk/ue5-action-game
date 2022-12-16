@@ -28,12 +28,9 @@ void ABaseCharacter::Attack()
 {
 }
 
-void ABaseCharacter::PlayAttackMontage()
+int32 ABaseCharacter::PlayAttackMontage()
 {
-	if (AttackMontageSections.Num() <= 0) return;
-	const int32 MaxSectionIndex = AttackMontageSections.Num() - 1;
-	const int32 RandomIndex = FMath::RandRange(0, MaxSectionIndex);
-	PlayMontageSection(AttackMontage, AttackMontageSections[RandomIndex]);
+	return PlayRandomMontageSection(AttackMontage, AttackMontageSections);
 }
 
 bool ABaseCharacter::CanAttack()
@@ -90,6 +87,15 @@ void ABaseCharacter::PlayMontageSection(UAnimMontage* Montage, const FName& Sect
 		AnimInstance->Montage_Play(Montage);
 		AnimInstance->Montage_JumpToSection(SectionName, Montage);
 	}
+}
+
+int32 ABaseCharacter::PlayRandomMontageSection(UAnimMontage* Montage, const TArray<FName>& Sections)
+{
+	if (Sections.Num() <= 0) return;
+	const int32 MaxSectionIndex = Sections.Num() - 1;
+	const int32 RandomIndex = FMath::RandRange(0, MaxSectionIndex);
+	PlayMontageSection(Montage, Sections[RandomIndex]);
+	return RandomIndex;
 }
 
 void ABaseCharacter::PlayHitReactMontage(const FName SectionName)

@@ -48,8 +48,9 @@ protected:
 
 	virtual void HandleDamage(float DamageAmount);
 	void PlayMontageSection(UAnimMontage* Montage, const FName& SectionName);
+	int32 PlayRandomMontageSection(UAnimMontage* Montage, const TArray<FName>& Sections);
 
-	void PlayAttackMontage();
+	int32 PlayAttackMontage();
 
 	UPROPERTY(VisibleAnywhere, Category = Weapon)
 	AWeapon* EquippedWeapon;
