@@ -50,7 +50,10 @@ protected:
 	void PlayMontageSection(UAnimMontage* Montage, const FName& SectionName);
 	int32 PlayRandomMontageSection(UAnimMontage* Montage, const TArray<FName>& Sections);
 
-	int32 PlayAttackMontage();
+	void DisableCapsule();
+
+	virtual int32 PlayAttackMontage();
+	virtual int32 PlayDeathMontage();
 
 	UPROPERTY(VisibleAnywhere, Category = Weapon)
 	AWeapon* EquippedWeapon;
@@ -69,6 +72,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = Combat)
 	TArray<FName> AttackMontageSections;
+
+	UPROPERTY(EditAnywhere, Category = Combat)
+	TArray<FName> DeathMontageSections;
 
 private:
 	UPROPERTY(EditAnywhere, Category = Effects)

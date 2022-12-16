@@ -3,6 +3,7 @@
 
 #include "Characters/BaseCharacter.h"
 #include "Components/BoxComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/AttributeComponent.h"
 #include "Items/Weapons/Weapon.h"
 #include <Kismet/GameplayStatics.h>
@@ -31,6 +32,11 @@ void ABaseCharacter::Attack()
 int32 ABaseCharacter::PlayAttackMontage()
 {
 	return PlayRandomMontageSection(AttackMontage, AttackMontageSections);
+}
+
+int32 ABaseCharacter::PlayDeathMontage()
+{
+	return PlayRandomMontageSection(DeathMontage, DeathMontageSections);
 }
 
 bool ABaseCharacter::CanAttack()
@@ -91,11 +97,16 @@ void ABaseCharacter::PlayMontageSection(UAnimMontage* Montage, const FName& Sect
 
 int32 ABaseCharacter::PlayRandomMontageSection(UAnimMontage* Montage, const TArray<FName>& Sections)
 {
-	if (Sections.Num() <= 0) return;
+	if (Sections.Num() <= 0) return -1;
 	const int32 MaxSectionIndex = Sections.Num() - 1;
 	const int32 RandomIndex = FMath::RandRange(0, MaxSectionIndex);
 	PlayMontageSection(Montage, Sections[RandomIndex]);
 	return RandomIndex;
+}
+
+void ABaseCharacter::DisableCapsule()
+{
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void ABaseCharacter::PlayHitReactMontage(const FName SectionName)

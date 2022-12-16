@@ -46,11 +46,13 @@ protected:
 
 	virtual bool CanAttack() override;
 
+	virtual int32 PlayDeathMontage() override;
+
 	UFUNCTION()
 	void PawnSeen(APawn* SeenPawn);
 
 	UPROPERTY(BlueprintReadOnly)
-	EDeathPose DeathPose;
+	TEnumAsByte<EDeathPose> DeathPose;
 
 	UPROPERTY(BlueprintReadOnly)
 	EEnemyState EnemyState = EEnemyState::EES_Patrolling;

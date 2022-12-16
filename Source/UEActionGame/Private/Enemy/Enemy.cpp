@@ -59,40 +59,10 @@ void AEnemy::BeginPlay()
 
 void AEnemy::Die()
 {
-	UAnimInstance* AnimInstance = this->GetMesh()->GetAnimInstance();
-	if (AnimInstance && DeathMontage)
-	{
-		AnimInstance->Montage_Play(DeathMontage);
-		
-		const int32 RandomSelection = FMath::RandRange(0, 4);
-		FName SectionName = FName();
-		switch (RandomSelection)
-		{
-		case 0:
-			SectionName = FName("Death1");
-			DeathPose = EDeathPose::EDP_Death1;
-			break;
-		case 1:
-			SectionName = FName("Death2");
-			DeathPose = EDeathPose::EDP_Death2;
-			break;
-		case 2:
-			SectionName = FName("Death3");
-			DeathPose = EDeathPose::EDP_Death3;
-			break;
-		case 3:
-			SectionName = FName("Death4");
-			DeathPose = EDeathPose::EDP_Death4;
-			break;
-		case 4:
-			SectionName = FName("Death5");
-			DeathPose = EDeathPose::EDP_Death5;
-			break;
-		}
-		AnimInstance->Montage_JumpToSection(SectionName, HitReactMontage);
-	}
+	PlayDeathMontage();
+
 	EnemyState = EEnemyState::EES_Dead;
-	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	DisableCapsule();
 }
 
 bool AEnemy::IsInTargetRange(AActor* Target, double AcceptanceRadius)
@@ -141,6 +111,17 @@ bool AEnemy::CanAttack()
 	return IsInTargetRange(CombatTarget, AttackRadius) &&
 		EnemyState != EEnemyState::EES_Attacking &&
 		EnemyState != EEnemyState::EES_Dead;
+}
+
+int32 AEnemy::PlayDeathMontage()
+{
+	const int32 Index = Super::PlayDeathMontage();
+	TEnumAsByte<EDeathPose> Pose(Index);
+	if (Pose < EDeathPose::EDP_MAX)
+	{
+		DeathPose = Pose;
+	}
+	return Index;
 }
 
 void AEnemy::PawnSeen(APawn* SeenPawn)
