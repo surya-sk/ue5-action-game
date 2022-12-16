@@ -9,7 +9,6 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Components/CapsuleComponent.h"
-#include "Components/BoxComponent.h"
 #include "Items/Item.h"
 #include "Items/Weapons/Weapon.h"
 #include "Animation/AnimMontage.h"
@@ -218,7 +217,7 @@ void AMainCharacter::GetHit(const FVector& ImpactPoint)
 {
 }
 
-void AMainCharacter::UnarmWeapon()
+void AMainCharacter::AttachWeaponToBack()
 {
 	if (EquippedWeapon)
 	{
@@ -226,7 +225,7 @@ void AMainCharacter::UnarmWeapon()
 	}
 }
 
-void AMainCharacter::ArmWeapon()
+void AMainCharacter::AttackWeaponToHand()
 {
 	if (EquippedWeapon)
 	{

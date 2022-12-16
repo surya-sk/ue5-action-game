@@ -19,13 +19,8 @@ class UEACTIONGAME_API AMainCharacter : public ABaseCharacter
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
 	AMainCharacter();
-
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
@@ -36,44 +31,93 @@ protected:
 	virtual void BeginPlay() override;
 
 	/// <summary>
-	/// Input axis mapping callback
+	/// Input axis mapping callbacks
 	/// </summary>
-	/// <param name="Value"></param>
+	/// <param name="Value">The value given by the input</param>
 	void MoveForward(float Value);
 	void MoveRight(float Value);
 	void Turn(float Value);
 	void LookUp(float Value);
 
+	/** INPUT ACTIONS*/
+
 	/// <summary>
-	/// Input action mapping callbacks
+	/// Vaults over the wall if possible
 	/// </summary>
 	void Vault();
-	void Slide();
-	void InteractKeyPressed();
-	virtual void Attack() override;
-	void Equip();
 
 	/// <summary>
-	/// Play montage functions
+	/// Slides under the object if appropriate 
 	/// </summary>
+	void Slide();
+
+	/// <summary>
+	/// Interacts with object
+	/// </summary>
+	void InteractKeyPressed();
+
+	/// <summary>
+	/// Equip weapon
+	/// </summary>
+	void Equip();
+
+
+	/** COMBAT*/
+
+	/// <summary>
+	/// Plays the weapon equip montage
+	/// </summary>
+	/// <param name="Section">The montage section to jump to</param>
 	void PlayEquipMontage(const FName Section);
 
-	virtual void AttackEnd() override;
-
-	virtual void GetHit(const FVector& ImpactPoint) override;
-
+	/// <summary>
+	/// Unequips the weapon
+	/// </summary>
 	UFUNCTION(BlueprintCallable)
-	void UnarmWeapon();
+	void AttachWeaponToBack();
 
+	/// <summary>
+	/// Arms the weapon
+	/// </summary>
 	UFUNCTION(BlueprintCallable)
-	void ArmWeapon();
+	void AttackWeaponToHand();
 
+	/// <summary>
+	/// Callback for anim notify
+	/// </summary>
 	UFUNCTION(BlueprintCallable)
 	void FinishEquip();
 
+	/** <ABaseCharacter> */
+	virtual void Attack() override;
+	virtual void AttackEnd() override;
+	virtual void GetHit(const FVector& ImpactPoint) override;
 	virtual bool CanAttack() override;
+	/** </ABaseCharacter> */
 
 private:
+
+	/// <summary>
+	/// Resets collision presets and movement values to default
+	/// </summary>
+	void ResetCollisionAndMovement();
+
+	/// <summary>
+	/// Sets collision for vaulting
+	/// </summary>
+	void SetVaultingCollision();
+
+	/// <summary>
+	/// Vaults or climbs depending on various parameters
+	/// </summary>
+	/// <param name="bShouldClimb">Determines whether to climb</param>
+	/// <param name="bWallThick">If the wall is too thick to climb</param>
+	/// <param name="bCanClimb">If the wall is climbable</param>
+	/// <param name="ForwardVector">The forward vector of the wall</param>
+	/// <param name="CWallHeight">The wall height</param>
+	void VaultOrClimb(bool bShouldClimb, bool bWallThick, bool bCanClimb, FVector ForwardVector, FVector CWallHeight);
+
+	bool bIsClimbing = false;
 
 	ECharacterWeaponState CharacterWeaponState = ECharacterWeaponState::ECWS_Unequipped;
 
@@ -92,9 +136,8 @@ private:
 	UPROPERTY(VisibleInstanceOnly)
 	AItem* OverlappingItem;
 
-	/// <summary>
-	/// Animation montages
-	/// </summary>
+	/** MONTAGES*/
+
 	UPROPERTY(EditAnywhere, Category = Animation)
 	UAnimMontage* GettingUp;
 
@@ -112,12 +155,4 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = Montages)
 	UAnimMontage* EquipMontage;
-
-	bool bIsClimbing = false;
-
-	void ResetCollisionAndMovement();
-
-	void SetVaultingCollision();
-
-	void VaultOrClimb(bool bShouldClimb, bool bWallThick, bool bCanClimb, FVector ForwardVector, FVector CWallHeight);
 };
