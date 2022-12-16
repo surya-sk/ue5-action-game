@@ -55,12 +55,12 @@ void AWeapon::AttachMeshToSocket(USceneComponent* InParent, const FName& InSocke
 void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if(GetOwner()->ActorHasTag(TEXT("Enemy")) && OtherActor->ActorHasTag(TEXT("Enemy"))) return;
+	if (ActorIsSameType(OtherActor)) return;
 	FHitResult BoxHit;
 	BoxTrace(BoxHit);
 	if (BoxHit.GetActor())
 	{
-		if (GetOwner()->ActorHasTag(TEXT("Enemy")) && BoxHit.GetActor()->ActorHasTag(TEXT("Enemy"))) return;
+		if (ActorIsSameType(BoxHit.GetActor())) return;
 		
 		UGameplayStatics::ApplyDamage(BoxHit.GetActor(), Damage, GetInstigator()->GetController(), this,
 			UDamageType::StaticClass());
@@ -68,6 +68,11 @@ void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 		ExcecuteGetHit(BoxHit);
 		CreateTransientFields(BoxHit.ImpactPoint); // Break destructible objects
 	}
+}
+
+bool AWeapon::ActorIsSameType(AActor* OtherActor)
+{
+	return GetOwner()->ActorHasTag(TEXT("Enemy")) && OtherActor->ActorHasTag(TEXT("Enemy"));
 }
 
 void AWeapon::ExcecuteGetHit(FHitResult& BoxHit)

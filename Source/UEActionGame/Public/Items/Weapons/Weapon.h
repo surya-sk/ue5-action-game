@@ -34,6 +34,8 @@ protected:
 	void OnWeaponBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+	bool ActorIsSameType(AActor* OtherActor);
+
 	void ExcecuteGetHit(FHitResult& BoxHit);
 
 	UFUNCTION(BlueprintImplementableEvent)
