@@ -85,6 +85,7 @@ void AEnemy::BeginPlay()
 		DefaultWeapon->Equip(GetMesh(), FName("RightHandSocket"), this, this);
 		EquippedWeapon = DefaultWeapon;
 	}
+	Tags.Add(FName(TEXT("Enemy")));
 }
 
 void AEnemy::Die()

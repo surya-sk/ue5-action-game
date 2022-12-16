@@ -135,19 +135,19 @@ private:
 	/// <returns>The index of the random section</returns>
 	int32 PlayRandomMontageSection(UAnimMontage* Montage, const TArray<FName>& Sections);
 
-	UPROPERTY(EditAnywhere, Category = Effects)
+	UPROPERTY(EditAnywhere, Category = Combat)
 	USoundBase* HitSound;
 
-	UPROPERTY(EditAnywhere, Category = Effects)
+	UPROPERTY(EditAnywhere, Category = Combat)
 	UParticleSystem* HitParticles;
 
-	UPROPERTY(EditDefaultsOnly, Category = Montages)
+	UPROPERTY(EditDefaultsOnly, Category = Combat)
 	UAnimMontage* AttackMontage;
 
-	UPROPERTY(EditDefaultsOnly, Category = Animation)
+	UPROPERTY(EditDefaultsOnly, Category = Combat)
 	UAnimMontage* HitReactMontage;
 
-	UPROPERTY(EditDefaultsOnly, Category = Animation)
+	UPROPERTY(EditDefaultsOnly, Category = Combat)
 	UAnimMontage* DeathMontage;
 
 	UPROPERTY(EditAnywhere, Category = Combat)
