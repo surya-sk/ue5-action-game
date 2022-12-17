@@ -50,6 +50,7 @@ void AEnemy::GetHit(const FVector& ImpactPoint, AActor* Hitter)
 {
 	Super::GetHit(ImpactPoint, Hitter);
 	GetWorldTimerManager().ClearTimer(PatrolTimer);
+	GetWorldTimerManager().ClearTimer(AttackTimer);
 }
 
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, 
