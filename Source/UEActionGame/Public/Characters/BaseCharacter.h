@@ -112,7 +112,26 @@ protected:
 	/// <returns>The index of the random sections</returns>
 	virtual int32 PlayDeathMontage();
 
+	/// <summary>
+	/// Stops playing the attack montage
+	/// </summary>
 	virtual void StopAttackMontage();
+
+	/** MOTION WARPING */
+
+	/// <summary>
+	/// Get the warping target just in front of main character to avoid being too close during combat
+	/// </summary>
+	/// <returns>A vector representing the translation</returns>
+	UFUNCTION(BlueprintCallable)
+	FVector GetTranslationWarpTarget();
+
+	/// <summary>
+	/// The actual location of main character in order to face her
+	/// </summary>
+	/// <returns>The warp target</returns>
+	UFUNCTION(BlueprintCallable)
+	FVector GetRotationWarpTarget();
 
 
 	UPROPERTY(VisibleAnywhere, Category = Weapon)
@@ -120,6 +139,12 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	UAttributeComponent* Attributes;
+
+	UPROPERTY(BlueprintReadOnly)
+	AActor* CombatTarget;
+
+	UPROPERTY(EditAnywhere, Category = Combat)
+	double WarpTargetOffset = 75.f;
 
 private:
 	/// <summary>

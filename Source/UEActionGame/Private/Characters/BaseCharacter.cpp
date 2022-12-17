@@ -50,6 +50,28 @@ void ABaseCharacter::StopAttackMontage()
 	}
 }
 
+FVector ABaseCharacter::GetTranslationWarpTarget()
+{
+	if (CombatTarget == nullptr) return FVector();
+
+	const FVector CombatTargetLocation = CombatTarget->GetActorLocation();
+	const FVector Location = GetActorLocation();
+
+	FVector TargetToAttacker = (Location - CombatTargetLocation).GetSafeNormal();
+	TargetToAttacker *= WarpTargetOffset;
+
+	return CombatTargetLocation + TargetToAttacker;
+}
+
+FVector ABaseCharacter::GetRotationWarpTarget()
+{
+	if (CombatTarget)
+	{
+		return CombatTarget->GetActorLocation();
+	}
+	return FVector();
+}
+
 bool ABaseCharacter::CanAttack()
 {
 	return false;
