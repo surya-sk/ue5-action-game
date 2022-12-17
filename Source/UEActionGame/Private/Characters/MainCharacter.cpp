@@ -222,8 +222,7 @@ void AMainCharacter::AttackEnd()
 
 void AMainCharacter::GetHit(const FVector& ImpactPoint)
 {
-	PlayHitSound(ImpactPoint);
-	SpawnHitParticles(ImpactPoint);
+	Super::GetHit(ImpactPoint);
 }
 
 void AMainCharacter::AttachWeaponToBack()

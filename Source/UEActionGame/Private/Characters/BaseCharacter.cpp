@@ -61,6 +61,13 @@ void ABaseCharacter::AttackEnd()
 
 void ABaseCharacter::GetHit(const FVector& ImpactPoint)
 {
+	if (IsAlive())
+		DirectionalHitReact(ImpactPoint);
+	else
+		Die();
+
+	PlayHitSound(ImpactPoint);
+	SpawnHitParticles(ImpactPoint);
 }
 
 void ABaseCharacter::PlayHitSound(const FVector& ImpactPoint)

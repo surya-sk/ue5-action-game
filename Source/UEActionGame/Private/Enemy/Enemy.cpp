@@ -48,13 +48,7 @@ void AEnemy::Tick(float DeltaTime)
 // Called when the game starts or when spawned
 void AEnemy::GetHit(const FVector& ImpactPoint)
 {
-	if (IsAlive())
-		DirectionalHitReact(ImpactPoint);
-	else
-		Die();
-
-	PlayHitSound(ImpactPoint);
-	SpawnHitParticles(ImpactPoint);
+	Super::GetHit(ImpactPoint);
 }
 
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, 
@@ -94,6 +88,7 @@ void AEnemy::Die()
 	GetWorldTimerManager().ClearTimer(AttackTimer);
 	EnemyState = EEnemyState::EES_Dead;
 	DisableCapsule();
+	GetCharacterMovement()->bOrientRotationToMovement = false;
 }
 
 void AEnemy::Attack()
