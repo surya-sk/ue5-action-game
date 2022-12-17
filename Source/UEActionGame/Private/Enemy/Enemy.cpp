@@ -89,6 +89,7 @@ void AEnemy::Die()
 	EnemyState = EEnemyState::EES_Dead;
 	DisableCapsule();
 	GetCharacterMovement()->bOrientRotationToMovement = false;
+	SetWeaponCollision(ECollisionEnabled::NoCollision);
 }
 
 void AEnemy::Attack()
