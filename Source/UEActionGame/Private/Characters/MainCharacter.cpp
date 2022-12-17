@@ -9,7 +9,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Components/CapsuleComponent.h"
-#include "Components/BoxComponent.h"
+#include "Components/StaticMeshComponent.h"
 #include "Items/Item.h"
 #include "Items/Weapons/Weapon.h"
 #include "Animation/AnimMontage.h"
@@ -26,6 +26,12 @@ AMainCharacter::AMainCharacter()
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 
+	GetMesh()->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+	GetMesh()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Block);
+	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Overlap);
+	GetMesh()->SetGenerateOverlapEvents(true);
+
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(GetRootComponent());
 	CameraBoom->TargetArmLength = 300.f;
@@ -37,20 +43,13 @@ AMainCharacter::AMainCharacter()
 	HairMesh->SetupAttachment(GetMesh(), TEXT("headSocket"));
 }
 
-void AMainCharacter::SetWeaponCollision(ECollisionEnabled::Type CollisionEnabled)
-{
-	if (EquippedWeapon && EquippedWeapon->GetWeaponBox())
-	{
-		EquippedWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionEnabled);
-		EquippedWeapon->ActorsToIgnore.Empty();
-	}
-}
 
 // Called when the game starts or when spawned
 void AMainCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	Tags.Add(FName("PlayerCharacter"));
 }
 
 void AMainCharacter::MoveForward(float Value)
@@ -176,6 +175,11 @@ void AMainCharacter::InteractKeyPressed()
 	}
 }
 
+void AMainCharacter::HitReactEnd()
+{
+	CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
+}
+
 void AMainCharacter::Attack()
 {
 	if (CanAttack())
@@ -205,32 +209,6 @@ void AMainCharacter::Equip()
 	}
 }
 
-void AMainCharacter::PlayAttackMontage()
-{
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	if (AnimInstance && AttackMontage)
-	{
-		AnimInstance->Montage_Play(AttackMontage);
-		const int32 RandomAnimSelection = FMath::RandRange(0, 2);
-		FName SectionName = FName();
-		switch (RandomAnimSelection)
-		{
-		case 0:
-			SectionName = FName("Attack1");
-			break;
-		case 1:
-			SectionName = FName("Attack2");
-			break;
-		case 2:
-			SectionName = FName("Attack3");
-			break;
-		default:
-			break;
-		}
-		AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
-	}
-}
-
 void AMainCharacter::PlayEquipMontage(const FName Section)
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
@@ -247,7 +225,15 @@ void AMainCharacter::AttackEnd()
 	CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
 }
 
-void AMainCharacter::UnarmWeapon()
+void AMainCharacter::GetHit(const FVector& ImpactPoint, AActor* Hitter)
+{
+	Super::GetHit(ImpactPoint, Hitter);
+
+	SetWeaponCollision(ECollisionEnabled::NoCollision);
+	CharacterActionState = ECharacterActionState::ECAS_HitReaction;
+}
+
+void AMainCharacter::AttachWeaponToBack()
 {
 	if (EquippedWeapon)
 	{
@@ -255,7 +241,7 @@ void AMainCharacter::UnarmWeapon()
 	}
 }
 
-void AMainCharacter::ArmWeapon()
+void AMainCharacter::AttackWeaponToHand()
 {
 	if (EquippedWeapon)
 	{
@@ -270,7 +256,8 @@ void AMainCharacter::FinishEquip()
 
 bool AMainCharacter::CanAttack()
 {
-	return CharacterActionState == ECharacterActionState::ECAS_Unoccupied && CharacterWeaponState != ECharacterWeaponState::ECWS_Unequipped;
+	return CharacterActionState == ECharacterActionState::ECAS_Unoccupied &&
+		CharacterWeaponState != ECharacterWeaponState::ECWS_Unequipped;
 }
 
 // Called every frame

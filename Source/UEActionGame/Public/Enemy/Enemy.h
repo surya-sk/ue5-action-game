@@ -3,63 +3,143 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
-#include "Interfaces/HitInterface.h"
+#include "Characters/BaseCharacter.h"
 #include "Characters/CharacterTypes.h"
 #include "Enemy.generated.h"
 
-class UAnimMontage;
+class UPawnSensingComponent;
 
 UCLASS()
-class UEACTIONGAME_API AEnemy : public ACharacter, public IHitInterface
+class UEACTIONGAME_API AEnemy : public ABaseCharacter
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
 	AEnemy();
 
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	virtual void GetHit(const FVector& ImpactPoint) override;
-	void DirectionalHitReact(const FVector& ImpactPoint);
-
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
+	virtual void GetHit(const FVector& ImpactPoint, AActor* Hitter) override;
+
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	/// <summary>
-	/// Play montage functions
-	/// </summary>
-	void PlayHitReactMontage(const FName SectionName);
-
-	void Die();
+	/** <ABaseCharacter> */
+	virtual void Die() override;
+	virtual void Attack() override;
+	virtual bool CanAttack() override;
+	virtual void HandleDamage(float DamageAmount) override;
+	virtual int32 PlayDeathMontage() override;
+	virtual void AttackEnd() override;
+	/** </ABaseCharacter> */
 
 	UPROPERTY(BlueprintReadOnly)
-	EDeathPose DeathPose = EDeathPose::EDP_Alive;
+	TEnumAsByte<EDeathPose> DeathPose;
+
+	UPROPERTY(BlueprintReadOnly)
+	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 
 private:
+	/** AI BEHAVIOUR */
+
 	/// <summary>
-	/// Animation montages
+	/// Checks if the current patrol target has been reached, and if true chooses a new one
 	/// </summary>
-	UPROPERTY(EditDefaultsOnly, Category = Animation)
-	UAnimMontage* HitReactMontage;
+	void CheckPatrolTarget();
 
-	UPROPERTY(EditDefaultsOnly, Category = Animation)
-	UAnimMontage* DeathMontage;
+	/// <summary>
+	/// Checks if the combat target in range, and attacks if true
+	/// </summary>
+	void CheckCombatTarget();
 
+	/// <summary>
+	/// Wait time for patrol end has finished, move on to the next one
+	/// </summary>
+	void PatrolTimerFinished();
 
-	UPROPERTY(EditAnywhere, Category = Effects)
-	USoundBase* HitSound;
-	UPROPERTY(EditAnywhere, Category = Effects)
-	UParticleSystem* HitParticles;
+	/// <summary>
+	/// Starts patrolling to the current patrol target
+	/// </summary>
+	void StartPatrolling();
+
+	/// <summary>
+	/// Chases the combat target
+	/// </summary>
+	void ChaseTarget();
+
+	/// <summary>
+	/// Checks if the target is within the acceptance radius
+	/// </summary>
+	/// <param name="Target">The target to check, usually the player</param>
+	/// <param name="AcceptanceRadius">The radius to check with</param>
+	/// <returns>Whether the target is in range</returns>
+	bool IsInTargetRange(AActor* Target, double AcceptanceRadius);
+
+	/// <summary>
+	/// Moves the enemy to the Target
+	/// </summary>
+	/// <param name="Target">The actor to move towards</param>
+	void MoveToTarget(AActor* Target);
+
+	/// <summary>
+	/// Chooses a patrol target at random
+	/// </summary>
+	/// <returns>The patrol target</returns>
+	AActor* ChoosePatrolTarget();
+
+	/// <summary>
+	/// Callback for OnPawnSeen for PawnSensing
+	/// </summary>
+	/// <param name="SeenPawn">The pawn that has been seen</param>
+	UFUNCTION()
+	void PawnSeen(APawn* SeenPawn);
 
 	UPROPERTY(VisibleAnywhere)
-	class UAttributeComponent* Attributes;
+	UPawnSensingComponent* PawnSensing;
+
+	UPROPERTY(EditAnywhere, Category = AI)
+	double CombatRadius = 500.f;
+
+	UPROPERTY(EditAnywhere, Category = AI)
+	double AttackRadius = 150.f;
+
+	UPROPERTY(EditInstanceOnly, Category = AI)
+	AActor* CurrentPatrolTarget;
+
+	UPROPERTY(EditInstanceOnly, Category = AI)
+	TArray<AActor*> PatrolTargets;
+
+	UPROPERTY(EditAnywhere, Category = AI)
+	double PatrolRadius = 200.f;
+
+	UPROPERTY(EditAnywhere, Category = AI)
+	double WalkSpeed = 125.f;
+
+	UPROPERTY(EditAnywhere, Category = AI)
+	double RunSpeed = 300.f;
+
+	FTimerHandle PatrolTimer;
+
+	UPROPERTY()
+	class AAIController* EnemyController;
+
+
+	/** COMBAT */
+
+	/// <summary>
+	/// Sets the attack timer so the enemy waits a few seconds before attacking again
+	/// </summary>
+	void StartAttackTimer();
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AWeapon> WeaponClass;
+
+	FTimerHandle AttackTimer;
+
+	UPROPERTY(EditAnywhere, Category = Combat)
+	float AttacDelayMin = 0.5f;
+
+	UPROPERTY(EditAnywhere, Category = Combat)
+	float AttackDelayMax = 1.f;
 };

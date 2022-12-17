@@ -31,7 +31,7 @@ void ABreakableActor::Tick(float DeltaTime)
 
 }
 
-void ABreakableActor::GetHit(const FVector& ImpactPoint)
+void ABreakableActor::GetHit(const FVector& ImpactPoint, AActor* Hitter)
 {
 	if(BreakSound)
 		UGameplayStatics::PlaySoundAtLocation(this, BreakSound, ImpactPoint);
