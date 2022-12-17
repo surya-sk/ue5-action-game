@@ -225,10 +225,11 @@ void AMainCharacter::AttackEnd()
 	CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
 }
 
-void AMainCharacter::GetHit(const FVector& ImpactPoint)
+void AMainCharacter::GetHit(const FVector& ImpactPoint, AActor* Hitter)
 {
-	Super::GetHit(ImpactPoint);
+	Super::GetHit(ImpactPoint, Hitter);
 
+	SetWeaponCollision(ECollisionEnabled::NoCollision);
 	CharacterActionState = ECharacterActionState::ECAS_HitReaction;
 }
 

@@ -20,7 +20,7 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
-	virtual void GetHit(const FVector& ImpactPoint) override;
+	virtual void GetHit(const FVector& ImpactPoint, AActor* Hitter) override;
 
 protected:
 	// Called when the game starts or when spawned

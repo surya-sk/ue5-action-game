@@ -59,10 +59,10 @@ void ABaseCharacter::AttackEnd()
 {
 }
 
-void ABaseCharacter::GetHit(const FVector& ImpactPoint)
+void ABaseCharacter::GetHit(const FVector& ImpactPoint, AActor* Hitter)
 {
-	if (IsAlive())
-		DirectionalHitReact(ImpactPoint);
+	if (IsAlive() && Hitter)
+		DirectionalHitReact(Hitter->GetActorLocation());
 	else
 		Die();
 

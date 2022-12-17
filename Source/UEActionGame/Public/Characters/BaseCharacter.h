@@ -40,7 +40,7 @@ protected:
 	/// Handles hit reaction
 	/// </summary>
 	/// <param name="ImpactPoint">Point of impact</param>
-	virtual void GetHit(const FVector& ImpactPoint) override;
+	virtual void GetHit(const FVector& ImpactPoint, AActor* Hitter) override;
 
 	/// <summary>
 	/// Determines if the character can attack

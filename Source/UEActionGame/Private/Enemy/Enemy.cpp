@@ -46,9 +46,9 @@ void AEnemy::Tick(float DeltaTime)
 	}
 }
 // Called when the game starts or when spawned
-void AEnemy::GetHit(const FVector& ImpactPoint)
+void AEnemy::GetHit(const FVector& ImpactPoint, AActor* Hitter)
 {
-	Super::GetHit(ImpactPoint);
+	Super::GetHit(ImpactPoint, Hitter);
 	GetWorldTimerManager().ClearTimer(PatrolTimer);
 }
 
