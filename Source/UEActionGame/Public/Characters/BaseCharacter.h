@@ -112,6 +112,8 @@ protected:
 	/// <returns>The index of the random sections</returns>
 	virtual int32 PlayDeathMontage();
 
+	virtual void StopAttackMontage();
+
 
 	UPROPERTY(VisibleAnywhere, Category = Weapon)
 	AWeapon* EquippedWeapon;

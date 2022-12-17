@@ -51,6 +51,8 @@ void AEnemy::GetHit(const FVector& ImpactPoint, AActor* Hitter)
 	Super::GetHit(ImpactPoint, Hitter);
 	GetWorldTimerManager().ClearTimer(PatrolTimer);
 	GetWorldTimerManager().ClearTimer(AttackTimer);
+	SetWeaponCollision(ECollisionEnabled::NoCollision);
+	StopAttackMontage();
 }
 
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, 
