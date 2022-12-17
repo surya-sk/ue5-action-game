@@ -58,6 +58,14 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 {
 	HandleDamage(DamageAmount);
 	CombatTarget = EventInstigator->GetPawn();
+	if (IsInTargetRange(CombatTarget, AttackRadius))
+	{
+		EnemyState = EEnemyState::EES_Attacking;
+	}
+	else if (!IsInTargetRange(CombatTarget, AttackRadius))
+	{
+		ChaseTarget();
+	}
 	ChaseTarget();
 	return DamageAmount;
 }
