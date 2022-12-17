@@ -88,6 +88,12 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void FinishEquip();
 
+	/// <summary>
+	/// Callback for anim notify
+	/// </summary>
+	UFUNCTION(BlueprintCallable)
+	void HitReactEnd();
+
 	/** <ABaseCharacter> */
 	virtual void Attack() override;
 	virtual void AttackEnd() override;

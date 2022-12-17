@@ -175,6 +175,11 @@ void AMainCharacter::InteractKeyPressed()
 	}
 }
 
+void AMainCharacter::HitReactEnd()
+{
+	CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
+}
+
 void AMainCharacter::Attack()
 {
 	if (CanAttack())
@@ -223,6 +228,8 @@ void AMainCharacter::AttackEnd()
 void AMainCharacter::GetHit(const FVector& ImpactPoint)
 {
 	Super::GetHit(ImpactPoint);
+
+	CharacterActionState = ECharacterActionState::ECAS_HitReaction;
 }
 
 void AMainCharacter::AttachWeaponToBack()
@@ -248,7 +255,8 @@ void AMainCharacter::FinishEquip()
 
 bool AMainCharacter::CanAttack()
 {
-	return CharacterActionState == ECharacterActionState::ECAS_Unoccupied && CharacterWeaponState != ECharacterWeaponState::ECWS_Unequipped;
+	return CharacterActionState == ECharacterActionState::ECAS_Unoccupied &&
+		CharacterWeaponState != ECharacterWeaponState::ECWS_Unequipped;
 }
 
 // Called every frame
