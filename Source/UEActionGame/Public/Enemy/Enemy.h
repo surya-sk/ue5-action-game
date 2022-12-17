@@ -40,6 +40,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 
+	UPROPERTY(BlueprintReadOnly)
+	AActor* CombatTarget;
+
 private:
 	/** AI BEHAVIOUR */
 
@@ -97,9 +100,6 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	UPawnSensingComponent* PawnSensing;
-
-	UPROPERTY()
-	AActor* CombatTarget;
 
 	UPROPERTY(EditAnywhere, Category = AI)
 	double CombatRadius = 500.f;
