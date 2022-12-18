@@ -33,5 +33,8 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Character State")
 	ECharacterWeaponState CharacterWeaponState;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Character State")
+	ECharacterActionState CharacterActionState;
 	
 };
