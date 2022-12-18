@@ -28,5 +28,6 @@ void UMainCharacterAnimInstance::NativeUpdateAnimation(float DeltaTime)
 		bIsFalling = MainCharacterMovement->IsFalling();
 		CharacterWeaponState = MainCharacter->GetCharacterWeaponState();
 		CharacterActionState = MainCharacter->GetCharacterActionState();
+		DeathPose = MainCharacter->GetDeathPose();
 	}
 }

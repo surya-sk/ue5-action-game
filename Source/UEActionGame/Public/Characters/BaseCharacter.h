@@ -21,6 +21,8 @@ public:
 	ABaseCharacter();
 	virtual void Tick(float DeltaTime) override;
 
+	FORCEINLINE TEnumAsByte<EDeathPose> GetDeathPose() const { return DeathPose;  }
+
 protected:
 	virtual void BeginPlay() override;
 

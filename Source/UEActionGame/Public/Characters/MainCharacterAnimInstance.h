@@ -36,5 +36,8 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Character State")
 	ECharacterActionState CharacterActionState;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Character State")
+	TEnumAsByte<EDeathPose> DeathPose;
 	
 };
