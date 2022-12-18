@@ -66,6 +66,11 @@ protected:
 	/// </summary>
 	void Sprint();
 
+	/// <summary>
+	/// Sets the speed back to walk speed
+	/// </summary>
+	void StopSprinting();
+
 
 	/** COMBAT*/
 
@@ -105,6 +110,15 @@ protected:
 	virtual void GetHit(const FVector& ImpactPoint, AActor* Hitter) override;
 	virtual bool CanAttack() override;
 	/** </ABaseCharacter> */
+
+	UPROPERTY(EditAnywhere)
+	float WalkSpeed = 50.f;
+
+	UPROPERTY(EditAnywhere)
+	float JogSpeed = 100.f;
+
+	UPROPERTY(EditAnywhere)
+	float RunSpeed = 300.f;
 
 private:
 

@@ -49,6 +49,7 @@ void AMainCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 	Tags.Add(FName("PlayerCharacter"));
 }
 
@@ -209,6 +210,21 @@ void AMainCharacter::Equip()
 	}
 }
 
+void AMainCharacter::Sprint()
+{
+	if (CanSprint())
+	{
+		GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
+	}
+	else
+		GetCharacterMovement()->MaxWalkSpeed = JogSpeed;
+}
+
+void AMainCharacter::StopSprinting()
+{
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+}
+
 void AMainCharacter::PlayEquipMontage(const FName Section)
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
@@ -283,6 +299,8 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction(FName("Interact"), IE_Pressed, this, &AMainCharacter::InteractKeyPressed);
 	PlayerInputComponent->BindAction(FName("Attack"), IE_Pressed, this, &AMainCharacter::Attack);
 	PlayerInputComponent->BindAction(FName("Equip"), IE_Pressed, this, &AMainCharacter::Equip);
+	PlayerInputComponent->BindAction(FName("Sprint"), IE_Pressed, this, &AMainCharacter::Sprint);
+	PlayerInputComponent->BindAction(FName("Sprint"), IE_Released, this, &AMainCharacter::StopSprinting);
 }
 
 void AMainCharacter::ResetCollisionAndMovement()
@@ -379,5 +397,11 @@ void AMainCharacter::VaultOrClimb(bool bShouldClimb, bool bWallThick, bool bCanC
 			bIsClimbing = false;
 		}
 	}
+}
+
+bool AMainCharacter::CanSprint()
+{
+	return CharacterActionState == ECharacterActionState::ECAS_Unoccupied &&
+		CharacterWeaponState == ECharacterWeaponState::ECWS_Unequipped;
 }
 
