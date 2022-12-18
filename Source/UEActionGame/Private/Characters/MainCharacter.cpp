@@ -282,6 +282,8 @@ void AMainCharacter::Die()
 {
 	Super::Die();
 	CharacterActionState = ECharacterActionState::ECAS_Dead;
+	DisableCapsule();
+	DisableMeshCollision();
 }
 
 // Called every frame

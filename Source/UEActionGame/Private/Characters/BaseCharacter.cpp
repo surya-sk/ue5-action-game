@@ -29,6 +29,11 @@ void ABaseCharacter::BeginPlay()
 
 void ABaseCharacter::Attack()
 {
+	if (CombatTarget && CombatTarget->ActorHasTag(FName("Dead")))
+	{
+		CombatTarget = nullptr;
+
+	}
 }
 
 int32 ABaseCharacter::PlayAttackMontage()
@@ -90,6 +95,7 @@ bool ABaseCharacter::IsAlive()
 
 void ABaseCharacter::Die()
 {
+	Tags.Add(FName("Dead"));
 	PlayDeathMontage();
 }
 
@@ -211,6 +217,11 @@ void ABaseCharacter::SetWeaponCollision(ECollisionEnabled::Type CollisionEnabled
 		EquippedWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionEnabled);
 		EquippedWeapon->ActorsToIgnore.Empty();
 	}
+}
+
+void ABaseCharacter::DisableMeshCollision()
+{
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 

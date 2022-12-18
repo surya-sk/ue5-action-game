@@ -94,6 +94,8 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void SetWeaponCollision(ECollisionEnabled::Type CollisionEnabled);
 
+	void DisableMeshCollision();
+
 
 	/** MONTAGE FUNCTIONS*/
 
