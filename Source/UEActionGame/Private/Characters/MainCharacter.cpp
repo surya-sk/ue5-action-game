@@ -12,6 +12,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Items/Item.h"
 #include "Items/Weapons/Weapon.h"
+#include "Components/AttributeComponent.h"
 #include "Animation/AnimMontage.h"
 
 // Sets default values
@@ -246,7 +247,8 @@ void AMainCharacter::GetHit(const FVector& ImpactPoint, AActor* Hitter)
 	Super::GetHit(ImpactPoint, Hitter);
 
 	SetWeaponCollision(ECollisionEnabled::NoCollision);
-	CharacterActionState = ECharacterActionState::ECAS_HitReaction;
+	if(Attributes && !Attributes->IsDead())
+		CharacterActionState = ECharacterActionState::ECAS_HitReaction;
 }
 
 void AMainCharacter::AttachWeaponToBack()
