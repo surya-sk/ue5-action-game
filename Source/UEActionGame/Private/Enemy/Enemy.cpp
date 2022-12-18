@@ -124,17 +124,6 @@ void AEnemy::HandleDamage(float DamageAmount)
 	Super::HandleDamage(DamageAmount);
 }
 
-int32 AEnemy::PlayDeathMontage()
-{
-	const int32 Index = Super::PlayDeathMontage();
-	TEnumAsByte<EDeathPose> Pose(Index);
-	if (Pose < EDeathPose::EDP_MAX)
-	{
-		DeathPose = Pose;
-	}
-	return Index;
-}
-
 void AEnemy::AttackEnd()
 {
 	EnemyState = EEnemyState::EES_NoState;

@@ -6,7 +6,8 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/AttributeComponent.h"
 #include "Items/Weapons/Weapon.h"
-#include <Kismet/GameplayStatics.h>
+#include "Kismet/GameplayStatics.h"
+#include "Characters/CharacterTypes.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()
@@ -38,7 +39,13 @@ int32 ABaseCharacter::PlayAttackMontage()
 
 int32 ABaseCharacter::PlayDeathMontage()
 {
-	return PlayRandomMontageSection(DeathMontage, DeathMontageSections);
+	const int32 Index = PlayRandomMontageSection(DeathMontage, DeathMontageSections); 
+	TEnumAsByte<EDeathPose> Pose(Index);
+	if (Pose < EDeathPose::EDP_MAX)
+	{
+		DeathPose = Pose;
+	}
+	return Index;
 }
 
 void ABaseCharacter::StopAttackMontage()
