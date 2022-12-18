@@ -111,6 +111,7 @@ protected:
 	virtual void AttackEnd() override;
 	virtual void GetHit(const FVector& ImpactPoint, AActor* Hitter) override;
 	virtual bool CanAttack() override;
+	virtual void Die() override;
 	/** </ABaseCharacter> */
 
 	UPROPERTY(EditAnywhere)

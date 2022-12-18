@@ -276,6 +276,12 @@ bool AMainCharacter::CanAttack()
 		CharacterWeaponState != ECharacterWeaponState::ECWS_Unequipped;
 }
 
+void AMainCharacter::Die()
+{
+	Super::Die();
+	CharacterActionState = ECharacterActionState::ECAS_Dead;
+}
+
 // Called every frame
 void AMainCharacter::Tick(float DeltaTime)
 {

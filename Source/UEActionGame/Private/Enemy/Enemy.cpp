@@ -96,7 +96,7 @@ void AEnemy::BeginPlay()
 
 void AEnemy::Die()
 {
-	PlayDeathMontage();
+	Super::Die();
 	GetWorldTimerManager().ClearTimer(AttackTimer);
 	EnemyState = EEnemyState::EES_Dead;
 	DisableCapsule();

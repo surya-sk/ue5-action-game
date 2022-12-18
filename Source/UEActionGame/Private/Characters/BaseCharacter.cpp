@@ -7,7 +7,6 @@
 #include "Components/AttributeComponent.h"
 #include "Items/Weapons/Weapon.h"
 #include "Kismet/GameplayStatics.h"
-#include "Characters/CharacterTypes.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()
@@ -91,6 +90,7 @@ bool ABaseCharacter::IsAlive()
 
 void ABaseCharacter::Die()
 {
+	PlayDeathMontage();
 }
 
 void ABaseCharacter::AttackEnd()
