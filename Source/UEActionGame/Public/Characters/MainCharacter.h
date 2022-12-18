@@ -61,6 +61,11 @@ protected:
 	/// </summary>
 	void Equip();
 
+	/// <summary>
+	/// Start sprinting
+	/// </summary>
+	void Sprint();
+
 
 	/** COMBAT*/
 
@@ -122,6 +127,12 @@ private:
 	/// <param name="ForwardVector">The forward vector of the wall</param>
 	/// <param name="CWallHeight">The wall height</param>
 	void VaultOrClimb(bool bShouldClimb, bool bWallThick, bool bCanClimb, FVector ForwardVector, FVector CWallHeight);
+
+	/// <summary>
+	/// Checks if the player can sprint
+	/// </summary>
+	/// <returns></returns>
+	bool CanSprint();
 
 	bool bIsClimbing = false;
 
