@@ -6,7 +6,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/AttributeComponent.h"
 #include "Items/Weapons/Weapon.h"
-#include <Kismet/GameplayStatics.h>
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()
@@ -29,6 +29,11 @@ void ABaseCharacter::BeginPlay()
 
 void ABaseCharacter::Attack()
 {
+	if (CombatTarget && CombatTarget->ActorHasTag(FName("Dead")))
+	{
+		CombatTarget = nullptr;
+
+	}
 }
 
 int32 ABaseCharacter::PlayAttackMontage()
@@ -38,7 +43,13 @@ int32 ABaseCharacter::PlayAttackMontage()
 
 int32 ABaseCharacter::PlayDeathMontage()
 {
-	return PlayRandomMontageSection(DeathMontage, DeathMontageSections);
+	const int32 Index = PlayRandomMontageSection(DeathMontage, DeathMontageSections); 
+	TEnumAsByte<EDeathPose> Pose(Index);
+	if (Pose < EDeathPose::EDP_MAX)
+	{
+		DeathPose = Pose;
+	}
+	return Index;
 }
 
 void ABaseCharacter::StopAttackMontage()
@@ -84,6 +95,8 @@ bool ABaseCharacter::IsAlive()
 
 void ABaseCharacter::Die()
 {
+	Tags.Add(FName("Dead"));
+	PlayDeathMontage();
 }
 
 void ABaseCharacter::AttackEnd()
@@ -204,6 +217,11 @@ void ABaseCharacter::SetWeaponCollision(ECollisionEnabled::Type CollisionEnabled
 		EquippedWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionEnabled);
 		EquippedWeapon->ActorsToIgnore.Empty();
 	}
+}
+
+void ABaseCharacter::DisableMeshCollision()
+{
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 

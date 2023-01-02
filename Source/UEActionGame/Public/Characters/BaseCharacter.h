@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Characters/CharacterTypes.h"
 #include "GameFramework/Character.h"
 #include "Interfaces/HitInterface.h"
 #include "BaseCharacter.generated.h"
@@ -19,6 +20,8 @@ class UEACTIONGAME_API ABaseCharacter : public ACharacter, public IHitInterface
 public:
 	ABaseCharacter();
 	virtual void Tick(float DeltaTime) override;
+
+	FORCEINLINE TEnumAsByte<EDeathPose> GetDeathPose() const { return DeathPose;  }
 
 protected:
 	virtual void BeginPlay() override;
@@ -91,6 +94,8 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void SetWeaponCollision(ECollisionEnabled::Type CollisionEnabled);
 
+	void DisableMeshCollision();
+
 
 	/** MONTAGE FUNCTIONS*/
 
@@ -145,6 +150,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = Combat)
 	double WarpTargetOffset = 75.f;
+
+	UPROPERTY(BlueprintReadOnly)
+	TEnumAsByte<EDeathPose> DeathPose;
 
 private:
 	/// <summary>

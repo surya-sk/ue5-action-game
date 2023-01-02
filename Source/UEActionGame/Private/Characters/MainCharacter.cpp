@@ -12,6 +12,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Items/Item.h"
 #include "Items/Weapons/Weapon.h"
+#include "Components/AttributeComponent.h"
 #include "Animation/AnimMontage.h"
 
 // Sets default values
@@ -49,6 +50,7 @@ void AMainCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 	Tags.Add(FName("PlayerCharacter"));
 }
 
@@ -209,6 +211,21 @@ void AMainCharacter::Equip()
 	}
 }
 
+void AMainCharacter::Sprint()
+{
+	if (CanSprint())
+	{
+		GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
+	}
+	else
+		GetCharacterMovement()->MaxWalkSpeed = JogSpeed;
+}
+
+void AMainCharacter::StopSprinting()
+{
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+}
+
 void AMainCharacter::PlayEquipMontage(const FName Section)
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
@@ -230,7 +247,8 @@ void AMainCharacter::GetHit(const FVector& ImpactPoint, AActor* Hitter)
 	Super::GetHit(ImpactPoint, Hitter);
 
 	SetWeaponCollision(ECollisionEnabled::NoCollision);
-	CharacterActionState = ECharacterActionState::ECAS_HitReaction;
+	if(Attributes && !Attributes->IsDead())
+		CharacterActionState = ECharacterActionState::ECAS_HitReaction;
 }
 
 void AMainCharacter::AttachWeaponToBack()
@@ -260,6 +278,13 @@ bool AMainCharacter::CanAttack()
 		CharacterWeaponState != ECharacterWeaponState::ECWS_Unequipped;
 }
 
+void AMainCharacter::Die()
+{
+	Super::Die();
+	CharacterActionState = ECharacterActionState::ECAS_Dead;
+	DisableMeshCollision();
+}
+
 // Called every frame
 void AMainCharacter::Tick(float DeltaTime)
 {
@@ -283,6 +308,14 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction(FName("Interact"), IE_Pressed, this, &AMainCharacter::InteractKeyPressed);
 	PlayerInputComponent->BindAction(FName("Attack"), IE_Pressed, this, &AMainCharacter::Attack);
 	PlayerInputComponent->BindAction(FName("Equip"), IE_Pressed, this, &AMainCharacter::Equip);
+	PlayerInputComponent->BindAction(FName("Sprint"), IE_Pressed, this, &AMainCharacter::Sprint);
+	PlayerInputComponent->BindAction(FName("Sprint"), IE_Released, this, &AMainCharacter::StopSprinting);
+}
+
+float AMainCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	HandleDamage(DamageAmount);
+	return DamageAmount;
 }
 
 void AMainCharacter::ResetCollisionAndMovement()
@@ -379,5 +412,11 @@ void AMainCharacter::VaultOrClimb(bool bShouldClimb, bool bWallThick, bool bCanC
 			bIsClimbing = false;
 		}
 	}
+}
+
+bool AMainCharacter::CanSprint()
+{
+	return CharacterActionState == ECharacterActionState::ECAS_Unoccupied &&
+		CharacterWeaponState == ECharacterWeaponState::ECWS_Unequipped;
 }
 

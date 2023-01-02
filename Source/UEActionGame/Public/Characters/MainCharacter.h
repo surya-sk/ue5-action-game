@@ -23,8 +23,11 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
 	FORCEINLINE ECharacterWeaponState GetCharacterWeaponState() const { return CharacterWeaponState; }
+	FORCEINLINE ECharacterActionState GetCharacterActionState() const { return CharacterActionState; }
 
 protected:
 	// Called when the game starts or when spawned
@@ -60,6 +63,16 @@ protected:
 	/// Equip weapon
 	/// </summary>
 	void Equip();
+
+	/// <summary>
+	/// Start sprinting
+	/// </summary>
+	void Sprint();
+
+	/// <summary>
+	/// Sets the speed back to walk speed
+	/// </summary>
+	void StopSprinting();
 
 
 	/** COMBAT*/
@@ -99,7 +112,17 @@ protected:
 	virtual void AttackEnd() override;
 	virtual void GetHit(const FVector& ImpactPoint, AActor* Hitter) override;
 	virtual bool CanAttack() override;
+	virtual void Die() override;
 	/** </ABaseCharacter> */
+
+	UPROPERTY(EditAnywhere)
+	float WalkSpeed = 50.f;
+
+	UPROPERTY(EditAnywhere)
+	float JogSpeed = 100.f;
+
+	UPROPERTY(EditAnywhere)
+	float RunSpeed = 300.f;
 
 private:
 
@@ -122,6 +145,12 @@ private:
 	/// <param name="ForwardVector">The forward vector of the wall</param>
 	/// <param name="CWallHeight">The wall height</param>
 	void VaultOrClimb(bool bShouldClimb, bool bWallThick, bool bCanClimb, FVector ForwardVector, FVector CWallHeight);
+
+	/// <summary>
+	/// Checks if the player can sprint
+	/// </summary>
+	/// <returns></returns>
+	bool CanSprint();
 
 	bool bIsClimbing = false;
 
