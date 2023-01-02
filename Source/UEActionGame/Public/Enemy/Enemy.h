@@ -8,6 +8,7 @@
 #include "Enemy.generated.h"
 
 class UPawnSensingComponent;
+class UAnimMontage;
 
 UCLASS()
 class UEACTIONGAME_API AEnemy : public ABaseCharacter
@@ -21,6 +22,8 @@ public:
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
 	virtual void GetHit(const FVector& ImpactPoint, AActor* Hitter) override;
+
+	void PlayAssassinationMontage();
 
 protected:
 	virtual void BeginPlay() override;
@@ -128,7 +131,7 @@ private:
 	class AAIController* EnemyController;
 
 	UPROPERTY(EditAnywhere)
-	UBoxComponent* AssassinationBox;
+	class UBoxComponent* AssassinationBox;
 
 
 	/** COMBAT */
@@ -148,4 +151,7 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = Combat)
 	float AttackDelayMax = 1.f;
+
+	UPROPERTY(EditDefaultsOnly)
+	UAnimMontage* AssassinationMontage;
 };

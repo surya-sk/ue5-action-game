@@ -60,6 +60,15 @@ void AEnemy::GetHit(const FVector& ImpactPoint, AActor* Hitter)
 	StopAttackMontage();
 }
 
+void AEnemy::PlayAssassinationMontage()
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && AssassinationMontage)
+	{
+		AnimInstance->Montage_Play(AssassinationMontage);
+	}
+}
+
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, 
 	AActor* DamageCauser)
 {

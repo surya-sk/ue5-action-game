@@ -14,6 +14,7 @@
 #include "Items/Weapons/Weapon.h"
 #include "Components/AttributeComponent.h"
 #include "Animation/AnimMontage.h"
+#include "Enemy/Enemy.h"
 
 // Sets default values
 AMainCharacter::AMainCharacter()
@@ -242,6 +243,11 @@ void AMainCharacter::StopCrouching()
 
 void AMainCharacter::PerformTakedown()
 {
+	if (EnemyToAssassinate)
+	{
+		PlayTakedownMontage();
+		EnemyToAssassinate->PlayAssassinationMontage();
+	}
 }
 
 void AMainCharacter::PlayEquipMontage(const FName Section)
@@ -251,6 +257,15 @@ void AMainCharacter::PlayEquipMontage(const FName Section)
 	{
 		AnimInstance->Montage_Play(EquipMontage);
 		AnimInstance->Montage_JumpToSection(Section, EquipMontage);
+	}
+}
+
+void AMainCharacter::PlayTakedownMontage()
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && TakedownMontage)
+	{
+		AnimInstance->Montage_Play(TakedownMontage);
 	}
 }
 

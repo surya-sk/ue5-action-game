@@ -12,6 +12,7 @@ class UCameraComponent;
 class AItem;
 class UAnimMontage;
 class AWeapon;
+class AEnemy;
 
 UCLASS()
 class UEACTIONGAME_API AMainCharacter : public ABaseCharacter
@@ -98,6 +99,11 @@ protected:
 	/// </summary>
 	/// <param name="Section">The montage section to jump to</param>
 	void PlayEquipMontage(const FName Section);
+
+	/// <summary>
+	/// Plays the stealth takedown montage
+	/// </summary>
+	void PlayTakedownMontage();
 
 	/// <summary>
 	/// Unequips the weapon
@@ -188,7 +194,7 @@ private:
 	AItem* OverlappingItem;
 
 	UPROPERTY(VisibleInstanceOnly)
-	class AEnemy* EnemyToAssassinate;
+	AEnemy* EnemyToAssassinate;
 
 	/** MONTAGES*/
 
@@ -209,4 +215,7 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = Montages)
 	UAnimMontage* EquipMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = Montages)
+	UAnimMontage* TakedownMontage;
 };
