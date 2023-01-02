@@ -226,6 +226,16 @@ void AMainCharacter::StopSprinting()
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 }
 
+void AMainCharacter::Crouch()
+{
+	CharacterActionState = ECharacterActionState::ECAS_Crouching;
+}
+
+void AMainCharacter::StopCrouching()
+{
+	CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
+}
+
 void AMainCharacter::PlayEquipMontage(const FName Section)
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
@@ -310,6 +320,8 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction(FName("Equip"), IE_Pressed, this, &AMainCharacter::Equip);
 	PlayerInputComponent->BindAction(FName("Sprint"), IE_Pressed, this, &AMainCharacter::Sprint);
 	PlayerInputComponent->BindAction(FName("Sprint"), IE_Released, this, &AMainCharacter::StopSprinting);
+	PlayerInputComponent->BindAction(FName("Crouch"), IE_Pressed, this, &AMainCharacter::Crouch);
+	PlayerInputComponent->BindAction(FName("Crouch"), IE_Released, this, &AMainCharacter::StopCrouching);
 }
 
 float AMainCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)

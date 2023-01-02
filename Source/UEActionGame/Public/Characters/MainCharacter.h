@@ -74,6 +74,16 @@ protected:
 	/// </summary>
 	void StopSprinting();
 
+	/// <summary>
+	/// Sets the player action to crouch
+	/// </summary>
+	void Crouch();
+
+	/// <summary>
+	/// Stops the player from crouching
+	/// </summary>
+	void StopCrouching();
+
 
 	/** COMBAT*/
 
