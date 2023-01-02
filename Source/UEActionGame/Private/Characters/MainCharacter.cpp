@@ -56,7 +56,7 @@ void AMainCharacter::BeginPlay()
 
 void AMainCharacter::MoveForward(float Value)
 {
-	if (CharacterActionState != ECharacterActionState::ECAS_Unoccupied) return;
+	if (CharacterActionState > ECharacterActionState::ECAS_Crouching) return;
 	if (Controller && (Value != 0.f))
 	{
 		const FRotator ControlRotation = GetControlRotation();
@@ -69,7 +69,7 @@ void AMainCharacter::MoveForward(float Value)
 
 void AMainCharacter::MoveRight(float Value)
 {
-	if (CharacterActionState != ECharacterActionState::ECAS_Unoccupied) return;
+	if (CharacterActionState > ECharacterActionState::ECAS_Crouching) return;;
 	if (Controller && (Value != 0.f))
 	{
 		const FRotator ControlRotation = GetControlRotation();
