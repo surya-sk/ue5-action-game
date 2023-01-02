@@ -28,6 +28,7 @@ public:
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
 	FORCEINLINE ECharacterWeaponState GetCharacterWeaponState() const { return CharacterWeaponState; }
 	FORCEINLINE ECharacterActionState GetCharacterActionState() const { return CharacterActionState; }
+	FORCEINLINE void SetEnemyToAssassinate(AEnemy* Enemy) { EnemyToAssassinate = Enemy; }
 
 protected:
 	// Called when the game starts or when spawned
@@ -185,6 +186,9 @@ private:
 
 	UPROPERTY(VisibleInstanceOnly)
 	AItem* OverlappingItem;
+
+	UPROPERTY(VisibleInstanceOnly)
+	class AEnemy* EnemyToAssassinate;
 
 	/** MONTAGES*/
 
