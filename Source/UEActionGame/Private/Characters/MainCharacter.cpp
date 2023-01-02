@@ -230,11 +230,13 @@ void AMainCharacter::StopSprinting()
 void AMainCharacter::StartCrouch()
 {
 	if (GetCharacterMovement()->MaxWalkSpeed > WalkSpeed) return;
+	Super::Crouch();
 	CharacterActionState = ECharacterActionState::ECAS_Crouching;
 }
 
 void AMainCharacter::StopCrouching()
 {
+	Super::UnCrouch();
 	CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
 }
 
