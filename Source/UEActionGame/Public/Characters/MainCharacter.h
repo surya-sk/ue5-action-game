@@ -77,7 +77,7 @@ protected:
 	/// <summary>
 	/// Sets the player action to crouch
 	/// </summary>
-	void Crouch();
+	void StartCrouch();
 
 	/// <summary>
 	/// Stops the player from crouching

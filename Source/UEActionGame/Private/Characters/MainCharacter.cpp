@@ -215,6 +215,7 @@ void AMainCharacter::Sprint()
 {
 	if (CanSprint())
 	{
+		CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
 		GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
 	}
 	else
@@ -226,8 +227,9 @@ void AMainCharacter::StopSprinting()
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 }
 
-void AMainCharacter::Crouch()
+void AMainCharacter::StartCrouch()
 {
+	if (GetCharacterMovement()->MaxWalkSpeed > WalkSpeed) return;
 	CharacterActionState = ECharacterActionState::ECAS_Crouching;
 }
 
@@ -320,7 +322,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction(FName("Equip"), IE_Pressed, this, &AMainCharacter::Equip);
 	PlayerInputComponent->BindAction(FName("Sprint"), IE_Pressed, this, &AMainCharacter::Sprint);
 	PlayerInputComponent->BindAction(FName("Sprint"), IE_Released, this, &AMainCharacter::StopSprinting);
-	PlayerInputComponent->BindAction(FName("Crouch"), IE_Pressed, this, &AMainCharacter::Crouch);
+	PlayerInputComponent->BindAction(FName("Crouch"), IE_Pressed, this, &AMainCharacter::StartCrouch);
 	PlayerInputComponent->BindAction(FName("Crouch"), IE_Released, this, &AMainCharacter::StopCrouching);
 }
 
@@ -428,7 +430,7 @@ void AMainCharacter::VaultOrClimb(bool bShouldClimb, bool bWallThick, bool bCanC
 
 bool AMainCharacter::CanSprint()
 {
-	return CharacterActionState == ECharacterActionState::ECAS_Unoccupied &&
+	return CharacterActionState <= ECharacterActionState::ECAS_Crouching &&
 		CharacterWeaponState == ECharacterWeaponState::ECWS_Unequipped;
 }
 
