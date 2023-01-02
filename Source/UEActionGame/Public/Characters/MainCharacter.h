@@ -84,6 +84,11 @@ protected:
 	/// </summary>
 	void StopCrouching();
 
+	/// <summary>
+	/// Takedown if an enemy is present
+	/// </summary>
+	void PerformTakedown();
+
 
 	/** COMBAT*/
 
