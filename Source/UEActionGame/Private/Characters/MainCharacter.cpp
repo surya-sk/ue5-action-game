@@ -92,7 +92,7 @@ void AMainCharacter::LookUp(float Value)
 
 void AMainCharacter::Vault()
 {
-	if (CharacterActionState != ECharacterActionState::ECAS_Unoccupied) return;
+	if (CharacterActionState > ECharacterActionState::ECAS_Crouching) return;
 	bool bShouldClimb;
 	bool bWallThick;
 	bool bCanClimb = true;
