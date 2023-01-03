@@ -415,7 +415,7 @@ void AMainCharacter::VaultOrClimb(bool bShouldClimb, bool bWallThick, bool bCanC
 
 		GetWorld()->GetTimerManager().SetTimer(handle, Delegate, MontageSeconds - 0.5f, false);
 	}
-	else
+	/*else
 	{
 		FHitResult CheckHitResult;
 		const FVector CheckStart = GetActorLocation() + FVector(0, 0, 200.f);
@@ -465,7 +465,7 @@ void AMainCharacter::VaultOrClimb(bool bShouldClimb, bool bWallThick, bool bCanC
 			GetWorld()->GetTimerManager().SetTimer(handle, Delegate, MontageSeconds, false);
 			bIsClimbing = false;
 		}
-	}
+	}*/
 }
 
 bool AMainCharacter::CanSprint()
