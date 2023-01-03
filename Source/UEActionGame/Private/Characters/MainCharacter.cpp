@@ -152,13 +152,14 @@ void AMainCharacter::Vault()
 void AMainCharacter::Slide()
 {
 	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
-	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	GetCapsuleComponent()->SetCapsuleHalfHeight(30.f);
 
 	float MontageLen = this->PlayAnimMontage(SlideMontage);
 	FTimerDelegate Delegate;
 	Delegate.BindLambda([&]()
 		{
-			ResetCollisionAndMovement();
+			GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+			GetCapsuleComponent()->SetCapsuleHalfHeight(88.f);
 		}
 	);
 
