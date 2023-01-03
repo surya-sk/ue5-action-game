@@ -335,6 +335,10 @@ void AMainCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	Attributes->RegenrateHealth();
+	if (!Attributes->HasEnoughStamina())
+	{
+		StopSprinting();
+	}
 	Attributes->HandleStamina(bSprinting);
 }
 

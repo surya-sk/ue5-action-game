@@ -22,7 +22,6 @@ void UAttributeComponent::BeginPlay()
 void UAttributeComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
 }
 
 void UAttributeComponent::ReceieveDamage(float Damage)
@@ -53,7 +52,7 @@ void UAttributeComponent::HandleStamina(bool bSprinting)
 
 bool UAttributeComponent::HasEnoughStamina()
 {
-	return Stamina > 0.f;
+	return Stamina > 1.f;
 }
 
 void UAttributeComponent::RegenrateHealth()
