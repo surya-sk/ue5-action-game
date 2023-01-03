@@ -318,6 +318,12 @@ void AMainCharacter::Die()
 	DisableMeshCollision();
 }
 
+FVector AMainCharacter::GetEnemyWarpTarget()
+{
+	if(EnemyToAssassinate == nullptr) return FVector();
+	return EnemyToAssassinate->GetActorLocation();
+}
+
 // Called every frame
 void AMainCharacter::Tick(float DeltaTime)
 {

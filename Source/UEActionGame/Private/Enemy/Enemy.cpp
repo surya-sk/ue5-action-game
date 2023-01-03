@@ -62,6 +62,8 @@ void AEnemy::GetHit(const FVector& ImpactPoint, AActor* Hitter)
 
 void AEnemy::PlayAssassinationMontage()
 {
+	EnemyState = EEnemyState::EES_Dead;
+	DisableCapsule();
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (AnimInstance && AssassinationMontage)
 	{

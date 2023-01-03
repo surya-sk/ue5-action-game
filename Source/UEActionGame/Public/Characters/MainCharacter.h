@@ -137,6 +137,9 @@ protected:
 	virtual void Die() override;
 	/** </ABaseCharacter> */
 
+	UFUNCTION(BlueprintCallable)
+	FVector GetEnemyWarpTarget();
+
 	UPROPERTY(EditAnywhere)
 	float WalkSpeed = 50.f;
 
@@ -145,6 +148,9 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	float RunSpeed = 300.f;
+
+	UPROPERTY(BlueprintReadOnly)
+	AEnemy* EnemyToAssassinate;
 
 private:
 
@@ -192,9 +198,6 @@ private:
 
 	UPROPERTY(VisibleInstanceOnly)
 	AItem* OverlappingItem;
-
-	UPROPERTY(VisibleInstanceOnly)
-	AEnemy* EnemyToAssassinate;
 
 	/** MONTAGES*/
 
