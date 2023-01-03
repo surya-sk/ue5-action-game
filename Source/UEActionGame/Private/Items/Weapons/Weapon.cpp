@@ -33,13 +33,7 @@ void AWeapon::BeginPlay()
 
 void AWeapon::Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator)
 {
-	SetOwner(NewOwner);
-	SetInstigator(NewInstigator);
-	AttachMeshToSocket(InParent, InSocketName);
-	if (EquipSound)
-	{
-		UGameplayStatics::PlaySoundAtLocation(this, EquipSound, this->GetActorLocation());
-	}
+	Super::Equip(InParent, InSocketName, NewOwner, NewInstigator);
 	if (Sphere)
 	{
 		Sphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
