@@ -216,15 +216,20 @@ void AMainCharacter::Sprint()
 {
 	if (CanSprint())
 	{
+		bSprinting = true;
 		CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
 		GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
 	}
 	else
+	{
+		bSprinting = false;
 		GetCharacterMovement()->MaxWalkSpeed = JogSpeed;
+	}
 }
 
 void AMainCharacter::StopSprinting()
 {
+	bSprinting = false;
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 }
 
@@ -329,6 +334,8 @@ void AMainCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	Attributes->RegenrateHealth();
+	Attributes->HandleStamina(bSprinting);
 }
 
 // Called to bind functionality to input
@@ -459,6 +466,6 @@ void AMainCharacter::VaultOrClimb(bool bShouldClimb, bool bWallThick, bool bCanC
 bool AMainCharacter::CanSprint()
 {
 	return CharacterActionState <= ECharacterActionState::ECAS_Crouching &&
-		CharacterWeaponState == ECharacterWeaponState::ECWS_Unequipped;
+		CharacterWeaponState == ECharacterWeaponState::ECWS_Unequipped && Attributes->HasEnoughStamina();
 }
 

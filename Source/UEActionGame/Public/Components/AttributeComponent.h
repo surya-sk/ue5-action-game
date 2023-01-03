@@ -18,6 +18,10 @@ public:
 
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	void ReceieveDamage(float Damage);
+	void ConsumeStamina(float StaminaCost);
+	void HandleStamina(bool bSprinting);
+	bool HasEnoughStamina();
+	void RegenrateHealth();
 	bool IsDead() const;
 
 protected:
@@ -30,4 +34,19 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float MaxHealth;
+
+	UPROPERTY(EditAnywhere)
+	float HealthRegenRate;
+
+	UPROPERTY(EditAnywhere)
+	float Stamina;
+
+	UPROPERTY(EditAnywhere)
+	float MaxStamina;
+
+	UPROPERTY(EditAnywhere)
+	float StaminaDrainRate;
+
+	UPROPERTY(EditAnywhere)
+	float StaminaRegenRate;
 };

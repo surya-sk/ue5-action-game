@@ -221,4 +221,6 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = Montages)
 	UAnimMontage* TakedownMontage;
+
+	bool bSprinting;
 };

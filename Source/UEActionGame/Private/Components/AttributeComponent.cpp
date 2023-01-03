@@ -30,6 +30,40 @@ void UAttributeComponent::ReceieveDamage(float Damage)
 	Health = FMath::Clamp<float>(Health - Damage, 0.f, MaxHealth);
 }
 
+void UAttributeComponent::ConsumeStamina(float StaminaCost)
+{
+	Stamina = FMath::Clamp<float>(Stamina - StaminaCost, 0.f, MaxStamina);
+}
+
+void UAttributeComponent::HandleStamina(bool bSprinting)
+{
+	if ((Stamina - StaminaDrainRate) > 0.f && bSprinting)
+	{
+		Stamina -= StaminaDrainRate;
+	}
+	else
+	{
+		// TODO: Play tired sound
+		if (Stamina < MaxStamina)
+		{
+			Stamina += StaminaRegenRate;
+		}
+	}
+}
+
+bool UAttributeComponent::HasEnoughStamina()
+{
+	return Stamina > 0.f;
+}
+
+void UAttributeComponent::RegenrateHealth()
+{
+	if (Health < MaxHealth)
+	{
+		Health += HealthRegenRate;
+	}
+}
+
 bool UAttributeComponent::IsDead() const
 {
 	return Health <= 0.f;
