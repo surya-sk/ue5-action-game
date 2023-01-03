@@ -16,6 +16,8 @@ public:
 	AItem();
 	virtual void Tick(float DeltaTime) override;
 
+	virtual void AttachMeshToSocket(USceneComponent* InParent, const FName& InSocketName);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
