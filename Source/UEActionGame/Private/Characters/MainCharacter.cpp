@@ -212,7 +212,7 @@ void AMainCharacter::Attack()
 void AMainCharacter::Equip()
 {
 	bool bCanUnequip = CharacterActionState == ECharacterActionState::ECAS_Unoccupied &&
-		CharacterWeaponState != ECharacterWeaponState::ECWS_Unequipped;
+		CharacterWeaponState == ECharacterWeaponState::ECWS_Equipped;
 	bool bCanEquip = CharacterActionState == ECharacterActionState::ECAS_Unoccupied &&
 		CharacterWeaponState != ECharacterWeaponState::ECWS_Equipped && EquippedWeapon;
 	if (bCanUnequip)
