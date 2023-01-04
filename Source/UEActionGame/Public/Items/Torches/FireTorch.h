@@ -14,5 +14,10 @@ class UEACTIONGAME_API AFireTorch : public AItem
 	GENERATED_BODY()
 
 public:
+	AFireTorch();
 	void Unequip();
+
+protected:
+	UPROPERTY(EditAnywhere)
+	class UParticleSystemComponent* FireParticles;
 };
