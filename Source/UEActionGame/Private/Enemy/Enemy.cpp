@@ -25,6 +25,7 @@ AEnemy::AEnemy()
 	EnemyMesh->SetGenerateOverlapEvents(true);
 
 	PawnSensing = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensing"));
+	TorchPawnSensing = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("TorchPawnSensing"));
 
 	AssassinationBox = CreateDefaultSubobject<UBoxComponent>(TEXT("AssassinationBox"));
 	AssassinationBox->SetupAttachment(EnemyMesh);
@@ -101,6 +102,11 @@ void AEnemy::BeginPlay()
 	if (PawnSensing)
 	{
 		PawnSensing->OnSeePawn.AddDynamic(this, &AEnemy::PawnSeen);
+	}
+
+	if (TorchPawnSensing)
+	{
+		TorchPawnSensing->OnSeePawn.AddDynamic(this, &AEnemy::TorchSeen);
 	}
 
 	UWorld* World = GetWorld();
@@ -257,6 +263,21 @@ void AEnemy::PawnSeen(APawn* SeenPawn)
 		EnemyState != EEnemyState::EES_Chasing &&
 		EnemyState < EEnemyState::EES_Attacking&&
 		SeenPawn->ActorHasTag(FName("PlayerCharacter"));
+
+	if (bShouldChase)
+	{
+		CombatTarget = SeenPawn;
+		GetWorldTimerManager().ClearTimer(PatrolTimer);
+		ChaseTarget();
+	}
+}
+
+void AEnemy::TorchSeen(APawn* SeenPawn)
+{
+	const bool bShouldChase = EnemyState != EEnemyState::EES_Dead &&
+		EnemyState != EEnemyState::EES_Chasing &&
+		EnemyState < EEnemyState::EES_Attacking&&
+		SeenPawn->ActorHasTag(FName("Torch")) && CombatTarget == nullptr;
 
 	if (bShouldChase)
 	{

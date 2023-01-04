@@ -185,10 +185,11 @@ void AMainCharacter::InteractKeyPressed()
 	{
 		if (EquippedWeapon)
 		{
-			Equip();
+			Equip(); // actually unequips
 		}
 		EquippedTorch = OverlappingTorch;
 		EquippedTorch->Equip(this->GetMesh(), FName("RightHandSocket"), this, this);
+		this->Tags.Add(FName("Torch"));
 		CharacterWeaponState = ECharacterWeaponState::ECWS_Torch;
 		OverlappingItem = nullptr;
 		return;
@@ -278,6 +279,7 @@ void AMainCharacter::UnequipTorch()
 	if (EquippedTorch)
 	{
 		EquippedTorch->Unequip();
+		this->Tags.Remove(FName("Torch"));
 		CharacterWeaponState = ECharacterWeaponState::ECWS_Unequipped;
 		EquippedTorch = nullptr;
 	}

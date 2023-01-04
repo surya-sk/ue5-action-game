@@ -101,8 +101,14 @@ private:
 	UFUNCTION()
 	void PawnSeen(APawn* SeenPawn);
 
+	UFUNCTION()
+	void TorchSeen(APawn* SeenPawn);
+
 	UPROPERTY(VisibleAnywhere)
 	UPawnSensingComponent* PawnSensing;
+
+	UPROPERTY(VisibleAnywhere)
+	UPawnSensingComponent* TorchPawnSensing;
 
 	UPROPERTY(EditAnywhere, Category = AI)
 	double CombatRadius = 500.f;
