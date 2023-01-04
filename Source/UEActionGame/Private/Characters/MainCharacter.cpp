@@ -336,7 +336,7 @@ void AMainCharacter::FinishEquip()
 bool AMainCharacter::CanAttack()
 {
 	return CharacterActionState == ECharacterActionState::ECAS_Unoccupied &&
-		CharacterWeaponState != ECharacterWeaponState::ECWS_Unequipped;
+		CharacterWeaponState == ECharacterWeaponState::ECWS_Equipped ;
 }
 
 void AMainCharacter::Die()
