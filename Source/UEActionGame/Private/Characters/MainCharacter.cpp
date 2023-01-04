@@ -214,7 +214,7 @@ void AMainCharacter::Equip()
 	bool bCanUnequip = CharacterActionState == ECharacterActionState::ECAS_Unoccupied &&
 		CharacterWeaponState != ECharacterWeaponState::ECWS_Unequipped;
 	bool bCanEquip = CharacterActionState == ECharacterActionState::ECAS_Unoccupied &&
-		CharacterWeaponState == ECharacterWeaponState::ECWS_Unequipped && EquippedWeapon;
+		CharacterWeaponState != ECharacterWeaponState::ECWS_Equipped && EquippedWeapon;
 	if (bCanUnequip)
 	{
 		PlayEquipMontage(FName("Unequip"));
@@ -223,6 +223,7 @@ void AMainCharacter::Equip()
 	}
 	else if (bCanEquip)
 	{
+		UnequipTorch();
 		PlayEquipMontage(FName("Equip"));
 		CharacterWeaponState = ECharacterWeaponState::ECWS_Equipped;
 		CharacterActionState = ECharacterActionState::ECAS_EquippingWeapon;
