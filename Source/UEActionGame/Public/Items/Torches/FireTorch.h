@@ -15,4 +15,6 @@ class UEACTIONGAME_API AFireTorch : public AItem
 
 public:
 	AFireTorch();
+
+	void Unequip();
 };

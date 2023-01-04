@@ -12,6 +12,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Items/Item.h"
 #include "Items/Weapons/Weapon.h"
+#include "Items/Torches/FireTorch.h"
 #include "Components/AttributeComponent.h"
 #include "Animation/AnimMontage.h"
 #include "Enemy/Enemy.h"
@@ -176,6 +177,17 @@ void AMainCharacter::InteractKeyPressed()
 		EquippedWeapon->Equip(this->GetMesh(), FName("LeftHandSocket"), this, this);
 		CharacterWeaponState = ECharacterWeaponState::ECWS_Equipped;
 		OverlappingItem = nullptr;
+		return;
+	}
+	
+	AFireTorch* OverlappingTorch = Cast<AFireTorch>(OverlappingItem);
+	if (OverlappingTorch)
+	{
+		EquippedTorch = OverlappingTorch;
+		EquippedTorch->Equip(this->GetMesh(), FName("RightHandSocket"), this, this);
+		CharacterWeaponState = ECharacterWeaponState::ECWS_Torch;
+		OverlappingItem = nullptr;
+		return;
 	}
 }
 

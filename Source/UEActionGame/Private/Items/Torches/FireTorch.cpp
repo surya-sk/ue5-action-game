@@ -6,3 +6,7 @@
 AFireTorch::AFireTorch()
 {
 }
+
+void AFireTorch::Unequip()
+{
+}

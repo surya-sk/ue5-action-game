@@ -13,6 +13,7 @@ class AItem;
 class UAnimMontage;
 class AWeapon;
 class AEnemy;
+class AFireTorch;
 
 UCLASS()
 class UEACTIONGAME_API AMainCharacter : public ABaseCharacter
@@ -198,6 +199,9 @@ private:
 
 	UPROPERTY(VisibleInstanceOnly)
 	AItem* OverlappingItem;
+
+	UPROPERTY(VisibleInstanceOnly)
+	AFireTorch* EquippedTorch;
 
 	/** MONTAGES*/
 
