@@ -264,6 +264,7 @@ void AEnemy::PawnSeen(APawn* SeenPawn)
 		EnemyState < EEnemyState::EES_Attacking&&
 		SeenPawn->ActorHasTag(FName("PlayerCharacter"));
 
+
 	if (bShouldChase)
 	{
 		CombatTarget = SeenPawn;
@@ -278,9 +279,9 @@ void AEnemy::TorchSeen(APawn* SeenPawn)
 		EnemyState != EEnemyState::EES_Chasing &&
 		EnemyState < EEnemyState::EES_Attacking&&
 		SeenPawn->ActorHasTag(FName("Torch")) && CombatTarget == nullptr;
-
 	if (bShouldChase)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Start chase torch"));
 		CombatTarget = SeenPawn;
 		GetWorldTimerManager().ClearTimer(PatrolTimer);
 		ChaseTarget();
