@@ -92,6 +92,11 @@ protected:
 	/// </summary>
 	void PerformTakedown();
 
+	/// <summary>
+	/// Unequips the torch
+	/// </summary>
+	void UnequipTorch();
+
 
 	/** COMBAT*/
 

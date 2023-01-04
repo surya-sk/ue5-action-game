@@ -3,10 +3,8 @@
 
 #include "Items/Torches/FireTorch.h"
 
-AFireTorch::AFireTorch()
-{
-}
-
 void AFireTorch::Unequip()
 {
+	DetachMeshFromSocket();
+	Destroy();
 }

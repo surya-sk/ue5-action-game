@@ -18,6 +18,8 @@ public:
 
 	virtual void AttachMeshToSocket(USceneComponent* InParent, const FName& InSocketName);
 
+	virtual void DetachMeshFromSocket();
+
 	virtual void Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator);
 
 protected:

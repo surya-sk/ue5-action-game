@@ -37,6 +37,12 @@ void AItem::AttachMeshToSocket(USceneComponent* InParent, const FName& InSocketN
 	ItemMesh->AttachToComponent(InParent, TransformRules, InSocketName);
 }
 
+void AItem::DetachMeshFromSocket()
+{
+	FDetachmentTransformRules TransformRules(EDetachmentRule::KeepWorld, true);
+	ItemMesh->DetachFromComponent(TransformRules);
+}
+
 void AItem::Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator)
 {
 	SetOwner(NewOwner);
