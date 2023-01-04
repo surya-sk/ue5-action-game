@@ -183,6 +183,10 @@ void AMainCharacter::InteractKeyPressed()
 	AFireTorch* OverlappingTorch = Cast<AFireTorch>(OverlappingItem);
 	if (OverlappingTorch)
 	{
+		if (EquippedWeapon)
+		{
+			Equip();
+		}
 		EquippedTorch = OverlappingTorch;
 		EquippedTorch->Equip(this->GetMesh(), FName("RightHandSocket"), this, this);
 		CharacterWeaponState = ECharacterWeaponState::ECWS_Torch;
