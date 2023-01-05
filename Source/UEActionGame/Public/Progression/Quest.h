@@ -24,9 +24,12 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditInstanceOnly)
-	TArray<UObjective*> Objectives;
+	TArray<class AMission*> Objectives;
 
 private:
+	void ActivateObjective();
+
+	UFUNCTION()
 	void EndCurrentObjective();
 
 	int ActiveObjectiveIndex = 0;

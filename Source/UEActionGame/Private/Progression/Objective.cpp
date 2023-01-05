@@ -15,6 +15,10 @@ void UObjective::Activate()
 
 void UObjective::Complete()
 {
+	if (OnObjectiveFinished.IsBound())
+	{
+		OnObjectiveFinished.Broadcast();
+	}
 }
 
 void UObjective::EnemyKilled()

@@ -6,10 +6,9 @@
 #include "UObject/NoExportTypes.h"
 #include "Objective.generated.h"
 
-/**
- * 
- */
-UCLASS()
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FObjectiveFinished);
+
+UCLASS(Blueprintable)
 class UEACTIONGAME_API UObjective : public UObject
 {
 	GENERATED_BODY()
@@ -18,7 +17,10 @@ public:
 	void Activate();
 	void Complete();
 
+	FObjectiveFinished OnObjectiveFinished;
+
 protected:
+	UFUNCTION()
 	void EnemyKilled();
 
 	UPROPERTY(EditAnywhere)
@@ -27,13 +29,13 @@ protected:
 	UPROPERTY(EditAnywhere)
 	TArray<AActor*> ActorsToActivate;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY()
 	class AEnemy* EnemyToKill;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY()
 	class UBoxComponent* PlaceToReach;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY()
 	class AItem* ItemToFind;
 	
 };
