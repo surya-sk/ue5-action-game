@@ -18,6 +18,10 @@ void AQuest::BeginPlay()
 	
 }
 
+void AQuest::EndCurrentObjective()
+{
+}
+
 // Called every frame
 void AQuest::Tick(float DeltaTime)
 {

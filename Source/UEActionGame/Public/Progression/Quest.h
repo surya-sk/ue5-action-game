@@ -17,15 +17,19 @@ public:
 	// Sets default values for this actor's properties
 	AQuest();
 
+	virtual void Tick(float DeltaTime) override;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere)
-	TArray<UObjective> Objectives;
+	TArray<UObjective*> Objectives;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+private:
+
+	void EndCurrentObjective();
+
+	int ActiveObjectiveIndex = 0;
 
 };

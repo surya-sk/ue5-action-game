@@ -3,3 +3,6 @@
 
 #include "Progression/Objective.h"
 
+void UObjective::Activate()
+{
+}
