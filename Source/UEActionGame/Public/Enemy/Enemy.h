@@ -10,6 +10,8 @@
 class UPawnSensingComponent;
 class UAnimMontage;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FEnemyKilled);
+
 UCLASS()
 class UEACTIONGAME_API AEnemy : public ABaseCharacter
 {
@@ -24,6 +26,8 @@ public:
 	virtual void GetHit(const FVector& ImpactPoint, AActor* Hitter) override;
 
 	void PlayAssassinationMontage();
+
+	FEnemyKilled OnEnemyKilled;
 
 protected:
 	virtual void BeginPlay() override;

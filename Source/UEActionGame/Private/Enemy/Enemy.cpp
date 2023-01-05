@@ -127,6 +127,10 @@ void AEnemy::Die()
 	DisableCapsule();
 	GetCharacterMovement()->bOrientRotationToMovement = false;
 	SetWeaponCollision(ECollisionEnabled::NoCollision);
+	if (OnEnemyKilled.IsBound())
+	{
+		OnEnemyKilled.Broadcast();
+	}
 }
 
 void AEnemy::Attack()

@@ -16,8 +16,11 @@ class UEACTIONGAME_API UObjective : public UObject
 
 public:
 	void Activate();
+	void Complete();
 
 protected:
+	void EnemyKilled();
+
 	UPROPERTY(EditAnywhere)
 	FName ObjectiveText;
 
