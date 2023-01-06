@@ -159,6 +159,7 @@ void AMainCharacter::Vault()
 
 void AMainCharacter::Slide()
 {
+	if (CharacterActionState == ECharacterActionState::ECAS_Swimming) return;
 	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
 	GetCapsuleComponent()->SetCapsuleHalfHeight(30.f);
 
@@ -389,6 +390,8 @@ void AMainCharacter::Tick(float DeltaTime)
 	if (CharacterActionState != ECharacterActionState::ECAS_Swimming && GetCharacterMovement()->IsSwimming())
 	{
 		CharacterActionState = ECharacterActionState::ECAS_Swimming;
+		UnequipTorch();
+		Equip();
 	}
 
 	if (CharacterActionState == ECharacterActionState::ECAS_Swimming && !GetCharacterMovement()->IsSwimming())
@@ -525,6 +528,7 @@ void AMainCharacter::VaultOrClimb(bool bShouldClimb, bool bWallThick, bool bCanC
 
 bool AMainCharacter::CanSprint()
 {
+	if (CharacterActionState == ECharacterActionState::ECAS_Swimming) return false;
 	return CharacterActionState <= ECharacterActionState::ECAS_Crouching &&
 		CharacterWeaponState == ECharacterWeaponState::ECWS_Unequipped && Attributes->HasEnoughStamina();
 }
