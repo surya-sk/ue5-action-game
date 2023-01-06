@@ -9,9 +9,6 @@ AQuest::AQuest()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	if (Objectives.Num() > 0)
-		Objectives[ActiveObjectiveIndex]->OnMissionFinished.AddDynamic(this, &AQuest::EndCurrentObjective);
 }
 
 // Called when the game starts or when spawned
@@ -21,6 +18,7 @@ void AQuest::BeginPlay()
 	if (Objectives.Num() > 0)
 	{
 		Objectives[ActiveObjectiveIndex]->Activate();
+		Objectives[ActiveObjectiveIndex]->OnMissionFinished.AddDynamic(this, &AQuest::EndCurrentObjective);
 	}
 	
 }
