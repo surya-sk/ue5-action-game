@@ -23,14 +23,18 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	void ActivateNewObjective();
-
 	UPROPERTY(EditInstanceOnly)
 	TArray<class AMission*> Objectives;
 
 private:
-	void ActivateObjective();
+	/// <summary>
+	/// Activates the new objective
+	/// </summary>
+	void ActivateNewObjective();
 
+	/// <summary>
+	/// Ends the current mission and moves on the next one
+	/// </summary>
 	UFUNCTION()
 	void EndCurrentObjective();
 
