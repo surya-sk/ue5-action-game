@@ -49,4 +49,7 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float StaminaRegenRate;
+
+	UPROPERTY(EditAnywhere)
+	class USoundBase* TiredSound;
 };

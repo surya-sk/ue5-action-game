@@ -2,6 +2,7 @@
 
 
 #include "Components/AttributeComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values for this component's properties
 UAttributeComponent::UAttributeComponent()
@@ -42,7 +43,10 @@ void UAttributeComponent::HandleStamina(bool bSprinting)
 	}
 	else
 	{
-		// TODO: Play tired sound
+		if (TiredSound && !HasEnoughStamina())
+		{
+			UGameplayStatics::PlaySound2D(GetWorld(), TiredSound);
+		}
 		if (Stamina < MaxStamina)
 		{
 			Stamina += StaminaRegenRate;
