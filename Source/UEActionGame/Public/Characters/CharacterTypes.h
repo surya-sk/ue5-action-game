@@ -12,6 +12,7 @@ UENUM(BlueprintType)
 enum class ECharacterActionState : uint8
 {
 	ECAS_Unoccupied UMETA(DisplayName = "Unoccupied"),
+	ECAS_Swimming UMETA(DisplayName = "Swimming"),
 	ECAS_Crouching UMETA(DisplayName = "Crouching"),
 	ECAS_HitReaction UMETA(DisplayName = "Hit Reaction"),
 	ECAS_Attacking UMETA(DisplayName = "Attacking"),

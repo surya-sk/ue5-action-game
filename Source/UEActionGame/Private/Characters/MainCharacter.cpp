@@ -60,7 +60,13 @@ void AMainCharacter::BeginPlay()
 void AMainCharacter::MoveForward(float Value)
 {
 	if (CharacterActionState > ECharacterActionState::ECAS_Crouching) return;
-	if (Controller && (Value != 0.f))
+
+	if (CharacterActionState == ECharacterActionState::ECAS_Swimming && Value != 0.f)
+	{
+		const FVector Direction = ViewCamera->GetForwardVector();
+		AddMovementInput(Direction, Value);
+	}
+	else if(Controller && (Value != 0.f))
 	{
 		const FRotator ControlRotation = GetControlRotation();
 		const FRotator YawRotation(0.f, ControlRotation.Yaw, 0.f); // only need the yaw
@@ -379,6 +385,16 @@ void AMainCharacter::Tick(float DeltaTime)
 		StopSprinting();
 	}
 	Attributes->HandleStamina(bSprinting);
+
+	if (CharacterActionState != ECharacterActionState::ECAS_Swimming && GetCharacterMovement()->IsSwimming())
+	{
+		CharacterActionState = ECharacterActionState::ECAS_Swimming;
+	}
+
+	if (CharacterActionState == ECharacterActionState::ECAS_Swimming && !GetCharacterMovement()->IsSwimming())
+	{
+		CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
+	}
 }
 
 // Called to bind functionality to input
