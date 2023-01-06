@@ -15,9 +15,13 @@ class UEACTIONGAME_API AFireTorch : public AItem
 
 public:
 	AFireTorch();
+	virtual void BeginPlay() override;
 	void Unequip();
 
 protected:
 	UPROPERTY(EditAnywhere)
 	class UParticleSystemComponent* FireParticles;
+
+	UPROPERTY(EditAnywhere)
+	class USoundBase* FireSound;
 };
