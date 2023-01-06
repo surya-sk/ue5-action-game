@@ -3,12 +3,13 @@
 
 #include "Progression/Mission.h"
 #include "Enemy/Enemy.h"
+#include "Components/BoxComponent.h"
 
 // Sets default values
 AMission::AMission()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 }
 
@@ -17,6 +18,14 @@ void AMission::Activate()
 	if (EnemyToKill)
 	{
 		EnemyToKill->OnEnemyKilled.AddDynamic(this, &AMission::EnemyKilled);
+	}
+	else if(PlaceToReach)
+	{
+		PlaceToReach->OnComponentBeginOverlap.AddDynamic(this, &AMission::PlaceReached);
+	}
+	else if (ItemToFind)
+	{
+		// TODO: Implement some sort of item to read
 	}
 }
 
@@ -31,6 +40,18 @@ void AMission::Complete()
 void AMission::EnemyKilled()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Enemy killed"));
+	Complete();
+}
+
+void AMission::PlaceReached(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Place reached"));
+	Complete();
+}
+
+void AMission::ItemFound()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Item reached"));
 	Complete();
 }
 
