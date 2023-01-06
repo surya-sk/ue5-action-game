@@ -13,6 +13,7 @@
 #include "Items/Item.h"
 #include "Items/Weapons/Weapon.h"
 #include "Items/Torches/FireTorch.h"
+#include "Items/ExpositionNote.h"
 #include "Components/AttributeComponent.h"
 #include "Animation/AnimMontage.h"
 #include "Enemy/Enemy.h"
@@ -194,6 +195,14 @@ void AMainCharacter::InteractKeyPressed()
 		OverlappingItem = nullptr;
 		return;
 	}
+
+	AExpositionNote* OverlappingNote = Cast<AExpositionNote>(OverlappingItem);
+	if (OverlappingNote)
+	{
+		OverlappingNote->Equip(this->GetMesh(), FName("RightHandSocket"), this, this);
+		OverlappingItem = nullptr;
+	}
+	
 }
 
 void AMainCharacter::HitReactEnd()

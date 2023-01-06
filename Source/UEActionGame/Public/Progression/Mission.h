@@ -67,6 +67,6 @@ protected:
 	class UBoxComponent* PlaceToReach;
 
 	UPROPERTY(EditInstanceOnly)
-	class AItem* ItemToFind;
+	class AExpositionNote* ItemToFind;
 
 };

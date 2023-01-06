@@ -3,6 +3,7 @@
 
 #include "Progression/Mission.h"
 #include "Enemy/Enemy.h"
+#include "Items/ExpositionNote.h"
 #include "Components/BoxComponent.h"
 
 // Sets default values
@@ -25,7 +26,7 @@ void AMission::Activate()
 	}
 	else if (ItemToFind)
 	{
-		// TODO: Implement some sort of item to read
+		ItemToFind->OnNoteRead.AddDynamic(this, &AMission::ItemFound);
 	}
 }
 
@@ -51,7 +52,7 @@ void AMission::PlaceReached(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 
 void AMission::ItemFound()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Item reached"));
+	UE_LOG(LogTemp, Warning, TEXT("Item found"));
 	Complete();
 }
 
