@@ -23,6 +23,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	void ActivateNewObjective();
+
 	UPROPERTY(EditInstanceOnly)
 	TArray<class AMission*> Objectives;
 

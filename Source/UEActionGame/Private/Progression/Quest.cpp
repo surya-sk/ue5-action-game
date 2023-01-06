@@ -17,19 +17,25 @@ void AQuest::BeginPlay()
 	Super::BeginPlay();
 	if (Objectives.Num() > 0)
 	{
-		Objectives[ActiveObjectiveIndex]->Activate();
-		Objectives[ActiveObjectiveIndex]->OnMissionFinished.AddDynamic(this, &AQuest::EndCurrentObjective);
+		ActivateNewObjective();
 	}
 	
 }
 
-void AQuest::ActivateObjective()
+void AQuest::ActivateNewObjective()
 {
+	Objectives[ActiveObjectiveIndex]->Activate();
+	Objectives[ActiveObjectiveIndex]->OnMissionFinished.AddDynamic(this, &AQuest::EndCurrentObjective);
 }
 
 void AQuest::EndCurrentObjective()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Objective complete"));
+	if (ActiveObjectiveIndex < Objectives.Num())
+	{
+		ActiveObjectiveIndex++;
+		ActivateNewObjective();
+	}
 }
 
 // Called every frame
