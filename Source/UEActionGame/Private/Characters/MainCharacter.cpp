@@ -397,7 +397,11 @@ void AMainCharacter::Tick(float DeltaTime)
 	if (CharacterActionState == ECharacterActionState::ECAS_Swimming && !GetCharacterMovement()->IsSwimming())
 	{
 		CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
+		UE_LOG(LogTemp, Warning, TEXT("Regenerating oxygen!"));
+		Attributes->RegenrateOxygen();
 	}
+
+	Attributes->HandleOxygen(CharacterActionState == ECharacterActionState::ECAS_Swimming);
 }
 
 // Called to bind functionality to input

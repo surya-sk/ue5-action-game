@@ -61,22 +61,16 @@ bool UAttributeComponent::HasEnoughStamina()
 
 void UAttributeComponent::HandleOxygen(bool bSwimming)
 {
-	if ((Oxygen - OxygenDrainRate) > 0.f && bSwimming)
+	if (!bSwimming) return;
+	if ((Oxygen - OxygenDrainRate) > 0.f)
 	{
 		Oxygen -= OxygenDrainRate;
 	}
 	else
 	{
-		if (Oxygen < MaxOxygen)
-		{
-			Oxygen += OxygenRegenRate;
-		}
+		UE_LOG(LogTemp, Warning, TEXT("Dead"));
+		Health = 0.f;
 	}
-}
-
-bool UAttributeComponent::HasEnoughOxgen()
-{
-	return Oxygen > 1.f;
 }
 
 void UAttributeComponent::RegenrateHealth()
