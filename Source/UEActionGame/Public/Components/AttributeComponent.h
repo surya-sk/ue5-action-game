@@ -21,6 +21,8 @@ public:
 	void ConsumeStamina(float StaminaCost);
 	void HandleStamina(bool bSprinting);
 	bool HasEnoughStamina();
+	void HandleOxygen(bool bSwimming);
+	bool HasEnoughOxgen();
 	void RegenrateHealth();
 	bool IsDead() const;
 
@@ -49,6 +51,18 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float StaminaRegenRate;
+
+	UPROPERTY(EditAnywhere)
+	float Oxygen;
+
+	UPROPERTY(EditAnywhere)
+	float MaxOxygen;
+
+	UPROPERTY(EditAnywhere);
+	float OxygenDrainRate;
+
+	UPROPERTY(EditAnywhere)
+	float OxygenRegenRate;
 
 	UPROPERTY(EditAnywhere)
 	class USoundBase* TiredSound;

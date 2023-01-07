@@ -59,6 +59,26 @@ bool UAttributeComponent::HasEnoughStamina()
 	return Stamina > 1.f;
 }
 
+void UAttributeComponent::HandleOxygen(bool bSwimming)
+{
+	if ((Oxygen - OxygenDrainRate) > 0.f && bSwimming)
+	{
+		Oxygen -= OxygenDrainRate;
+	}
+	else
+	{
+		if (Oxygen < MaxOxygen)
+		{
+			Oxygen += OxygenRegenRate;
+		}
+	}
+}
+
+bool UAttributeComponent::HasEnoughOxgen()
+{
+	return Oxygen > 1.f;
+}
+
 void UAttributeComponent::RegenrateHealth()
 {
 	if (Health < MaxHealth)
