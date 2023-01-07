@@ -33,23 +33,11 @@ void AWeapon::BeginPlay()
 
 void AWeapon::Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator)
 {
-	SetOwner(NewOwner);
-	SetInstigator(NewInstigator);
-	AttachMeshToSocket(InParent, InSocketName);
-	if (EquipSound)
-	{
-		UGameplayStatics::PlaySoundAtLocation(this, EquipSound, this->GetActorLocation());
-	}
+	Super::Equip(InParent, InSocketName, NewOwner, NewInstigator);
 	if (Sphere)
 	{
 		Sphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
-}
-
-void AWeapon::AttachMeshToSocket(USceneComponent* InParent, const FName& InSocketName)
-{
-	FAttachmentTransformRules TransformRules(EAttachmentRule::SnapToTarget, true);
-	ItemMesh->AttachToComponent(InParent, TransformRules, InSocketName);
 }
 
 void AWeapon::OnWeaponBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,

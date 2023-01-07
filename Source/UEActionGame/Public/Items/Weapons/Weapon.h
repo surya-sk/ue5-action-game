@@ -19,9 +19,7 @@ class UEACTIONGAME_API AWeapon : public AItem
 
 public:
 	AWeapon();
-	void Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator);
-
-	void AttachMeshToSocket(USceneComponent* InParent, const FName& InSocketName);
+	virtual void Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator) override;
 
 	FORCEINLINE UBoxComponent* GetWeaponBox() const { return WeaponBox; }
 
@@ -49,9 +47,6 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
 	bool bShowBoxDebug = false;
-
-	UPROPERTY(EditAnywhere)
-	USoundBase* EquipSound;
 
 	UPROPERTY(VisibleAnywhere)
 	UBoxComponent* WeaponBox;

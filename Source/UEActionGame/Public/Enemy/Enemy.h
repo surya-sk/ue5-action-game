@@ -8,6 +8,9 @@
 #include "Enemy.generated.h"
 
 class UPawnSensingComponent;
+class UAnimMontage;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FEnemyKilled);
 
 UCLASS()
 class UEACTIONGAME_API AEnemy : public ABaseCharacter
@@ -22,6 +25,10 @@ public:
 
 	virtual void GetHit(const FVector& ImpactPoint, AActor* Hitter) override;
 
+	void PlayAssassinationMontage();
+
+	FEnemyKilled OnEnemyKilled;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -32,6 +39,13 @@ protected:
 	virtual void HandleDamage(float DamageAmount) override;
 	virtual void AttackEnd() override;
 	/** </ABaseCharacter> */
+
+	UFUNCTION()
+	virtual void OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	virtual void OnBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
 
 	UPROPERTY(BlueprintReadOnly)
 	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
@@ -91,8 +105,14 @@ private:
 	UFUNCTION()
 	void PawnSeen(APawn* SeenPawn);
 
+	UFUNCTION()
+	void TorchSeen(APawn* SeenPawn);
+
 	UPROPERTY(VisibleAnywhere)
 	UPawnSensingComponent* PawnSensing;
+
+	UPROPERTY(VisibleAnywhere)
+	UPawnSensingComponent* TorchPawnSensing;
 
 	UPROPERTY(EditAnywhere, Category = AI)
 	double CombatRadius = 500.f;
@@ -120,6 +140,9 @@ private:
 	UPROPERTY()
 	class AAIController* EnemyController;
 
+	UPROPERTY(EditAnywhere)
+	class UBoxComponent* AssassinationBox;
+
 
 	/** COMBAT */
 
@@ -138,4 +161,7 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = Combat)
 	float AttackDelayMax = 1.f;
+
+	UPROPERTY(EditDefaultsOnly)
+	UAnimMontage* AssassinationMontage;
 };

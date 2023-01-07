@@ -6,8 +6,10 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Perception/PawnSensingComponent.h"
 #include "Components/AttributeComponent.h"
+#include "Components/BoxComponent.h"
 #include "AIController.h"
 #include "Items/Weapons/Weapon.h"
+#include "Characters/MainCharacter.h"
 
 
 // Sets default values
@@ -23,6 +25,10 @@ AEnemy::AEnemy()
 	EnemyMesh->SetGenerateOverlapEvents(true);
 
 	PawnSensing = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensing"));
+	TorchPawnSensing = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("TorchPawnSensing"));
+
+	AssassinationBox = CreateDefaultSubobject<UBoxComponent>(TEXT("AssassinationBox"));
+	AssassinationBox->SetupAttachment(EnemyMesh);
 
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
@@ -55,6 +61,17 @@ void AEnemy::GetHit(const FVector& ImpactPoint, AActor* Hitter)
 	StopAttackMontage();
 }
 
+void AEnemy::PlayAssassinationMontage()
+{
+	EnemyState = EEnemyState::EES_Dead;
+	DisableCapsule();
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && AssassinationMontage)
+	{
+		AnimInstance->Montage_Play(AssassinationMontage);
+	}
+}
+
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, 
 	AActor* DamageCauser)
 {
@@ -75,6 +92,9 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+
+	AssassinationBox->OnComponentBeginOverlap.AddDynamic(this, &AEnemy::OnBoxOverlap);
+	AssassinationBox->OnComponentEndOverlap.AddDynamic(this, &AEnemy::OnBoxEndOverlap);
 	
 	EnemyController = Cast<AAIController>(GetController());
 	MoveToTarget(CurrentPatrolTarget);
@@ -82,6 +102,11 @@ void AEnemy::BeginPlay()
 	if (PawnSensing)
 	{
 		PawnSensing->OnSeePawn.AddDynamic(this, &AEnemy::PawnSeen);
+	}
+
+	if (TorchPawnSensing)
+	{
+		TorchPawnSensing->OnSeePawn.AddDynamic(this, &AEnemy::TorchSeen);
 	}
 
 	UWorld* World = GetWorld();
@@ -102,6 +127,10 @@ void AEnemy::Die()
 	DisableCapsule();
 	GetCharacterMovement()->bOrientRotationToMovement = false;
 	SetWeaponCollision(ECollisionEnabled::NoCollision);
+	if (OnEnemyKilled.IsBound())
+	{
+		OnEnemyKilled.Broadcast();
+	}
 }
 
 void AEnemy::Attack()
@@ -129,6 +158,24 @@ void AEnemy::AttackEnd()
 {
 	EnemyState = EEnemyState::EES_NoState;
 	CheckCombatTarget();
+}
+
+void AEnemy::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	AMainCharacter* Character = Cast<AMainCharacter>(OtherActor);
+	if (Character)
+	{
+		Character->SetEnemyToAssassinate(this);
+	}
+}
+
+void AEnemy::OnBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	AMainCharacter* Character = Cast<AMainCharacter>(OtherActor);
+	if (Character)
+	{
+		Character->SetEnemyToAssassinate(nullptr);
+	}
 }
 
 void AEnemy::CheckPatrolTarget()
@@ -221,8 +268,24 @@ void AEnemy::PawnSeen(APawn* SeenPawn)
 		EnemyState < EEnemyState::EES_Attacking&&
 		SeenPawn->ActorHasTag(FName("PlayerCharacter"));
 
+
 	if (bShouldChase)
 	{
+		CombatTarget = SeenPawn;
+		GetWorldTimerManager().ClearTimer(PatrolTimer);
+		ChaseTarget();
+	}
+}
+
+void AEnemy::TorchSeen(APawn* SeenPawn)
+{
+	const bool bShouldChase = EnemyState != EEnemyState::EES_Dead &&
+		EnemyState != EEnemyState::EES_Chasing &&
+		EnemyState < EEnemyState::EES_Attacking&&
+		SeenPawn->ActorHasTag(FName("Torch")) && CombatTarget == nullptr;
+	if (bShouldChase)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Start chase torch"));
 		CombatTarget = SeenPawn;
 		GetWorldTimerManager().ClearTimer(PatrolTimer);
 		ChaseTarget();

@@ -12,8 +12,13 @@
 #include "Components/StaticMeshComponent.h"
 #include "Items/Item.h"
 #include "Items/Weapons/Weapon.h"
+#include "Items/Torches/FireTorch.h"
+#include "Items/ExpositionNote.h"
 #include "Components/AttributeComponent.h"
+#include "Components/AudioComponent.h"
 #include "Animation/AnimMontage.h"
+#include "Kismet/GameplayStatics.h"
+#include "Enemy/Enemy.h"
 
 // Sets default values
 AMainCharacter::AMainCharacter()
@@ -56,8 +61,14 @@ void AMainCharacter::BeginPlay()
 
 void AMainCharacter::MoveForward(float Value)
 {
-	if (CharacterActionState != ECharacterActionState::ECAS_Unoccupied) return;
-	if (Controller && (Value != 0.f))
+	if (CharacterActionState > ECharacterActionState::ECAS_Crouching) return;
+
+	if (CharacterActionState == ECharacterActionState::ECAS_Swimming && Value != 0.f)
+	{
+		const FVector Direction = ViewCamera->GetForwardVector();
+		AddMovementInput(Direction, Value);
+	}
+	else if(Controller && (Value != 0.f))
 	{
 		const FRotator ControlRotation = GetControlRotation();
 		const FRotator YawRotation(0.f, ControlRotation.Yaw, 0.f); // only need the yaw
@@ -69,7 +80,7 @@ void AMainCharacter::MoveForward(float Value)
 
 void AMainCharacter::MoveRight(float Value)
 {
-	if (CharacterActionState != ECharacterActionState::ECAS_Unoccupied) return;
+	if (CharacterActionState > ECharacterActionState::ECAS_Crouching) return;;
 	if (Controller && (Value != 0.f))
 	{
 		const FRotator ControlRotation = GetControlRotation();
@@ -92,7 +103,7 @@ void AMainCharacter::LookUp(float Value)
 
 void AMainCharacter::Vault()
 {
-	if (CharacterActionState != ECharacterActionState::ECAS_Unoccupied) return;
+	if (CharacterActionState > ECharacterActionState::ECAS_Crouching) return;
 	bool bShouldClimb;
 	bool bWallThick;
 	bool bCanClimb = true;
@@ -150,14 +161,16 @@ void AMainCharacter::Vault()
 
 void AMainCharacter::Slide()
 {
+	if (CharacterActionState == ECharacterActionState::ECAS_Swimming) return;
 	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
-	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	GetCapsuleComponent()->SetCapsuleHalfHeight(30.f);
 
 	float MontageLen = this->PlayAnimMontage(SlideMontage);
 	FTimerDelegate Delegate;
 	Delegate.BindLambda([&]()
 		{
-			ResetCollisionAndMovement();
+			GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+			GetCapsuleComponent()->SetCapsuleHalfHeight(88.f);
 		}
 	);
 
@@ -174,7 +187,31 @@ void AMainCharacter::InteractKeyPressed()
 		EquippedWeapon->Equip(this->GetMesh(), FName("LeftHandSocket"), this, this);
 		CharacterWeaponState = ECharacterWeaponState::ECWS_Equipped;
 		OverlappingItem = nullptr;
+		return;
 	}
+	
+	AFireTorch* OverlappingTorch = Cast<AFireTorch>(OverlappingItem);
+	if (OverlappingTorch)
+	{
+		if (EquippedWeapon)
+		{
+			Equip(); // actually unequips
+		}
+		EquippedTorch = OverlappingTorch;
+		EquippedTorch->Equip(this->GetMesh(), FName("RightHandSocket"), this, this);
+		this->Tags.Add(FName("Torch"));
+		CharacterWeaponState = ECharacterWeaponState::ECWS_Torch;
+		OverlappingItem = nullptr;
+		return;
+	}
+
+	AExpositionNote* OverlappingNote = Cast<AExpositionNote>(OverlappingItem);
+	if (OverlappingNote)
+	{
+		OverlappingNote->Equip(this->GetMesh(), FName("RightHandSocket"), this, this);
+		OverlappingItem = nullptr;
+	}
+	
 }
 
 void AMainCharacter::HitReactEnd()
@@ -194,9 +231,9 @@ void AMainCharacter::Attack()
 void AMainCharacter::Equip()
 {
 	bool bCanUnequip = CharacterActionState == ECharacterActionState::ECAS_Unoccupied &&
-		CharacterWeaponState != ECharacterWeaponState::ECWS_Unequipped;
+		CharacterWeaponState == ECharacterWeaponState::ECWS_Equipped;
 	bool bCanEquip = CharacterActionState == ECharacterActionState::ECAS_Unoccupied &&
-		CharacterWeaponState == ECharacterWeaponState::ECWS_Unequipped && EquippedWeapon;
+		CharacterWeaponState != ECharacterWeaponState::ECWS_Equipped && EquippedWeapon;
 	if (bCanUnequip)
 	{
 		PlayEquipMontage(FName("Unequip"));
@@ -205,6 +242,7 @@ void AMainCharacter::Equip()
 	}
 	else if (bCanEquip)
 	{
+		UnequipTorch();
 		PlayEquipMontage(FName("Equip"));
 		CharacterWeaponState = ECharacterWeaponState::ECWS_Equipped;
 		CharacterActionState = ECharacterActionState::ECAS_EquippingWeapon;
@@ -215,15 +253,54 @@ void AMainCharacter::Sprint()
 {
 	if (CanSprint())
 	{
+		bSprinting = true;
+		CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
 		GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
 	}
 	else
+	{
+		bSprinting = false;
 		GetCharacterMovement()->MaxWalkSpeed = JogSpeed;
+	}
 }
 
 void AMainCharacter::StopSprinting()
 {
+	bSprinting = false;
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+}
+
+void AMainCharacter::StartCrouch()
+{
+	if (GetCharacterMovement()->MaxWalkSpeed > WalkSpeed) return;
+	Super::Crouch();
+	CharacterActionState = ECharacterActionState::ECAS_Crouching;
+}
+
+void AMainCharacter::StopCrouching()
+{
+	Super::UnCrouch();
+	CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
+}
+
+void AMainCharacter::PerformTakedown()
+{
+	if (EnemyToAssassinate)
+	{
+		PlayTakedownMontage();
+		EnemyToAssassinate->PlayAssassinationMontage();
+	}
+}
+
+void AMainCharacter::UnequipTorch()
+{
+	if (EquippedTorch)
+	{
+		EquippedTorch->Unequip();
+		this->Tags.Remove(FName("Torch"));
+		CharacterWeaponState = ECharacterWeaponState::ECWS_Unequipped;
+		EquippedTorch = nullptr;
+	}
 }
 
 void AMainCharacter::PlayEquipMontage(const FName Section)
@@ -233,6 +310,15 @@ void AMainCharacter::PlayEquipMontage(const FName Section)
 	{
 		AnimInstance->Montage_Play(EquipMontage);
 		AnimInstance->Montage_JumpToSection(Section, EquipMontage);
+	}
+}
+
+void AMainCharacter::PlayTakedownMontage()
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && TakedownMontage)
+	{
+		AnimInstance->Montage_Play(TakedownMontage);
 	}
 }
 
@@ -275,7 +361,7 @@ void AMainCharacter::FinishEquip()
 bool AMainCharacter::CanAttack()
 {
 	return CharacterActionState == ECharacterActionState::ECAS_Unoccupied &&
-		CharacterWeaponState != ECharacterWeaponState::ECWS_Unequipped;
+		CharacterWeaponState == ECharacterWeaponState::ECWS_Equipped ;
 }
 
 void AMainCharacter::Die()
@@ -285,11 +371,46 @@ void AMainCharacter::Die()
 	DisableMeshCollision();
 }
 
+FVector AMainCharacter::GetEnemyWarpTarget()
+{
+	if(EnemyToAssassinate == nullptr) return FVector();
+	return EnemyToAssassinate->GetActorLocation();
+}
+
 // Called every frame
 void AMainCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	Attributes->RegenrateHealth();
+	if (!Attributes->HasEnoughStamina())
+	{
+		StopSprinting();
+	}
+	Attributes->HandleStamina(bSprinting);
+
+	if (CharacterActionState != ECharacterActionState::ECAS_Swimming && GetCharacterMovement()->IsSwimming())
+	{
+		CharacterActionState = ECharacterActionState::ECAS_Swimming;
+		if (WaterSound)
+		{
+			WaterAudio = UGameplayStatics::SpawnSound2D(GetWorld(), WaterSound);
+		}
+		UnequipTorch();
+		Equip();
+	}
+
+	if (CharacterActionState == ECharacterActionState::ECAS_Swimming && !GetCharacterMovement()->IsSwimming())
+	{
+		CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
+		if (WaterAudio)
+		{
+			WaterAudio->SetActive(false);
+		}
+		Attributes->RegenrateOxygen();
+	}
+
+	Attributes->HandleOxygen(CharacterActionState == ECharacterActionState::ECAS_Swimming);
 }
 
 // Called to bind functionality to input
@@ -308,8 +429,12 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction(FName("Interact"), IE_Pressed, this, &AMainCharacter::InteractKeyPressed);
 	PlayerInputComponent->BindAction(FName("Attack"), IE_Pressed, this, &AMainCharacter::Attack);
 	PlayerInputComponent->BindAction(FName("Equip"), IE_Pressed, this, &AMainCharacter::Equip);
+	PlayerInputComponent->BindAction(FName("Unequip"), IE_Pressed, this, &AMainCharacter::UnequipTorch);
 	PlayerInputComponent->BindAction(FName("Sprint"), IE_Pressed, this, &AMainCharacter::Sprint);
 	PlayerInputComponent->BindAction(FName("Sprint"), IE_Released, this, &AMainCharacter::StopSprinting);
+	PlayerInputComponent->BindAction(FName("Crouch"), IE_Pressed, this, &AMainCharacter::StartCrouch);
+	PlayerInputComponent->BindAction(FName("Crouch"), IE_Released, this, &AMainCharacter::StopCrouching);
+	PlayerInputComponent->BindAction(FName("Takedown"), IE_Pressed, this, &AMainCharacter::PerformTakedown);
 }
 
 float AMainCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -361,7 +486,7 @@ void AMainCharacter::VaultOrClimb(bool bShouldClimb, bool bWallThick, bool bCanC
 
 		GetWorld()->GetTimerManager().SetTimer(handle, Delegate, MontageSeconds - 0.5f, false);
 	}
-	else
+	/*else
 	{
 		FHitResult CheckHitResult;
 		const FVector CheckStart = GetActorLocation() + FVector(0, 0, 200.f);
@@ -411,12 +536,13 @@ void AMainCharacter::VaultOrClimb(bool bShouldClimb, bool bWallThick, bool bCanC
 			GetWorld()->GetTimerManager().SetTimer(handle, Delegate, MontageSeconds, false);
 			bIsClimbing = false;
 		}
-	}
+	}*/
 }
 
 bool AMainCharacter::CanSprint()
 {
-	return CharacterActionState == ECharacterActionState::ECAS_Unoccupied &&
-		CharacterWeaponState == ECharacterWeaponState::ECWS_Unequipped;
+	if (CharacterActionState == ECharacterActionState::ECAS_Swimming) return false;
+	return CharacterActionState <= ECharacterActionState::ECAS_Crouching &&
+		CharacterWeaponState == ECharacterWeaponState::ECWS_Unequipped && Attributes->HasEnoughStamina();
 }
 

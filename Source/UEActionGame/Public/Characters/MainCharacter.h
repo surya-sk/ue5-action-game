@@ -12,6 +12,8 @@ class UCameraComponent;
 class AItem;
 class UAnimMontage;
 class AWeapon;
+class AEnemy;
+class AFireTorch;
 
 UCLASS()
 class UEACTIONGAME_API AMainCharacter : public ABaseCharacter
@@ -28,6 +30,7 @@ public:
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
 	FORCEINLINE ECharacterWeaponState GetCharacterWeaponState() const { return CharacterWeaponState; }
 	FORCEINLINE ECharacterActionState GetCharacterActionState() const { return CharacterActionState; }
+	FORCEINLINE void SetEnemyToAssassinate(AEnemy* Enemy) { EnemyToAssassinate = Enemy; }
 
 protected:
 	// Called when the game starts or when spawned
@@ -74,6 +77,26 @@ protected:
 	/// </summary>
 	void StopSprinting();
 
+	/// <summary>
+	/// Sets the player action to crouch
+	/// </summary>
+	void StartCrouch();
+
+	/// <summary>
+	/// Stops the player from crouching
+	/// </summary>
+	void StopCrouching();
+
+	/// <summary>
+	/// Takedown if an enemy is present
+	/// </summary>
+	void PerformTakedown();
+
+	/// <summary>
+	/// Unequips the torch
+	/// </summary>
+	void UnequipTorch();
+
 
 	/** COMBAT*/
 
@@ -82,6 +105,11 @@ protected:
 	/// </summary>
 	/// <param name="Section">The montage section to jump to</param>
 	void PlayEquipMontage(const FName Section);
+
+	/// <summary>
+	/// Plays the stealth takedown montage
+	/// </summary>
+	void PlayTakedownMontage();
 
 	/// <summary>
 	/// Unequips the weapon
@@ -115,6 +143,9 @@ protected:
 	virtual void Die() override;
 	/** </ABaseCharacter> */
 
+	UFUNCTION(BlueprintCallable)
+	FVector GetEnemyWarpTarget();
+
 	UPROPERTY(EditAnywhere)
 	float WalkSpeed = 50.f;
 
@@ -123,6 +154,9 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	float RunSpeed = 300.f;
+
+	UPROPERTY(BlueprintReadOnly)
+	AEnemy* EnemyToAssassinate;
 
 private:
 
@@ -171,6 +205,9 @@ private:
 	UPROPERTY(VisibleInstanceOnly)
 	AItem* OverlappingItem;
 
+	UPROPERTY(VisibleInstanceOnly)
+	AFireTorch* EquippedTorch;
+
 	/** MONTAGES*/
 
 	UPROPERTY(EditAnywhere, Category = Animation)
@@ -190,4 +227,14 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = Montages)
 	UAnimMontage* EquipMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = Montages)
+	UAnimMontage* TakedownMontage;
+
+	UPROPERTY(EditAnywhere)
+	class USoundBase* WaterSound;
+
+	bool bSprinting;
+
+	UAudioComponent* WaterAudio;
 };

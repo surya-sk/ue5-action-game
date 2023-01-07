@@ -16,6 +16,12 @@ public:
 	AItem();
 	virtual void Tick(float DeltaTime) override;
 
+	virtual void AttachMeshToSocket(USceneComponent* InParent, const FName& InSocketName);
+
+	virtual void DetachMeshFromSocket();
+
+	virtual void Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -31,6 +37,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class USphereComponent* Sphere;
+
+	UPROPERTY(EditAnywhere)
+	class USoundBase* EquipSound;
 
 
 };
