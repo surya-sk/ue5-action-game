@@ -15,7 +15,9 @@
 #include "Items/Torches/FireTorch.h"
 #include "Items/ExpositionNote.h"
 #include "Components/AttributeComponent.h"
+#include "Components/AudioComponent.h"
 #include "Animation/AnimMontage.h"
+#include "Kismet/GameplayStatics.h"
 #include "Enemy/Enemy.h"
 
 // Sets default values
@@ -390,6 +392,10 @@ void AMainCharacter::Tick(float DeltaTime)
 	if (CharacterActionState != ECharacterActionState::ECAS_Swimming && GetCharacterMovement()->IsSwimming())
 	{
 		CharacterActionState = ECharacterActionState::ECAS_Swimming;
+		if (WaterSound)
+		{
+			WaterAudio = UGameplayStatics::SpawnSound2D(GetWorld(), WaterSound);
+		}
 		UnequipTorch();
 		Equip();
 	}
@@ -397,7 +403,10 @@ void AMainCharacter::Tick(float DeltaTime)
 	if (CharacterActionState == ECharacterActionState::ECAS_Swimming && !GetCharacterMovement()->IsSwimming())
 	{
 		CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
-		UE_LOG(LogTemp, Warning, TEXT("Regenerating oxygen!"));
+		if (WaterAudio)
+		{
+			WaterAudio->SetActive(false);
+		}
 		Attributes->RegenrateOxygen();
 	}
 

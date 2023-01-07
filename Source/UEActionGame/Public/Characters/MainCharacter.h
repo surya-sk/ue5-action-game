@@ -231,5 +231,10 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = Montages)
 	UAnimMontage* TakedownMontage;
 
+	UPROPERTY(EditAnywhere)
+	class USoundBase* WaterSound;
+
 	bool bSprinting;
+
+	UAudioComponent* WaterAudio;
 };
