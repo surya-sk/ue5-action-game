@@ -20,6 +20,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Enemy/Enemy.h"
 #include "Components/WidgetComponent.h"
+#include "HUD/MainHUD.h"
+#include "HUD/PlayerOverlay.h"
 
 // Sets default values
 AMainCharacter::AMainCharacter()
@@ -56,8 +58,27 @@ void AMainCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	InitPlayerOverlay();
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 	Tags.Add(FName("PlayerCharacter"));
+}
+
+void AMainCharacter::InitPlayerOverlay()
+{
+	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	if (PlayerController)
+	{
+		AMainHUD* MainHUD = Cast<AMainHUD>(PlayerController->GetHUD());
+		if (MainHUD)
+		{
+			Overlay = MainHUD->GetPlayerOverlay();
+			if (Overlay && Attributes)
+			{
+				Overlay->SetHealthBarPercent(Attributes->GetHealthPercent());
+				Overlay->SetStaminaBarPercent(Attributes->GetStaminaPercent());
+			}
+		}
+	}
 }
 
 void AMainCharacter::MoveForward(float Value)
@@ -389,6 +410,10 @@ void AMainCharacter::Tick(float DeltaTime)
 		StopSprinting();
 	}
 	Attributes->HandleStamina(bSprinting);
+	if (Overlay)
+	{
+		Overlay->SetStaminaBarPercent(Attributes->GetStaminaPercent());
+	}
 
 	if (CharacterActionState != ECharacterActionState::ECAS_Swimming && GetCharacterMovement()->IsSwimming())
 	{
@@ -441,6 +466,10 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 float AMainCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	HandleDamage(DamageAmount);
+	if (Overlay)
+	{
+		Overlay->SetHealthBarPercent(Attributes->GetHealthPercent());
+	}
 	return DamageAmount;
 }
 

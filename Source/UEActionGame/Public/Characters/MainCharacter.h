@@ -36,6 +36,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	void InitPlayerOverlay();
+
 	/// <summary>
 	/// Input axis mapping callbacks
 	/// </summary>
@@ -237,4 +239,7 @@ private:
 	bool bSprinting;
 
 	UAudioComponent* WaterAudio;
+
+	UPROPERTY()
+	class UPlayerOverlay* Overlay;
 };

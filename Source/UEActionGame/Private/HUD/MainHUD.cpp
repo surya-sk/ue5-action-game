@@ -14,7 +14,7 @@ void AMainHUD::BeginPlay()
 		APlayerController* Controller = World->GetFirstPlayerController();
 		if (Controller && PlayerOverlayClass)
 		{
-			UPlayerOverlay* Overlay = CreateWidget<UPlayerOverlay>(Controller, PlayerOverlayClass);
+			Overlay = CreateWidget<UPlayerOverlay>(Controller, PlayerOverlayClass);
 			Overlay->AddToViewport();
 		}
 	}

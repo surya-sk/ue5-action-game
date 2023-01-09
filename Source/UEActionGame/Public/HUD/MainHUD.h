@@ -6,6 +6,8 @@
 #include "GameFramework/HUD.h"
 #include "MainHUD.generated.h"
 
+class UPlayerOverlay;
+
 /**
  * 
  */
@@ -14,11 +16,17 @@ class UEACTIONGAME_API AMainHUD : public AHUD
 {
 	GENERATED_BODY()
 
+public:
+	FORCEINLINE UPlayerOverlay* GetPlayerOverlay() const { return Overlay; }
+
 protected:
 	virtual void BeginPlay() override;
 
 private:
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<class UPlayerOverlay> PlayerOverlayClass;
+	TSubclassOf<UPlayerOverlay> PlayerOverlayClass;
+
+	UPROPERTY()
+	UPlayerOverlay* Overlay;
 	
 };
