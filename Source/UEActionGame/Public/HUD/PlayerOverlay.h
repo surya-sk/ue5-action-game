@@ -7,6 +7,7 @@
 #include "PlayerOverlay.generated.h"
 
 class UProgressBar;
+class UTextBlock;
 /**
  * 
  */
@@ -18,6 +19,7 @@ class UEACTIONGAME_API UPlayerOverlay : public UUserWidget
 public:
 	void SetHealthBarPercent(float Percent);
 	void SetStaminaBarPercent(float Percent);
+	void SetObjectiveText(FText Objective);
 
 private:
 	UPROPERTY(meta = (BindWidget))
@@ -25,5 +27,7 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	UProgressBar* StaminaBar;
-	
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* ObjectiveText;
 };

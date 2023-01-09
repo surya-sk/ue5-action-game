@@ -188,6 +188,9 @@ private:
 	/// <returns></returns>
 	bool CanSprint();
 
+	UFUNCTION()
+	void ObjectiveActivated();
+
 	bool bIsClimbing = false;
 
 	ECharacterWeaponState CharacterWeaponState = ECharacterWeaponState::ECWS_Unequipped;
@@ -242,4 +245,7 @@ private:
 
 	UPROPERTY()
 	class UPlayerOverlay* Overlay;
+
+	UPROPERTY(EditInstanceOnly)
+	class AQuest* Quest;
 };

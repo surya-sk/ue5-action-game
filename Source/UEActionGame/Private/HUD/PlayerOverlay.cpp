@@ -3,6 +3,7 @@
 
 #include "HUD/PlayerOverlay.h"
 #include "Components/ProgressBar.h"
+#include "Components/TextBlock.h"
 
 void UPlayerOverlay::SetHealthBarPercent(float Percent)
 {
@@ -17,5 +18,13 @@ void UPlayerOverlay::SetStaminaBarPercent(float Percent)
 	if (StaminaBar)
 	{
 		StaminaBar->SetPercent(Percent);
+	}
+}
+
+void UPlayerOverlay::SetObjectiveText(FText Objective)
+{
+	if (ObjectiveText)
+	{
+		ObjectiveText->SetText(Objective);
 	}
 }

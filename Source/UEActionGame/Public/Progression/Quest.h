@@ -4,9 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Mission.h"
 #include "Quest.generated.h"
 
 class UObjective;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FObjectiveUpdated);
 
 UCLASS()
 class UEACTIONGAME_API AQuest : public AActor
@@ -18,13 +21,16 @@ public:
 	AQuest();
 
 	virtual void Tick(float DeltaTime) override;
+	FORCEINLINE FText GetCurrentObjective() const { return Objectives[ActiveObjectiveIndex]->GetText(); }
+
+	FObjectiveUpdated OnObjectiveUpdated;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditInstanceOnly)
-	TArray<class AMission*> Objectives;
+	TArray<AMission*> Objectives;
 
 private:
 	/// <summary>

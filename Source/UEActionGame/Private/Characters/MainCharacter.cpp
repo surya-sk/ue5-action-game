@@ -22,6 +22,7 @@
 #include "Components/WidgetComponent.h"
 #include "HUD/MainHUD.h"
 #include "HUD/PlayerOverlay.h"
+#include "Progression/Quest.h"
 
 // Sets default values
 AMainCharacter::AMainCharacter()
@@ -76,6 +77,24 @@ void AMainCharacter::InitPlayerOverlay()
 			{
 				Overlay->SetHealthBarPercent(Attributes->GetHealthPercent());
 				Overlay->SetStaminaBarPercent(Attributes->GetStaminaPercent());
+				if (Quest == nullptr)
+				{
+					TArray<AActor*> ActorsToFind;
+					if (UWorld* World = GetWorld())
+					{
+						UGameplayStatics::GetAllActorsOfClass(GetWorld(), AQuest::StaticClass(), ActorsToFind);
+						AQuest* QuestToFind = Cast<AQuest>(ActorsToFind[0]);
+						if (QuestToFind)
+						{
+							Quest = QuestToFind;
+						}
+					}
+				}
+				if (Quest)
+				{
+					Quest->OnObjectiveUpdated.AddDynamic(this, &AMainCharacter::ObjectiveActivated);
+					Overlay->SetObjectiveText(Quest->GetCurrentObjective());
+				}
 			}
 		}
 	}
@@ -574,5 +593,13 @@ bool AMainCharacter::CanSprint()
 	if (CharacterActionState == ECharacterActionState::ECAS_Swimming) return false;
 	return CharacterActionState <= ECharacterActionState::ECAS_Crouching &&
 		CharacterWeaponState == ECharacterWeaponState::ECWS_Unequipped && Attributes->HasEnoughStamina();
+}
+
+void AMainCharacter::ObjectiveActivated()
+{
+	if (Overlay)
+	{
+		Overlay->SetObjectiveText(Quest->GetCurrentObjective());
+	}
 }
 
