@@ -19,6 +19,7 @@
 #include "Animation/AnimMontage.h"
 #include "Kismet/GameplayStatics.h"
 #include "Enemy/Enemy.h"
+#include "Components/WidgetComponent.h"
 
 // Sets default values
 AMainCharacter::AMainCharacter()
@@ -47,6 +48,9 @@ AMainCharacter::AMainCharacter()
 
 	HairMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("HairMesh"));
 	HairMesh->SetupAttachment(GetMesh(), TEXT("headSocket"));
+
+	StatsWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("StatsWidget"));
+	StatsWidget->SetupAttachment(GetRootComponent());
 }
 
 

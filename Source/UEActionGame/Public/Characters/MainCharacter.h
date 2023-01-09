@@ -237,4 +237,7 @@ private:
 	bool bSprinting;
 
 	UAudioComponent* WaterAudio;
+
+	UPROPERTY(VisibleAnywhere)
+	class UWidgetComponent* StatsWidget;
 };

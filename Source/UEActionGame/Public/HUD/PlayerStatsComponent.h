@@ -6,6 +6,7 @@
 #include "Components/WidgetComponent.h"
 #include "PlayerStatsComponent.generated.h"
 
+class UProgressBar;
 /**
  * 
  */
@@ -14,4 +15,14 @@ class UEACTIONGAME_API UPlayerStatsComponent : public UWidgetComponent
 {
 	GENERATED_BODY()
 	
+public:
+	void SetHealthBarPercent(float Percent);
+	void SetStaminaBarPercent(float Percent);
+
+private:
+	UPROPERTY(meta = (BindWidget))
+	UProgressBar* HealthBar;
+
+	UPROPERTY(meta = (BindWidget))
+	UProgressBar* StaminaBar;
 };
