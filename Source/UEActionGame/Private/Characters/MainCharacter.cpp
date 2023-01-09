@@ -48,9 +48,6 @@ AMainCharacter::AMainCharacter()
 
 	HairMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("HairMesh"));
 	HairMesh->SetupAttachment(GetMesh(), TEXT("headSocket"));
-
-	StatsWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("StatsWidget"));
-	StatsWidget->SetupAttachment(GetRootComponent());
 }
 
 

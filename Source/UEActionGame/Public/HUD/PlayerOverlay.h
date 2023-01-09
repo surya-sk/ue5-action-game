@@ -21,9 +21,9 @@ public:
 
 private:
 	UPROPERTY(meta = (BindWidget))
-		UProgressBar* HealthBar;
+	UProgressBar* HealthBar;
 
 	UPROPERTY(meta = (BindWidget))
-		UProgressBar* StaminaBar;
+	UProgressBar* StaminaBar;
 	
 };
