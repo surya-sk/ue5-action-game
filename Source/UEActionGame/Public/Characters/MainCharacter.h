@@ -36,6 +36,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	void InitPlayerOverlay();
+
 	/// <summary>
 	/// Input axis mapping callbacks
 	/// </summary>
@@ -186,6 +188,9 @@ private:
 	/// <returns></returns>
 	bool CanSprint();
 
+	UFUNCTION()
+	void ObjectiveActivated();
+
 	bool bIsClimbing = false;
 
 	ECharacterWeaponState CharacterWeaponState = ECharacterWeaponState::ECWS_Unequipped;
@@ -237,4 +242,10 @@ private:
 	bool bSprinting;
 
 	UAudioComponent* WaterAudio;
+
+	UPROPERTY()
+	class UPlayerOverlay* Overlay;
+
+	UPROPERTY(EditInstanceOnly)
+	class AQuest* Quest;
 };

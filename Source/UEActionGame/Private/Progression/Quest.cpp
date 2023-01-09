@@ -26,6 +26,10 @@ void AQuest::ActivateNewObjective()
 {
 	Objectives[ActiveObjectiveIndex]->Activate();
 	Objectives[ActiveObjectiveIndex]->OnMissionFinished.AddDynamic(this, &AQuest::EndCurrentObjective);
+	if (OnObjectiveUpdated.IsBound())
+	{
+		OnObjectiveUpdated.Broadcast();
+	}
 }
 
 void AQuest::EndCurrentObjective()

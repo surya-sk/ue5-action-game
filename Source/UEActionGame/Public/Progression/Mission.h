@@ -27,6 +27,8 @@ public:
 	/// </summary>
 	void Complete();
 
+	FORCEINLINE FText GetText() const { return ObjectiveText; }
+
 	FMissionFinished OnMissionFinished;
 
 protected:
@@ -55,7 +57,7 @@ protected:
 	void ItemFound();
 
 	UPROPERTY(EditInstanceOnly)
-	FName ObjectiveText;
+	FText ObjectiveText;
 
 	UPROPERTY(EditInstanceOnly)
 	TArray<AActor*> ActorsToActivate;

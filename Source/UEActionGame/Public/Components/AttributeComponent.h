@@ -26,6 +26,9 @@ public:
 	void RegenrateHealth();
 	bool IsDead() const;
 
+	FORCEINLINE float GetHealthPercent() const { return Health / MaxHealth; }
+	FORCEINLINE float GetStaminaPercent() const { return Stamina / MaxStamina; }
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
