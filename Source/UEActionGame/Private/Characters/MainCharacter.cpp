@@ -347,8 +347,8 @@ void AMainCharacter::UnequipTorch()
 
 	if (OverlappingNote)
 	{
-		/*OverlappingNote->Unequip();
-		OverlappingNote = nullptr;*/
+		OverlappingNote->Unequip();
+		OverlappingNote = nullptr;
 	}
 }
 

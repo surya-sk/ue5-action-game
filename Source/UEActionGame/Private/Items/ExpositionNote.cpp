@@ -8,7 +8,6 @@
 
 void AExpositionNote::Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator)
 {
-	Super::Equip(InParent, InSocketName, NewOwner, NewInstigator);
 	if (NoteWidget)
 	{
 		FString String = NoteText.ToString();
