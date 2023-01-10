@@ -5,8 +5,8 @@
 
 void AExpositionNote::Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator)
 {
-	if (OnNoteRead.IsBound())
+	/*if (OnNoteRead.IsBound())
 	{
 		OnNoteRead.Broadcast();
-	}
+	}*/
 }
