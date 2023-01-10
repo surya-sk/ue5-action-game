@@ -12,14 +12,13 @@ void AExpositionNote::Equip(USceneComponent* InParent, FName InSocketName, AActo
 	{
 		FString String = NoteText.ToString();
 		UE_LOG(LogTemp, Warning, TEXT("%s"), *String);
-		NoteWidget->SetNoteText(NoteText);
 		NoteWidget->AddToViewport();
+		NoteWidget->SetNoteText(NoteText);
 	}
 }
 
 void AExpositionNote::Unequip()
 {
-
 	if (OnNoteRead.IsBound())
 	{
 		OnNoteRead.Broadcast();
