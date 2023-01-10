@@ -83,10 +83,13 @@ void AMainCharacter::InitPlayerOverlay()
 					if (UWorld* World = GetWorld())
 					{
 						UGameplayStatics::GetAllActorsOfClass(GetWorld(), AQuest::StaticClass(), ActorsToFind);
-						AQuest* QuestToFind = Cast<AQuest>(ActorsToFind[0]);
-						if (QuestToFind)
+						if (ActorsToFind.Num() > 0)
 						{
-							Quest = QuestToFind;
+							AQuest* QuestToFind = Cast<AQuest>(ActorsToFind[0]);
+							if (QuestToFind)
+							{
+								Quest = QuestToFind;
+							}
 						}
 					}
 				}
@@ -423,7 +426,8 @@ void AMainCharacter::Die()
 FVector AMainCharacter::GetEnemyWarpTarget()
 {
 	if(EnemyToAssassinate == nullptr) return FVector();
-	return EnemyToAssassinate->GetActorLocation();
+	FVector TargetToAttacker = (GetActorLocation() - EnemyToAssassinate->GetActorLocation()).GetSafeNormal();
+	return TargetToAttacker + EnemyToAssassinate->GetActorLocation();
 }
 
 // Called every frame
