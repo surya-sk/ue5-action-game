@@ -23,5 +23,8 @@ void AExpositionNote::Unequip()
 	{
 		OnNoteRead.Broadcast();
 	}
-	NoteWidget->RemoveFromViewport();
+	if (NoteWidget)
+	{
+		NoteWidget->RemoveFromViewport();
+	}
 }
