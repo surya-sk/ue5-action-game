@@ -17,4 +17,13 @@ public:
 	FNoteRead OnNoteRead;
 	
 	virtual void Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator) override;
+
+	void Unequip();
+
+private:
+	UPROPERTY(EditDefaultsOnly)
+	class UNoteWidget* NoteWidget;
+
+	UPROPERTY(EditInstanceOnly)
+	FText NoteText;
 };

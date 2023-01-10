@@ -8,6 +8,7 @@ void UNoteWidget::SetNoteText(FText Text)
 {
 	if (NoteText)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("NoteText"));
 		NoteText->SetText(Text);
 	}
 }

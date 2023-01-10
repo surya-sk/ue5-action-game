@@ -246,11 +246,13 @@ void AMainCharacter::InteractKeyPressed()
 		return;
 	}
 
-	AExpositionNote* OverlappingNote = Cast<AExpositionNote>(OverlappingItem);
-	if (OverlappingNote)
+	AExpositionNote* Note = Cast<AExpositionNote>(OverlappingItem);
+	if (Note)
 	{
+		OverlappingNote = Note;
 		OverlappingNote->Equip(this->GetMesh(), FName("RightHandSocket"), this, this);
 		OverlappingItem = nullptr;
+		return;
 	}
 	
 }
@@ -341,6 +343,12 @@ void AMainCharacter::UnequipTorch()
 		this->Tags.Remove(FName("Torch"));
 		CharacterWeaponState = ECharacterWeaponState::ECWS_Unequipped;
 		EquippedTorch = nullptr;
+	}
+
+	if (OverlappingNote)
+	{
+		/*OverlappingNote->Unequip();
+		OverlappingNote = nullptr;*/
 	}
 }
 
