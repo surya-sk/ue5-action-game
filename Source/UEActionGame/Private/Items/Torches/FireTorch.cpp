@@ -4,11 +4,15 @@
 #include "Items/Torches/FireTorch.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/PointLightComponent.h"
 
 AFireTorch::AFireTorch()
 {
 	FireParticles = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("FireParticles"));
 	FireParticles->SetupAttachment(ItemMesh);
+
+	TorchLight = CreateDefaultSubobject<UPointLightComponent>(TEXT("TorchLight"));
+	TorchLight->SetupAttachment(ItemMesh);
 }
 
 void AFireTorch::BeginPlay()

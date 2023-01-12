@@ -213,6 +213,9 @@ private:
 	UPROPERTY(VisibleInstanceOnly)
 	AFireTorch* EquippedTorch;
 
+	UPROPERTY()
+	class AExpositionNote* OverlappingNote;
+
 	/** MONTAGES*/
 
 	UPROPERTY(EditAnywhere, Category = Animation)

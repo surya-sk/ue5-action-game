@@ -24,4 +24,7 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	class USoundBase* FireSound;
+
+	UPROPERTY(EditAnywhere)
+	class UPointLightComponent* TorchLight;
 };

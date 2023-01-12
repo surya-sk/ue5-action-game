@@ -83,10 +83,13 @@ void AMainCharacter::InitPlayerOverlay()
 					if (UWorld* World = GetWorld())
 					{
 						UGameplayStatics::GetAllActorsOfClass(GetWorld(), AQuest::StaticClass(), ActorsToFind);
-						AQuest* QuestToFind = Cast<AQuest>(ActorsToFind[0]);
-						if (QuestToFind)
+						if (ActorsToFind.Num() > 0)
 						{
-							Quest = QuestToFind;
+							AQuest* QuestToFind = Cast<AQuest>(ActorsToFind[0]);
+							if (QuestToFind)
+							{
+								Quest = QuestToFind;
+							}
 						}
 					}
 				}
@@ -246,11 +249,13 @@ void AMainCharacter::InteractKeyPressed()
 		return;
 	}
 
-	AExpositionNote* OverlappingNote = Cast<AExpositionNote>(OverlappingItem);
-	if (OverlappingNote)
+	AExpositionNote* Note = Cast<AExpositionNote>(OverlappingItem);
+	if (Note)
 	{
+		OverlappingNote = Note;
 		OverlappingNote->Equip(this->GetMesh(), FName("RightHandSocket"), this, this);
 		OverlappingItem = nullptr;
+		return;
 	}
 	
 }
@@ -342,6 +347,12 @@ void AMainCharacter::UnequipTorch()
 		CharacterWeaponState = ECharacterWeaponState::ECWS_Unequipped;
 		EquippedTorch = nullptr;
 	}
+
+	if (OverlappingNote)
+	{
+		OverlappingNote->Unequip();
+		OverlappingNote = nullptr;
+	}
 }
 
 void AMainCharacter::PlayEquipMontage(const FName Section)
@@ -415,7 +426,8 @@ void AMainCharacter::Die()
 FVector AMainCharacter::GetEnemyWarpTarget()
 {
 	if(EnemyToAssassinate == nullptr) return FVector();
-	return EnemyToAssassinate->GetActorLocation();
+	FVector TargetToAttacker = (GetActorLocation() - EnemyToAssassinate->GetActorLocation()).GetSafeNormal();
+	return TargetToAttacker + EnemyToAssassinate->GetActorLocation();
 }
 
 // Called every frame
