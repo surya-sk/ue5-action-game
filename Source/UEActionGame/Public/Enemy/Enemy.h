@@ -84,19 +84,19 @@ private:
 	/// <param name="Target">The target to check, usually the player</param>
 	/// <param name="AcceptanceRadius">The radius to check with</param>
 	/// <returns>Whether the target is in range</returns>
-	bool IsInTargetRange(AActor* Target, double AcceptanceRadius);
+	bool IsInTargetRange(FVector Target, double AcceptanceRadius);
 
 	/// <summary>
 	/// Moves the enemy to the Target
 	/// </summary>
 	/// <param name="Target">The actor to move towards</param>
-	void MoveToTarget(AActor* Target);
+	void MoveToTarget(FVector Target);
 
 	/// <summary>
 	/// Chooses a patrol target at random
 	/// </summary>
 	/// <returns>The patrol target</returns>
-	AActor* ChoosePatrolTarget();
+	FVector ChoosePatrolTarget();
 
 	/// <summary>
 	/// Callback for OnPawnSeen for PawnSensing
@@ -121,7 +121,7 @@ private:
 	double AttackRadius = 150.f;
 
 	UPROPERTY(EditInstanceOnly, Category = AI)
-	AActor* CurrentPatrolTarget;
+	FVector CurrentPatrolTarget;
 
 	UPROPERTY(EditInstanceOnly, Category = AI)
 	TArray<AActor*> PatrolTargets;
