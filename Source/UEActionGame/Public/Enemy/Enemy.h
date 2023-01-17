@@ -164,4 +164,7 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	UAnimMontage* AssassinationMontage;
+
+	UPROPERTY(EditAnywhere)
+	float ReachablePatrolRadius;
 };
