@@ -105,8 +105,11 @@ void AEnemy::BeginPlay()
 	NearbyEnemyTrigger->OnComponentEndOverlap.AddDynamic(this, &AEnemy::OnSphereEndOverlap);
 	
 	EnemyController = Cast<AAIController>(GetController());
-	CurrentPatrolTarget = ChoosePatrolTarget();
-	MoveToTarget(CurrentPatrolTarget);
+	if (bShouldPatrol)
+	{
+		CurrentPatrolTarget = ChoosePatrolTarget();
+		MoveToTarget(CurrentPatrolTarget);
+	}
 
 	if (PawnSensing)
 	{
@@ -279,7 +282,7 @@ void AEnemy::MoveToTarget(FVector Target)
 
 FVector AEnemy::ChoosePatrolTarget()
 {
-	if (PatrolTargets.Num() > 0)
+	if (PatrolTargets.Num() > 0 && bShouldPatrol)
 	{
 		TArray<AActor*> ValidTargets;
 		for (auto Target : PatrolTargets)

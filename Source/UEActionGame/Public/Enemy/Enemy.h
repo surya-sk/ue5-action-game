@@ -175,8 +175,11 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	UAnimMontage* AssassinationMontage;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = AI)
 	float ReachablePatrolRadius;
+
+	UPROPERTY(EditAnywhere, Category = AI)
+	bool bShouldPatrol = true;
 
 	UPROPERTY(EditAnywhere)
 	class USphereComponent* NearbyEnemyTrigger;
