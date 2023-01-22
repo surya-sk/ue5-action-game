@@ -182,4 +182,9 @@ private:
 	class USphereComponent* NearbyEnemyTrigger;
 
 	TArray<AEnemy*> NearbyEnemies;
+
+	UPROPERTY(EditAnywhere)
+	class USoundBase* AlertSound;
+
+	bool bChasing;
 };

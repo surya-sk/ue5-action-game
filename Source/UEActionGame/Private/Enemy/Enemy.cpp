@@ -12,6 +12,7 @@
 #include "Items/Weapons/Weapon.h"
 #include "Characters/MainCharacter.h"
 #include "NavigationSystem.h"
+#include "Kismet/GameplayStatics.h"
 
 
 // Sets default values
@@ -90,7 +91,6 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 	{
 		ChaseTarget();
 	}
-	ChaseTarget();
 	return DamageAmount;
 }
 
@@ -218,6 +218,8 @@ void AEnemy::CheckPatrolTarget()
 void AEnemy::CheckCombatTarget()
 {
 	if (CombatTarget == nullptr) return;
+	if (EnemyState == EEnemyState::EES_Chasing && !bChasing)
+		ChaseTarget();
 	if (!IsInTargetRange(CombatTarget->GetActorLocation(), CombatRadius))
 	{
 		GetWorldTimerManager().ClearTimer(AttackTimer);
@@ -250,9 +252,11 @@ void AEnemy::StartPatrolling()
 
 void AEnemy::ChaseTarget()
 {
+	bChasing = true;
 	EnemyState = EEnemyState::EES_Chasing;
 	GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
 	MoveToTarget(CombatTarget->GetActorLocation());
+	bChasing = false;
 }
 
 bool AEnemy::IsInTargetRange(FVector Target, double AcceptanceRadius)
@@ -299,7 +303,7 @@ void AEnemy::PawnSeen(APawn* SeenPawn)
 {
 	const bool bShouldChase =
 		EnemyState != EEnemyState::EES_Dead &&
-		//EnemyState != EEnemyState::EES_Chasing &&
+		EnemyState != EEnemyState::EES_Chasing &&
 		EnemyState < EEnemyState::EES_Attacking&&
 		SeenPawn->ActorHasTag(FName("PlayerCharacter"));
 
@@ -320,7 +324,6 @@ void AEnemy::TorchSeen(APawn* SeenPawn)
 		SeenPawn->ActorHasTag(FName("Torch")) && CombatTarget == nullptr;
 	if (bShouldChase)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Start chase torch"));
 		CombatTarget = SeenPawn;
 		GetWorldTimerManager().ClearTimer(PatrolTimer);
 		ChaseTarget();
@@ -330,6 +333,10 @@ void AEnemy::TorchSeen(APawn* SeenPawn)
 void AEnemy::AlertNearbyEnemies()
 {
 	if (NearbyEnemies.Num() == 0) return;
+	if (AlertSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, AlertSound, GetActorLocation());
+	}
 
 	for (AEnemy* Enemy : NearbyEnemies)
 	{
