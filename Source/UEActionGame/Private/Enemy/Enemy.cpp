@@ -192,6 +192,7 @@ void AEnemy::CheckPatrolTarget()
 
 void AEnemy::CheckCombatTarget()
 {
+	if (CombatTarget == nullptr) return;
 	if (!IsInTargetRange(CombatTarget->GetActorLocation(), CombatRadius))
 	{
 		GetWorldTimerManager().ClearTimer(AttackTimer);
@@ -273,10 +274,9 @@ void AEnemy::PawnSeen(APawn* SeenPawn)
 {
 	const bool bShouldChase =
 		EnemyState != EEnemyState::EES_Dead &&
-		EnemyState != EEnemyState::EES_Chasing &&
+		//EnemyState != EEnemyState::EES_Chasing &&
 		EnemyState < EEnemyState::EES_Attacking&&
 		SeenPawn->ActorHasTag(FName("PlayerCharacter"));
-
 
 	if (bShouldChase)
 	{
