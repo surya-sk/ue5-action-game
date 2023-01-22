@@ -7,6 +7,7 @@
 #include "Perception/PawnSensingComponent.h"
 #include "Components/AttributeComponent.h"
 #include "Components/BoxComponent.h"
+#include "Components/SphereComponent.h"
 #include "AIController.h"
 #include "Items/Weapons/Weapon.h"
 #include "Characters/MainCharacter.h"
@@ -30,6 +31,9 @@ AEnemy::AEnemy()
 
 	AssassinationBox = CreateDefaultSubobject<UBoxComponent>(TEXT("AssassinationBox"));
 	AssassinationBox->SetupAttachment(EnemyMesh);
+
+	NearbyEnemyTrigger = CreateDefaultSubobject<USphereComponent>(TEXT("NearbyEnemyTrigger"));
+	NearbyEnemyTrigger->SetupAttachment(EnemyMesh);
 
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
@@ -96,6 +100,9 @@ void AEnemy::BeginPlay()
 
 	AssassinationBox->OnComponentBeginOverlap.AddDynamic(this, &AEnemy::OnBoxOverlap);
 	AssassinationBox->OnComponentEndOverlap.AddDynamic(this, &AEnemy::OnBoxEndOverlap);
+
+	NearbyEnemyTrigger->OnComponentBeginOverlap.AddDynamic(this, &AEnemy::OnSphereOverlap);
+	NearbyEnemyTrigger->OnComponentEndOverlap.AddDynamic(this, &AEnemy::OnSphereEndOverlap);
 	
 	EnemyController = Cast<AAIController>(GetController());
 	CurrentPatrolTarget = ChoosePatrolTarget();
@@ -177,6 +184,24 @@ void AEnemy::OnBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 	if (Character)
 	{
 		Character->SetEnemyToAssassinate(nullptr);
+	}
+}
+
+void AEnemy::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	AEnemy* NearbyEnemy = Cast<AEnemy>(OtherActor);
+	if (NearbyEnemy)
+	{
+		NearbyEnemies.AddUnique(NearbyEnemy);
+	}
+}
+
+void AEnemy::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	AEnemy* NearbyEnemy = Cast<AEnemy>(OtherActor);
+	if (NearbyEnemy)
+	{
+		NearbyEnemies.Remove(NearbyEnemy);
 	}
 }
 
@@ -283,6 +308,7 @@ void AEnemy::PawnSeen(APawn* SeenPawn)
 		CombatTarget = SeenPawn;
 		GetWorldTimerManager().ClearTimer(PatrolTimer);
 		ChaseTarget();
+		AlertNearbyEnemies();
 	}
 }
 
@@ -298,6 +324,17 @@ void AEnemy::TorchSeen(APawn* SeenPawn)
 		CombatTarget = SeenPawn;
 		GetWorldTimerManager().ClearTimer(PatrolTimer);
 		ChaseTarget();
+	}
+}
+
+void AEnemy::AlertNearbyEnemies()
+{
+	if (NearbyEnemies.Num() == 0) return;
+
+	for (AEnemy* Enemy : NearbyEnemies)
+	{
+		Enemy->CombatTarget = CombatTarget;
+		Enemy->ChaseTarget();
 	}
 }
 

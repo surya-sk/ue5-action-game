@@ -46,6 +46,11 @@ protected:
 	UFUNCTION()
 	virtual void OnBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	UFUNCTION()
+	virtual void OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	virtual void OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	UPROPERTY(BlueprintReadOnly)
 	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
@@ -108,6 +113,11 @@ private:
 	UFUNCTION()
 	void TorchSeen(APawn* SeenPawn);
 
+	/// <summary>
+	/// Alerts enemies nearby that the player has been seen
+	/// </summary>
+	void AlertNearbyEnemies();
+
 	UPROPERTY(VisibleAnywhere)
 	UPawnSensingComponent* PawnSensing;
 
@@ -167,4 +177,9 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float ReachablePatrolRadius;
+
+	UPROPERTY(EditAnywhere)
+	class USphereComponent* NearbyEnemyTrigger;
+
+	TArray<AEnemy*> NearbyEnemies;
 };
