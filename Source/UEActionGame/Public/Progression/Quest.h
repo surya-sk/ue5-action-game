@@ -32,6 +32,9 @@ protected:
 	UPROPERTY(EditInstanceOnly)
 	TArray<AMission*> Objectives;
 
+	UPROPERTY(EditAnywhere)
+	FName NextMap;
+
 private:
 	/// <summary>
 	/// Activates the new objective
