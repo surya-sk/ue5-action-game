@@ -3,6 +3,7 @@
 
 #include "Progression/Quest.h"
 #include "Progression/Mission.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AQuest::AQuest()
@@ -35,10 +36,17 @@ void AQuest::ActivateNewObjective()
 void AQuest::EndCurrentObjective()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Objective complete"));
-	if (ActiveObjectiveIndex < Objectives.Num())
+	if (ActiveObjectiveIndex + 1 < Objectives.Num())
 	{
 		ActiveObjectiveIndex++;
 		ActivateNewObjective();
+	}
+	else
+	{
+		if (NextMap != "")
+		{
+			UGameplayStatics::OpenLevel(this, NextMap);
+		}
 	}
 }
 

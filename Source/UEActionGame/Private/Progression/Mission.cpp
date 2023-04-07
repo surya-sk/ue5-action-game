@@ -2,6 +2,7 @@
 
 
 #include "Progression/Mission.h"
+#include "Progression/PlaceToReach.h"
 #include "Enemy/Enemy.h"
 #include "Items/ExpositionNote.h"
 #include "Components/BoxComponent.h"
@@ -22,7 +23,7 @@ void AMission::Activate()
 	}
 	else if(PlaceToReach)
 	{
-		PlaceToReach->OnComponentBeginOverlap.AddDynamic(this, &AMission::PlaceReached);
+		PlaceToReach->OnPlaceReached.AddDynamic(this, &AMission::PlaceReached);
 	}
 	else if (ItemToFind)
 	{
@@ -44,7 +45,8 @@ void AMission::EnemyKilled()
 	Complete();
 }
 
-void AMission::PlaceReached(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+
+void AMission::PlaceReached()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Place reached"));
 	Complete();

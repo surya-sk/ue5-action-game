@@ -7,10 +7,12 @@
 #include "Perception/PawnSensingComponent.h"
 #include "Components/AttributeComponent.h"
 #include "Components/BoxComponent.h"
+#include "Components/SphereComponent.h"
 #include "AIController.h"
 #include "Items/Weapons/Weapon.h"
 #include "Characters/MainCharacter.h"
 #include "NavigationSystem.h"
+#include "Kismet/GameplayStatics.h"
 
 
 // Sets default values
@@ -30,6 +32,9 @@ AEnemy::AEnemy()
 
 	AssassinationBox = CreateDefaultSubobject<UBoxComponent>(TEXT("AssassinationBox"));
 	AssassinationBox->SetupAttachment(EnemyMesh);
+
+	NearbyEnemyTrigger = CreateDefaultSubobject<USphereComponent>(TEXT("NearbyEnemyTrigger"));
+	NearbyEnemyTrigger->SetupAttachment(EnemyMesh);
 
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
@@ -86,7 +91,6 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 	{
 		ChaseTarget();
 	}
-	ChaseTarget();
 	return DamageAmount;
 }
 
@@ -96,10 +100,16 @@ void AEnemy::BeginPlay()
 
 	AssassinationBox->OnComponentBeginOverlap.AddDynamic(this, &AEnemy::OnBoxOverlap);
 	AssassinationBox->OnComponentEndOverlap.AddDynamic(this, &AEnemy::OnBoxEndOverlap);
+
+	NearbyEnemyTrigger->OnComponentBeginOverlap.AddDynamic(this, &AEnemy::OnSphereOverlap);
+	NearbyEnemyTrigger->OnComponentEndOverlap.AddDynamic(this, &AEnemy::OnSphereEndOverlap);
 	
 	EnemyController = Cast<AAIController>(GetController());
-	CurrentPatrolTarget = ChoosePatrolTarget();
-	MoveToTarget(CurrentPatrolTarget);
+	if (bShouldPatrol)
+	{
+		CurrentPatrolTarget = ChoosePatrolTarget();
+		MoveToTarget(CurrentPatrolTarget);
+	}
 
 	if (PawnSensing)
 	{
@@ -180,6 +190,24 @@ void AEnemy::OnBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 	}
 }
 
+void AEnemy::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	AEnemy* NearbyEnemy = Cast<AEnemy>(OtherActor);
+	if (NearbyEnemy)
+	{
+		NearbyEnemies.AddUnique(NearbyEnemy);
+	}
+}
+
+void AEnemy::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	AEnemy* NearbyEnemy = Cast<AEnemy>(OtherActor);
+	if (NearbyEnemy)
+	{
+		NearbyEnemies.Remove(NearbyEnemy);
+	}
+}
+
 void AEnemy::CheckPatrolTarget()
 {
 	if (IsInTargetRange(CurrentPatrolTarget, PatrolRadius))
@@ -192,6 +220,9 @@ void AEnemy::CheckPatrolTarget()
 
 void AEnemy::CheckCombatTarget()
 {
+	if (CombatTarget == nullptr) return;
+	if (EnemyState == EEnemyState::EES_Chasing && !bChasing)
+		ChaseTarget();
 	if (!IsInTargetRange(CombatTarget->GetActorLocation(), CombatRadius))
 	{
 		GetWorldTimerManager().ClearTimer(AttackTimer);
@@ -224,9 +255,11 @@ void AEnemy::StartPatrolling()
 
 void AEnemy::ChaseTarget()
 {
+	bChasing = true;
 	EnemyState = EEnemyState::EES_Chasing;
 	GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
 	MoveToTarget(CombatTarget->GetActorLocation());
+	bChasing = false;
 }
 
 bool AEnemy::IsInTargetRange(FVector Target, double AcceptanceRadius)
@@ -249,7 +282,7 @@ void AEnemy::MoveToTarget(FVector Target)
 
 FVector AEnemy::ChoosePatrolTarget()
 {
-	if (PatrolTargets.Num() > 0)
+	if (PatrolTargets.Num() > 0 && !bShouldPatrol)
 	{
 		TArray<AActor*> ValidTargets;
 		for (auto Target : PatrolTargets)
@@ -265,7 +298,7 @@ FVector AEnemy::ChoosePatrolTarget()
 	}
 	else
 	{
-		return UNavigationSystemV1::GetRandomReachablePointInRadius(GetWorld(), GetActorLocation(), 2000);
+		return UNavigationSystemV1::GetRandomReachablePointInRadius(GetWorld(), GetActorLocation(), ReachablePatrolRadius);
 	}
 }
 
@@ -277,12 +310,12 @@ void AEnemy::PawnSeen(APawn* SeenPawn)
 		EnemyState < EEnemyState::EES_Attacking&&
 		SeenPawn->ActorHasTag(FName("PlayerCharacter"));
 
-
 	if (bShouldChase)
 	{
 		CombatTarget = SeenPawn;
 		GetWorldTimerManager().ClearTimer(PatrolTimer);
 		ChaseTarget();
+		AlertNearbyEnemies();
 	}
 }
 
@@ -294,10 +327,24 @@ void AEnemy::TorchSeen(APawn* SeenPawn)
 		SeenPawn->ActorHasTag(FName("Torch")) && CombatTarget == nullptr;
 	if (bShouldChase)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Start chase torch"));
 		CombatTarget = SeenPawn;
 		GetWorldTimerManager().ClearTimer(PatrolTimer);
 		ChaseTarget();
+	}
+}
+
+void AEnemy::AlertNearbyEnemies()
+{
+	if (NearbyEnemies.Num() == 0) return;
+	if (AlertSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, AlertSound, GetActorLocation());
+	}
+
+	for (AEnemy* Enemy : NearbyEnemies)
+	{
+		Enemy->CombatTarget = CombatTarget;
+		Enemy->ChaseTarget();
 	}
 }
 
