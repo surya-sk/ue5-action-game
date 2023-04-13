@@ -547,57 +547,6 @@ void AMainCharacter::VaultOrClimb(bool bShouldClimb, bool bWallThick, bool bCanC
 
 		GetWorld()->GetTimerManager().SetTimer(handle, Delegate, MontageSeconds - 0.5f, false);
 	}
-	/*else
-	{
-		FHitResult CheckHitResult;
-		const FVector CheckStart = GetActorLocation() + FVector(0, 0, 200.f);
-		const FVector CheckEnd = (GetActorForwardVector() * 70.f) + CheckStart;
-		bool CheckLineTrace = UKismetSystemLibrary::LineTraceSingleForObjects(this, CheckStart, CheckEnd, TraceObjects, false, ActorsToIgnore,
-			EDrawDebugTrace::ForDuration, CheckHitResult, true);
-		if (CheckLineTrace)
-		{
-			bCanClimb = false;
-		}
-		const FVector CheckStart2 = GetActorLocation();
-		const FVector CheckEnd2 = CheckStart2 + FVector(0, 0, 200.f);
-		bool bCheckLineTrace2 = UKismetSystemLibrary::LineTraceSingleForObjects(this, CheckStart2, CheckEnd2, TraceObjects, false, ActorsToIgnore,
-			EDrawDebugTrace::ForDuration, CheckHitResult, true);
-
-		if (bCanClimb)
-		{
-			bIsClimbing = true;
-			SetVaultingCollision();
-			SetActorLocation((ForwardVector * 50.f) + GetActorLocation());
-			SetActorLocation(FVector(GetActorLocation().X, GetActorLocation().Y, CWallHeight.Z - 44.f));
-			MontageSeconds = this->PlayAnimMontage(ClimbUpMontage);
-			FTimerDelegate Delegate;
-			Delegate.BindLambda([&]()
-				{
-					if (bWallThick)
-					{
-						ResetCollisionAndMovement();
-					}
-					else
-					{
-						if (bIsClimbing) return;
-						auto MontageLen = this->PlayAnimMontage(JumpDownMontage);
-						FTimerDelegate Del;
-						Del.BindLambda([&]()
-							{
-								ResetCollisionAndMovement();
-							});
-						FTimerHandle h;
-						GetWorld()->GetTimerManager().SetTimer(h, Del, MontageLen, false);
-						bIsClimbing = false;
-					}
-				}
-			);
-			FTimerHandle handle;
-
-			GetWorld()->GetTimerManager().SetTimer(handle, Delegate, MontageSeconds, false);
-			bIsClimbing = false;
-		}
-	}*/
 }
 
 bool AMainCharacter::CanSprint()
