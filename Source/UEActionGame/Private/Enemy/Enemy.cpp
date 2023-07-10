@@ -298,7 +298,17 @@ FVector AEnemy::ChoosePatrolTarget()
 	}
 	else
 	{
-		return UNavigationSystemV1::GetRandomReachablePointInRadius(GetWorld(), GetActorLocation(), ReachablePatrolRadius);
+		UNavigationSystemV1* NavigationSystem = UNavigationSystemV1::GetCurrent(GetWorld());
+
+		if (NavigationSystem)
+		{
+			FNavLocation RandomLocation;
+			if (NavigationSystem->GetRandomReachablePointInRadius(GetActorLocation(), ReachablePatrolRadius, RandomLocation))
+			{
+				return RandomLocation.Location;
+			}
+		}
+		return GetActorLocation();
 	}
 }
 
