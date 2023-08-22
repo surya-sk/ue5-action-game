@@ -99,6 +99,12 @@ protected:
 	/// </summary>
 	void UnequipTorch();
 
+	/// <summary>
+	/// Hides the blade
+	/// </summary>
+	UFUNCTION(BlueprintCallable)
+	void HideBlade();
+
 
 	/** COMBAT*/
 
@@ -206,6 +212,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	USkeletalMeshComponent* HairMesh;
+
+	UPROPERTY(VisibleAnywhere)
+	USkeletalMeshComponent* BladeMesh;
 
 	UPROPERTY(VisibleInstanceOnly)
 	AItem* OverlappingItem;

@@ -51,6 +51,9 @@ AMainCharacter::AMainCharacter()
 
 	HairMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("HairMesh"));
 	HairMesh->SetupAttachment(GetMesh(), TEXT("headSocket"));
+
+	BladeMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("BladeMesh"));
+	BladeMesh->SetupAttachment(GetMesh(), TEXT("LeftHandSocket"));
 }
 
 
@@ -333,6 +336,7 @@ void AMainCharacter::PerformTakedown()
 {
 	if (EnemyToAssassinate)
 	{
+		BladeMesh->SetHiddenInGame(false);
 		PlayTakedownMontage();
 		EnemyToAssassinate->PlayAssassinationMontage();
 	}
@@ -353,6 +357,11 @@ void AMainCharacter::UnequipTorch()
 		OverlappingNote->Unequip();
 		OverlappingNote = nullptr;
 	}
+}
+
+void AMainCharacter::HideBlade()
+{
+	BladeMesh->SetHiddenInGame(true);
 }
 
 void AMainCharacter::PlayEquipMontage(const FName Section)
