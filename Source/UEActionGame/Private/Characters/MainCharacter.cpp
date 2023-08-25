@@ -268,6 +268,12 @@ void AMainCharacter::HitReactEnd()
 	CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
 }
 
+void AMainCharacter::EndDodge()
+{
+	CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
+	CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
+}
+
 void AMainCharacter::Attack()
 {
 	if (CanAttack())
@@ -359,6 +365,14 @@ void AMainCharacter::UnequipTorch()
 	}
 }
 
+void AMainCharacter::Dodge()
+{
+	if (CharacterActionState != ECharacterActionState::ECAS_Unoccupied) return;
+	PlayDodgeMontage();
+	LaunchCharacter(GetActorForwardVector() * 2500, true, true);
+	CharacterActionState = ECharacterActionState::ECAS_Dodge;
+}
+
 void AMainCharacter::HideBlade()
 {
 	BladeMesh->SetHiddenInGame(true);
@@ -380,6 +394,15 @@ void AMainCharacter::PlayTakedownMontage()
 	if (AnimInstance && TakedownMontage)
 	{
 		AnimInstance->Montage_Play(TakedownMontage);
+	}
+}
+
+void AMainCharacter::PlayDodgeMontage()
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && DodgeMontage)
+	{
+		AnimInstance->Montage_Play(DodgeMontage);
 	}
 }
 
@@ -501,6 +524,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction(FName("Crouch"), IE_Pressed, this, &AMainCharacter::StartCrouch);
 	PlayerInputComponent->BindAction(FName("Crouch"), IE_Released, this, &AMainCharacter::StopCrouching);
 	PlayerInputComponent->BindAction(FName("Takedown"), IE_Pressed, this, &AMainCharacter::PerformTakedown);
+	PlayerInputComponent->BindAction(FName("Dodge"), IE_Pressed, this, &AMainCharacter::Dodge);
 }
 
 float AMainCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)

@@ -100,6 +100,11 @@ protected:
 	void UnequipTorch();
 
 	/// <summary>
+	/// Performs a dodge
+	/// </summary>
+	void Dodge();
+
+	/// <summary>
 	/// Hides the blade
 	/// </summary>
 	UFUNCTION(BlueprintCallable)
@@ -118,6 +123,11 @@ protected:
 	/// Plays the stealth takedown montage
 	/// </summary>
 	void PlayTakedownMontage();
+
+	/// <summary>
+	/// Plays the dodge montage
+	/// </summary>
+	void PlayDodgeMontage();
 
 	/// <summary>
 	/// Unequips the weapon
@@ -142,6 +152,12 @@ protected:
 	/// </summary>
 	UFUNCTION(BlueprintCallable)
 	void HitReactEnd();
+
+	/// <summary>
+	/// Gets the character out of the dodge state
+	/// </summary>
+	UFUNCTION(BlueprintCallable)
+	void EndDodge();
 
 	/** <ABaseCharacter> */
 	virtual void Attack() override;
@@ -247,6 +263,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = Montages)
 	UAnimMontage* TakedownMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = Montages)
+	UAnimMontage* DodgeMontage;
 
 	UPROPERTY(EditAnywhere)
 	class USoundBase* WaterSound;
