@@ -369,7 +369,6 @@ void AMainCharacter::Dodge()
 {
 	if (CharacterActionState != ECharacterActionState::ECAS_Unoccupied) return;
 	PlayDodgeMontage();
-	LaunchCharacter(GetActorForwardVector() * 2500, true, true);
 	CharacterActionState = ECharacterActionState::ECAS_Dodge;
 }
 
