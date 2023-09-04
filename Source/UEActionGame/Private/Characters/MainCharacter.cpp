@@ -583,7 +583,7 @@ void AMainCharacter::VaultOrClimb(bool bShouldClimb, bool bWallThick, bool bCanC
 
 bool AMainCharacter::CanSprint()
 {
-	if (CharacterActionState == ECharacterActionState::ECAS_Swimming) return false;
+	if (CharacterActionState == ECharacterActionState::ECAS_Swimming || CharacterActionState == ECharacterActionState::ECAS_Following) return false;
 	return CharacterActionState <= ECharacterActionState::ECAS_Crouching &&
 		CharacterWeaponState == ECharacterWeaponState::ECWS_Unequipped && Attributes->HasEnoughStamina();
 }
