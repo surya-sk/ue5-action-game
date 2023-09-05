@@ -6,6 +6,8 @@
 #include "Enemy/Enemy.h"
 #include "Items/ExpositionNote.h"
 #include "Components/BoxComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Characters/MainCharacter.h"
 
 // Sets default values
 AMission::AMission()
@@ -17,6 +19,18 @@ AMission::AMission()
 
 void AMission::Activate()
 {
+	if (bForcePlayerFollow)
+	{
+		if (Player == nullptr)
+		{
+			Player = Cast<AMainCharacter>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+		}
+		if (Player)
+			Player->SetFollowState(true);
+		else
+			UE_LOG(LogTemp, Warning, TEXT("Player is null"));
+	}
+
 	if (EnemyToKill)
 	{
 		EnemyToKill->OnEnemyKilled.AddDynamic(this, &AMission::EnemyKilled);
@@ -33,6 +47,10 @@ void AMission::Activate()
 
 void AMission::Complete()
 {
+	if (bForcePlayerFollow)
+	{
+		Player->SetFollowState(false);
+	}
 	if (OnMissionFinished.IsBound())
 	{
 		OnMissionFinished.Broadcast();

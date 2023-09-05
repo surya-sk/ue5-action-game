@@ -221,6 +221,9 @@ void AEnemy::CheckPatrolTarget()
 void AEnemy::CheckCombatTarget()
 {
 	if (CombatTarget == nullptr) return;
+	AMainCharacter* Player = Cast<AMainCharacter>(CombatTarget);
+	if (Player->IsFollwing())
+		return;
 	if (EnemyState == EEnemyState::EES_Chasing && !bChasing)
 		ChaseTarget();
 	if (!IsInTargetRange(CombatTarget->GetActorLocation(), CombatRadius))

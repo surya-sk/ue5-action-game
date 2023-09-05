@@ -31,6 +31,14 @@ public:
 	FORCEINLINE ECharacterWeaponState GetCharacterWeaponState() const { return CharacterWeaponState; }
 	FORCEINLINE ECharacterActionState GetCharacterActionState() const { return CharacterActionState; }
 	FORCEINLINE void SetEnemyToAssassinate(AEnemy* Enemy) { EnemyToAssassinate = Enemy; }
+	FORCEINLINE void SetFollowState(bool bFollow) 
+	{ 
+		if (bFollow)
+			CharacterActionState = ECharacterActionState::ECAS_Following;
+		else
+			CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
+	}
+	FORCEINLINE bool IsFollwing() { return CharacterActionState == ECharacterActionState::ECAS_Following; }
 
 protected:
 	// Called when the game starts or when spawned

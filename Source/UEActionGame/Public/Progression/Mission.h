@@ -66,4 +66,10 @@ protected:
 	UPROPERTY(EditInstanceOnly)
 	class AExpositionNote* ItemToFind;
 
+	UPROPERTY(EditInstanceOnly)
+	bool bForcePlayerFollow;
+
+private:
+	class AMainCharacter* Player;
+
 };
