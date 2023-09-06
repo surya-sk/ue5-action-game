@@ -23,12 +23,13 @@ void AMission::Activate()
 	{
 		if (Player == nullptr)
 		{
-			Player = Cast<AMainCharacter>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+			Player = Cast<AMainCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 		}
+
 		if (Player)
 			Player->SetFollowState(true);
 		else
-			UE_LOG(LogTemp, Warning, TEXT("Player is null"));
+			UE_LOG(LogTemp, Error, TEXT("Player is null"));
 	}
 
 	if (EnemyToKill)

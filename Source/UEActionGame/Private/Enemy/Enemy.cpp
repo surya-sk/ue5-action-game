@@ -221,9 +221,6 @@ void AEnemy::CheckPatrolTarget()
 void AEnemy::CheckCombatTarget()
 {
 	if (CombatTarget == nullptr) return;
-	AMainCharacter* Player = Cast<AMainCharacter>(CombatTarget);
-	if (Player->IsFollwing())
-		return;
 	if (EnemyState == EEnemyState::EES_Chasing && !bChasing)
 		ChaseTarget();
 	if (!IsInTargetRange(CombatTarget->GetActorLocation(), CombatRadius))
@@ -317,11 +314,13 @@ FVector AEnemy::ChoosePatrolTarget()
 
 void AEnemy::PawnSeen(APawn* SeenPawn)
 {
+	AMainCharacter* Player = Cast<AMainCharacter>(SeenPawn);
 	const bool bShouldChase =
 		EnemyState != EEnemyState::EES_Dead &&
 		EnemyState != EEnemyState::EES_Chasing &&
 		EnemyState < EEnemyState::EES_Attacking&&
-		SeenPawn->ActorHasTag(FName("PlayerCharacter"));
+		SeenPawn->ActorHasTag(FName("PlayerCharacter")) && 
+		Player && !Player->IsFollwing();
 
 	if (bShouldChase)
 	{
