@@ -4,6 +4,7 @@
 #include "Characters/NPC.h"
 #include "Components/TextRenderComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Components/SphereComponent.h"
 #include "Characters/MainCharacter.h"
 
 // Sets default values
@@ -14,6 +15,9 @@ ANPC::ANPC()
 
 	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(RootComponent);
+
+	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
+	Sphere->SetupAttachment(RootComponent);
 
 	DialogueText = CreateDefaultSubobject<UTextRenderComponent>(TEXT("DialogueText"));
 	DialogueText->SetupAttachment(RootComponent);
@@ -42,6 +46,8 @@ void ANPC::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	Sphere->OnComponentBeginOverlap.AddDynamic(this, &ANPC::OnSphereOverlap);
+	Sphere->OnComponentEndOverlap.AddDynamic(this, &ANPC::OnSphereEndOverlap);
 }
 
 void ANPC::NextLine()
@@ -66,24 +72,19 @@ void ANPC::NextLine()
 
 void ANPC::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor->ActorHasTag("PlayerCharacter"))
+	UE_LOG(LogTemp, Warning, TEXT("Overlap!!"));
+	Player = Cast<AMainCharacter>(OtherActor);
+	if (Player)
 	{
-		Player = Cast<AMainCharacter>(OtherActor);
-		if (Player)
-		{
-			Player->SetDialogueState(true, this);
-		}
+		Player->SetDialogueState(true, this);
 	}
 }
 
 void ANPC::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if (OtherActor->ActorHasTag("PlayerCharacter"))
+	if (Player)
 	{
-		if (Player)
-		{
-			Player->SetDialogueState(false);
-		}
+		Player->SetDialogueState(false);
 	}
 }
 
