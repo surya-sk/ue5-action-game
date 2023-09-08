@@ -3,6 +3,7 @@
 
 #include "Characters/NPC.h"
 #include "Components/TextRenderComponent.h"
+#include "Characters/MainCharacter.h"
 
 // Sets default values
 ANPC::ANPC()
@@ -56,11 +57,26 @@ void ANPC::NextLine()
 
 void ANPC::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	
+	if (OtherActor->ActorHasTag("PlayerCharacter"))
+	{
+		AMainCharacter* Player = Cast<AMainCharacter>(OtherActor);
+		if (Player)
+		{
+			Player->SetDialogueState(true, this);
+		}
+	}
 }
 
 void ANPC::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
+	if (OtherActor->ActorHasTag("PlayerCharacter"))
+	{
+		AMainCharacter* Player = Cast<AMainCharacter>(OtherActor);
+		if (Player)
+		{
+			Player->SetDialogueState(false);
+		}
+	}
 }
 
 // Called every frame

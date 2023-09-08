@@ -20,6 +20,7 @@ public:
 	void SetHealthBarPercent(float Percent);
 	void SetStaminaBarPercent(float Percent);
 	void SetObjectiveText(FText Objective);
+	void SetDialogueText(FText Dialogue);
 
 private:
 	UPROPERTY(meta = (BindWidget))

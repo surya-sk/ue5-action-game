@@ -23,6 +23,7 @@
 #include "HUD/MainHUD.h"
 #include "HUD/PlayerOverlay.h"
 #include "Progression/Quest.h"
+#include "Characters/NPC.h"
 
 // Sets default values
 AMainCharacter::AMainCharacter()
@@ -56,6 +57,27 @@ AMainCharacter::AMainCharacter()
 	BladeMesh->SetupAttachment(GetMesh(), TEXT("LeftHandSocket"));
 }
 
+
+void AMainCharacter::SetDialogueState(bool bDialogue, ANPC* ActiveNPC)
+{
+	NPC = ActiveNPC;
+	if (bDialogue)
+	{
+		CharacterActionState = ECharacterActionState::ECAS_Dialogue;
+	}
+	else
+	{
+		CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
+	}
+}
+
+void AMainCharacter::SetDialogueText(FText Dialogue)
+{
+	if (Overlay)
+	{
+		Overlay->SetDialogueText(Dialogue);
+	}
+}
 
 // Called when the game starts or when spawned
 void AMainCharacter::BeginPlay()
@@ -227,6 +249,11 @@ void AMainCharacter::Slide()
 
 void AMainCharacter::InteractKeyPressed()
 {
+	if (NPC)
+	{
+		NPC->Interact();
+	}
+
 	AWeapon* OverlappingWeapon = Cast<AWeapon>(OverlappingItem);
 	if (OverlappingWeapon)
 	{

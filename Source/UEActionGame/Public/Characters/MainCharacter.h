@@ -39,14 +39,8 @@ public:
 			CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
 	}
 	FORCEINLINE bool IsFollwing() { return CharacterActionState == ECharacterActionState::ECAS_Following; }
-	FORCEINLINE void SetDialogueState(bool bDialogue, class ANPC* ActiveNPC = nullptr)
-	{
-		this->NPC = ActiveNPC;
-		if (bDialogue)
-			CharacterActionState = ECharacterActionState::ECAS_Dialogue;
-		else
-			CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
-	}
+	void SetDialogueState(bool bDialogue, class ANPC* ActiveNPC = nullptr);
+	void SetDialogueText(FText Dialogue);
 
 protected:
 	// Called when the game starts or when spawned

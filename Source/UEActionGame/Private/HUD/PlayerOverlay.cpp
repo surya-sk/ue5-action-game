@@ -28,3 +28,11 @@ void UPlayerOverlay::SetObjectiveText(FText Objective)
 		ObjectiveText->SetText(Objective);
 	}
 }
+
+void UPlayerOverlay::SetDialogueText(FText Dialogue)
+{
+	if (DialogueText)
+	{
+		DialogueText->SetText(Dialogue);
+	}
+}
