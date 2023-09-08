@@ -39,6 +39,14 @@ public:
 			CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
 	}
 	FORCEINLINE bool IsFollwing() { return CharacterActionState == ECharacterActionState::ECAS_Following; }
+	FORCEINLINE void SetDialogueState(bool bDialogue, class ANPC* ActiveNPC = nullptr)
+	{
+		this->NPC = ActiveNPC;
+		if (bDialogue)
+			CharacterActionState = ECharacterActionState::ECAS_Dialogue;
+		else
+			CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
+	}
 
 protected:
 	// Called when the game starts or when spawned
@@ -287,4 +295,6 @@ private:
 
 	UPROPERTY(EditInstanceOnly)
 	class AQuest* Quest;
+
+	class ANPC* NPC;
 };
