@@ -30,4 +30,7 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* ObjectiveText;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* DialogueText;
 };
