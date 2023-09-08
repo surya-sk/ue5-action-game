@@ -24,6 +24,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override; 
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Mesh");
+	class USkeletalMeshComponent* Mesh;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
 	class UTextRenderComponent* DialogueText;
 
@@ -40,6 +43,10 @@ protected:
 
 	UFUNCTION()
 	virtual void OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+
+private:
+	class AMainCharacter* Player;
 
 
 };

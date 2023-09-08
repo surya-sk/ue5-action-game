@@ -3,6 +3,7 @@
 
 #include "Characters/NPC.h"
 #include "Components/TextRenderComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "Characters/MainCharacter.h"
 
 // Sets default values
@@ -10,6 +11,9 @@ ANPC::ANPC()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
+	Mesh->SetupAttachment(RootComponent);
 
 	DialogueText = CreateDefaultSubobject<UTextRenderComponent>(TEXT("DialogueText"));
 	DialogueText->SetupAttachment(RootComponent);
@@ -46,7 +50,12 @@ void ANPC::NextLine()
 
 	if (CurrentLineIndex < DialogueLines.Num())
 	{
-		DialogueText->SetText(FText::FromString(DialogueLines[CurrentLineIndex]));
+		bool bPlayerLine = CurrentLineIndex % 2 == 0;
+		FText DialogueLine = FText::FromString(DialogueLines[CurrentLineIndex]);
+		if (bPlayerLine)
+			Player->SetDialogueText(DialogueLine);
+		else
+			DialogueText->SetText(DialogueLine);
 	}
 	else
 	{
@@ -59,7 +68,7 @@ void ANPC::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Oth
 {
 	if (OtherActor->ActorHasTag("PlayerCharacter"))
 	{
-		AMainCharacter* Player = Cast<AMainCharacter>(OtherActor);
+		Player = Cast<AMainCharacter>(OtherActor);
 		if (Player)
 		{
 			Player->SetDialogueState(true, this);
@@ -71,7 +80,6 @@ void ANPC::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 {
 	if (OtherActor->ActorHasTag("PlayerCharacter"))
 	{
-		AMainCharacter* Player = Cast<AMainCharacter>(OtherActor);
 		if (Player)
 		{
 			Player->SetDialogueState(false);
