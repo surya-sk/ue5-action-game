@@ -17,7 +17,7 @@ ANPC::ANPC()
 	Mesh->SetupAttachment(RootComponent);
 
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
-	Sphere->SetupAttachment(RootComponent);
+	Sphere->SetupAttachment(Mesh);
 
 	DialogueText = CreateDefaultSubobject<UTextRenderComponent>(TEXT("DialogueText"));
 	DialogueText->SetupAttachment(RootComponent);
@@ -72,7 +72,6 @@ void ANPC::NextLine()
 
 void ANPC::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Overlap!!"));
 	Player = Cast<AMainCharacter>(OtherActor);
 	if (Player)
 	{

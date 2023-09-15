@@ -251,7 +251,6 @@ void AMainCharacter::InteractKeyPressed()
 {
 	if (NPC)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("NPC!"));
 		NPC->Interact();
 	}
 
