@@ -53,11 +53,10 @@ void ANPC::BeginPlay()
 void ANPC::NextLine()
 {
 	CurrentLineIndex++;
-	UE_LOG(LogTemp, Warning, TEXT("%d"), CurrentLineIndex);
 
 	if (CurrentLineIndex < DialogueLines.Num())
 	{
-		bool bPlayerLine = CurrentLineIndex % 2 == 0;
+		bool bPlayerLine = CurrentLineIndex % 2 != 0;
 		FText DialogueLine = FText::FromString(DialogueLines[CurrentLineIndex]);
 		if (bPlayerLine)
 			Player->SetDialogueText(DialogueLine);
