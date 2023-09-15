@@ -20,7 +20,7 @@ ANPC::ANPC()
 	Sphere->SetupAttachment(Mesh);
 
 	DialogueText = CreateDefaultSubobject<UTextRenderComponent>(TEXT("DialogueText"));
-	DialogueText->SetupAttachment(RootComponent);
+	DialogueText->SetupAttachment(Mesh);
 
 	CurrentLineIndex = -1;
 }
@@ -53,6 +53,7 @@ void ANPC::BeginPlay()
 void ANPC::NextLine()
 {
 	CurrentLineIndex++;
+	UE_LOG(LogTemp, Warning, TEXT("%d"), CurrentLineIndex);
 
 	if (CurrentLineIndex < DialogueLines.Num())
 	{
