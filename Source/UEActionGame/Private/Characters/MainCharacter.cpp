@@ -79,6 +79,12 @@ void AMainCharacter::SetDialogueText(FText Dialogue)
 	}
 }
 
+void AMainCharacter::PlayDialogueAudio(USoundBase* DialogueAudio)
+{
+	if (DialogueAudio)
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), DialogueAudio, GetActorLocation());
+}
+
 // Called when the game starts or when spawned
 void AMainCharacter::BeginPlay()
 {

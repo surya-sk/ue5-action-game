@@ -41,6 +41,7 @@ public:
 	FORCEINLINE bool IsFollwing() { return CharacterActionState == ECharacterActionState::ECAS_Following; }
 	void SetDialogueState(bool bDialogue, class ANPC* ActiveNPC = nullptr);
 	void SetDialogueText(FText Dialogue);
+	void PlayDialogueAudio(USoundBase* DialogueAudio);
 
 protected:
 	// Called when the game starts or when spawned

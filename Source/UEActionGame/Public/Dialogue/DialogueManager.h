@@ -35,6 +35,8 @@ public:
 	ADialogueManager();
 	virtual void Tick(float DeltaTime) override;
 	FORCEINLINE FString GetDialogueLine(EDialogueKey Key) const { return DialogueMap[Key].DialogueLine; }
+	FORCEINLINE USoundBase* GetDialogueAudio(EDialogueKey Key) const { return DialogueMap[Key].DialogueAudio; }
+	FORCEINLINE FDialogueData GetDialogueData(EDialogueKey Key) const { return DialogueMap[Key]; }
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TMap<EDialogueKey, FDialogueData> DialogueMap;

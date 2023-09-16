@@ -7,6 +7,7 @@
 #include "Components/SphereComponent.h"
 #include "Characters/MainCharacter.h"
 #include "Dialogue/DialogueManager.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ANPC::ANPC()
@@ -34,7 +35,9 @@ void ANPC::Interact()
 	if (CurrentLineIndex == -1)
 	{
 		CurrentLineIndex = 0;
-		DialogueText->SetText(FText::FromString(DialogueManager->GetDialogueLine(DialogueKeys[CurrentLineIndex])));
+		DialogueData = DialogueManager->GetDialogueData(DialogueKeys[CurrentLineIndex]);
+		DialogueText->SetText(FText::FromString(DialogueData.DialogueLine));
+		PlayDialogueAudio(DialogueData.DialogueAudio);
 	}
 	else
 	{
@@ -61,11 +64,19 @@ void ANPC::NextLine()
 	if (CurrentLineIndex < DialogueKeys.Num())
 	{
 		bool bPlayerLine = CurrentLineIndex % 2 != 0;
-		FText DialogueLine = FText::FromString(DialogueManager->GetDialogueLine(DialogueKeys[CurrentLineIndex]));
+		DialogueData = DialogueManager->GetDialogueData(DialogueKeys[CurrentLineIndex]);
+		FText DialogueLine = FText::FromString(DialogueData.DialogueLine);
+		USoundBase* DialogAudio = DialogueData.DialogueAudio;
 		if (bPlayerLine)
+		{
 			Player->SetDialogueText(DialogueLine);
+			Player->PlayDialogueAudio(DialogAudio);
+		}
 		else
+		{
 			DialogueText->SetText(DialogueLine);
+			PlayDialogueAudio(DialogAudio);
+		}
 	}
 	else
 	{
@@ -89,6 +100,12 @@ void ANPC::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 	{
 		Player->SetDialogueState(false);
 	}
+}
+
+void ANPC::PlayDialogueAudio(USoundBase* DialogueAudio)
+{
+	if (DialogueAudio)
+		UGameplayStatics::PlaySound2D(GetWorld(), DialogueAudio);
 }
 
 // Called every frame

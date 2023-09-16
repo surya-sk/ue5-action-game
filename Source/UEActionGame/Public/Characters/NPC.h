@@ -54,6 +54,8 @@ protected:
 
 private:
 	class AMainCharacter* Player;
+	FDialogueData DialogueData;
 
+	void PlayDialogueAudio(USoundBase* DialogueAudio);
 
 };
