@@ -24,7 +24,7 @@ ANPC::ANPC()
 	DialogueText = CreateDefaultSubobject<UTextRenderComponent>(TEXT("DialogueText"));
 	DialogueText->SetupAttachment(Mesh);
 
-	CurrentLineIndex = -1;
+	CurrentKeyIndex = -1;
 }
 
 void ANPC::Interact()
@@ -32,10 +32,10 @@ void ANPC::Interact()
 	if (DialogueKeys.Num() == 0)
 		return;
 
-	if (CurrentLineIndex == -1)
+	if (CurrentKeyIndex == -1)
 	{
-		CurrentLineIndex = 0;
-		DialogueData = DialogueManager->GetDialogueData(DialogueKeys[CurrentLineIndex]);
+		CurrentKeyIndex = 0;
+		DialogueData = DialogueManager->GetDialogueData(DialogueKeys[CurrentKeyIndex]);
 		DialogueText->SetText(FText::FromString(DialogueData.DialogueLine));
 		PlayDialogueAudio(DialogueData.DialogueAudio);
 	}
@@ -59,12 +59,12 @@ void ANPC::BeginPlay()
 
 void ANPC::NextLine()
 {
-	CurrentLineIndex++;
+	CurrentKeyIndex++;
 
-	if (CurrentLineIndex < DialogueKeys.Num())
+	if (CurrentKeyIndex < DialogueKeys.Num())
 	{
-		bool bPlayerLine = CurrentLineIndex % 2 != 0;
-		DialogueData = DialogueManager->GetDialogueData(DialogueKeys[CurrentLineIndex]);
+		bool bPlayerLine = CurrentKeyIndex % 2 != 0;
+		DialogueData = DialogueManager->GetDialogueData(DialogueKeys[CurrentKeyIndex]);
 		FText DialogueLine = FText::FromString(DialogueData.DialogueLine);
 		USoundBase* DialogAudio = DialogueData.DialogueAudio;
 		if (bPlayerLine)
@@ -80,7 +80,7 @@ void ANPC::NextLine()
 	}
 	else
 	{
-		CurrentLineIndex = -1;
+		CurrentKeyIndex = -1;
 		DialogueText->SetText(FText::GetEmpty());
 	}
 }

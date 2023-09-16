@@ -41,7 +41,7 @@ protected:
 	ADialogueManager* DialogueManager;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
-	int32 CurrentLineIndex;
+	int32 CurrentKeyIndex;
 
 	void NextLine();
 
