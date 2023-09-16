@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Dialogue/DialogueManager.h"
 #include "NPC.generated.h"
 
 UCLASS()
@@ -33,8 +34,11 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
 	class UTextRenderComponent* DialogueText;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Dialogue")
-	TArray<FString> DialogueLines;
+	UPROPERTY(EditInstanceOnly, Category = "Dialogue")
+	TArray<EDialogueKey> DialogueKeys;
+
+	UPROPERTY(EditInstanceOnly, Category = "Dialogue")
+	ADialogueManager* DialogueManager;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
 	int32 CurrentLineIndex;

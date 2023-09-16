@@ -6,6 +6,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/SphereComponent.h"
 #include "Characters/MainCharacter.h"
+#include "Dialogue/DialogueManager.h"
 
 // Sets default values
 ANPC::ANPC()
@@ -27,13 +28,13 @@ ANPC::ANPC()
 
 void ANPC::Interact()
 {
-	if (DialogueLines.Num() == 0)
+	if (DialogueKeys.Num() == 0)
 		return;
 
 	if (CurrentLineIndex == -1)
 	{
 		CurrentLineIndex = 0;
-		DialogueText->SetText(FText::FromString(DialogueLines[CurrentLineIndex]));
+		DialogueText->SetText(FText::FromString(DialogueManager->GetDialogueLine(DialogueKeys[CurrentLineIndex])));
 	}
 	else
 	{
@@ -48,16 +49,19 @@ void ANPC::BeginPlay()
 	
 	Sphere->OnComponentBeginOverlap.AddDynamic(this, &ANPC::OnSphereOverlap);
 	Sphere->OnComponentEndOverlap.AddDynamic(this, &ANPC::OnSphereEndOverlap);
+
+	if (DialogueManager == nullptr)
+		UE_LOG(LogTemp, Error, TEXT("Dialogue Manager missing!"));
 }
 
 void ANPC::NextLine()
 {
 	CurrentLineIndex++;
 
-	if (CurrentLineIndex < DialogueLines.Num())
+	if (CurrentLineIndex < DialogueKeys.Num())
 	{
 		bool bPlayerLine = CurrentLineIndex % 2 != 0;
-		FText DialogueLine = FText::FromString(DialogueLines[CurrentLineIndex]);
+		FText DialogueLine = FText::FromString(DialogueManager->GetDialogueLine(DialogueKeys[CurrentLineIndex]));
 		if (bPlayerLine)
 			Player->SetDialogueText(DialogueLine);
 		else
