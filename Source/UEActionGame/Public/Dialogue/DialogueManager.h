@@ -13,6 +13,18 @@ enum class EDialogueKey
 	EDK_NPC_Hello UMETA(DisplayName = "NPC hello")
 };
 
+USTRUCT(BlueprintType)
+struct FDialogueData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString DialogueLine;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USoundBase* DialogueAudio;
+};
+
 UCLASS()
 class UEACTIONGAME_API ADialogueManager : public AActor
 {
@@ -22,10 +34,10 @@ public:
 	// Sets default values for this actor's properties
 	ADialogueManager();
 	virtual void Tick(float DeltaTime) override;
-	FORCEINLINE FString GetDialogueLine(EDialogueKey Key) const { return DialogueMap[Key]; }
+	FORCEINLINE FString GetDialogueLine(EDialogueKey Key) const { return DialogueMap[Key].DialogueLine; }
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TMap<EDialogueKey, FString> DialogueMap;
+	TMap<EDialogueKey, FDialogueData> DialogueMap;
 
 protected:
 	// Called when the game starts or when spawned
