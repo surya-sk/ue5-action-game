@@ -3,30 +3,26 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "GameFramework/Character.h"
 #include "Dialogue/DialogueManager.h"
 #include "NPC.generated.h"
 
 UCLASS()
-class UEACTIONGAME_API ANPC : public AActor
+class UEACTIONGAME_API ANPC : public ACharacter
 {
 	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
+
+public:
+	// Sets default values for this character's properties
 	ANPC();
 
-	void Interact();
-
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	
+	void Interact();
 
 protected:
 	// Called when the game starts or when spawned
-	virtual void BeginPlay() override; 
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Mesh");
-	class USkeletalMeshComponent* Mesh;
+	virtual void BeginPlay() override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class USphereComponent* Sphere;
@@ -40,9 +36,6 @@ protected:
 	UPROPERTY(EditInstanceOnly, Category = "Dialogue")
 	ADialogueManager* DialogueManager;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
-	int32 CurrentKeyIndex;
-
 	void NextLine();
 
 	UFUNCTION()
@@ -51,9 +44,11 @@ protected:
 	UFUNCTION()
 	virtual void OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-
 private:
+	int32 CurrentKeyIndex;
+
 	class AMainCharacter* Player;
+	
 	FDialogueData DialogueData;
 
 	void PlayDialogueAudio(USoundBase* DialogueAudio);

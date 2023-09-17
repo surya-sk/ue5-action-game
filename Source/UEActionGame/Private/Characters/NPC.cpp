@@ -12,37 +12,19 @@
 // Sets default values
 ANPC::ANPC()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+ 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
-	Mesh->SetupAttachment(RootComponent);
+	USkeletalMeshComponent* NPCMesh = this->GetMesh();
 
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
-	Sphere->SetupAttachment(Mesh);
+	Sphere->SetupAttachment(NPCMesh);
 
 	DialogueText = CreateDefaultSubobject<UTextRenderComponent>(TEXT("DialogueText"));
-	DialogueText->SetupAttachment(Mesh);
+	DialogueText->SetupAttachment(NPCMesh);
 
 	CurrentKeyIndex = -1;
-}
 
-void ANPC::Interact()
-{
-	if (DialogueKeys.Num() == 0)
-		return;
-
-	if (CurrentKeyIndex == -1)
-	{
-		CurrentKeyIndex = 0;
-		DialogueData = DialogueManager->GetDialogueData(DialogueKeys[CurrentKeyIndex]);
-		DialogueText->SetText(FText::FromString(DialogueData.DialogueLine));
-		PlayDialogueAudio(DialogueData.DialogueAudio);
-	}
-	else
-	{
-		NextLine();
-	}
 }
 
 // Called when the game starts or when spawned
@@ -114,3 +96,23 @@ void ANPC::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
+
+void ANPC::Interact()
+{
+	if (DialogueKeys.Num() == 0)
+		return;
+
+	if (CurrentKeyIndex == -1)
+	{
+		CurrentKeyIndex = 0;
+		DialogueData = DialogueManager->GetDialogueData(DialogueKeys[CurrentKeyIndex]);
+		DialogueText->SetText(FText::FromString(DialogueData.DialogueLine));
+		PlayDialogueAudio(DialogueData.DialogueAudio);
+	}
+	else
+	{
+		NextLine();
+	}
+}
+
+
