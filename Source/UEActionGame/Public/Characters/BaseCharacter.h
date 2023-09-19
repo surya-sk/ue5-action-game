@@ -138,6 +138,10 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	FVector GetRotationWarpTarget();
 
+	/// <summary>
+	/// Plays a dialogue montage at random. Might need to have a mood paramter if I have/want to use mood specific animations
+	/// </summary>
+	virtual void PlayRandomDialogueAnimation();
 
 	UPROPERTY(VisibleAnywhere, Category = Weapon)
 	AWeapon* EquippedWeapon;
@@ -185,10 +189,16 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = Combat)
 	UAnimMontage* DeathMontage;
 
+	UPROPERTY(EditAnywhere, Category = Dialogue)
+	UAnimMontage* DialogueMontage;
+
 	UPROPERTY(EditAnywhere, Category = Combat)
 	TArray<FName> AttackMontageSections;
 
 	UPROPERTY(EditAnywhere, Category = Combat)
 	TArray<FName> DeathMontageSections;
+
+	UPROPERTY(EditAnywhere, Category = Dialogue)
+	TArray<FName> DialogueMontageSections;
 
 };

@@ -8,6 +8,7 @@
 #include "Characters/MainCharacter.h"
 #include "Dialogue/DialogueManager.h"
 #include "Kismet/GameplayStatics.h"
+#include "Animation/AnimMontage.h"
 
 // Sets default values
 ANPC::ANPC()
@@ -87,7 +88,10 @@ void ANPC::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 void ANPC::PlayDialogueAudio(USoundBase* DialogueAudio)
 {
 	if (DialogueAudio)
+	{
 		UGameplayStatics::PlaySound2D(GetWorld(), DialogueAudio);
+		PlayRandomDialogueAnimation();
+	}
 }
 
 // Called every frame

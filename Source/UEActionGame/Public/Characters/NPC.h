@@ -3,12 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
 #include "Dialogue/DialogueManager.h"
+#include "BaseCharacter.h"
 #include "NPC.generated.h"
 
 UCLASS()
-class UEACTIONGAME_API ANPC : public ACharacter
+class UEACTIONGAME_API ANPC : public ABaseCharacter
 {
 	GENERATED_BODY()
 
@@ -27,13 +27,13 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class USphereComponent* Sphere;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue System")
 	class UTextRenderComponent* DialogueText;
 
-	UPROPERTY(EditInstanceOnly, Category = "Dialogue")
+	UPROPERTY(EditInstanceOnly, Category = "Dialogue System")
 	TArray<EDialogueKey> DialogueKeys;
 
-	UPROPERTY(EditInstanceOnly, Category = "Dialogue")
+	UPROPERTY(EditInstanceOnly, Category = "Dialogue System")
 	ADialogueManager* DialogueManager;
 
 	void NextLine();

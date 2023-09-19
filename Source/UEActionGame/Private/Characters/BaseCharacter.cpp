@@ -83,6 +83,18 @@ FVector ABaseCharacter::GetRotationWarpTarget()
 	return FVector();
 }
 
+void ABaseCharacter::PlayRandomDialogueAnimation()
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && DialogueMontage)
+	{
+		int random = FMath::RandRange(0, DialogueMontageSections.Num());
+		FName SelectedSection = DialogueMontageSections[random];
+		AnimInstance->Montage_Play(DialogueMontage);
+		AnimInstance->Montage_JumpToSection(SelectedSection, DialogueMontage);
+	}
+}
+
 bool ABaseCharacter::CanAttack()
 {
 	return false;
