@@ -9,6 +9,9 @@
 #include "Dialogue/DialogueManager.h"
 #include "Kismet/GameplayStatics.h"
 #include "Animation/AnimMontage.h"
+#include <AIController.h>
+#include <NavigationSystem.h>
+#include <NavigationSystem.h>
 
 // Sets default values
 ANPC::ANPC()
@@ -38,6 +41,12 @@ void ANPC::BeginPlay()
 
 	if (DialogueManager == nullptr)
 		UE_LOG(LogTemp, Error, TEXT("Dialogue Manager missing!"));
+
+	if (bShouldPatrol)
+	{
+		CurrentPatrolTarget = ChoosePatrolTarget();
+		MoveToTarget(CurrentPatrolTarget);
+	}
 }
 
 void ANPC::NextLine()
@@ -94,11 +103,77 @@ void ANPC::PlayDialogueAudio(USoundBase* DialogueAudio)
 	}
 }
 
+FVector ANPC::ChoosePatrolTarget()
+{
+	if (PatrolTargets.Num() > 0 && !bShouldPatrol)
+	{
+		TArray<AActor*> ValidTargets;
+		for (auto Target : PatrolTargets)
+		{
+			if (Target->GetActorLocation() != CurrentPatrolTarget)
+			{
+				ValidTargets.AddUnique(Target);
+			}
+		}
+
+		const auto RandomTargetIndex = FMath::RandRange(0, ValidTargets.Num() - 1);
+		return ValidTargets[RandomTargetIndex]->GetActorLocation();
+	}
+	else
+	{
+		UNavigationSystemV1* NavigationSystem = UNavigationSystemV1::GetCurrent(GetWorld());
+
+		if (NavigationSystem)
+		{
+			FNavLocation RandomLocation;
+			if (NavigationSystem->GetRandomReachablePointInRadius(GetActorLocation(), ReachablePatrolRadius, RandomLocation))
+			{
+				return RandomLocation.Location;
+			}
+		}
+		return GetActorLocation();
+	}
+}
+
+void ANPC::PatrolTimerFinished()
+{
+	MoveToTarget(CurrentPatrolTarget);
+}
+
+void ANPC::CheckPatrolTarget()
+{
+	if (IsInTargetRange(CurrentPatrolTarget, PatrolRadius))
+	{
+		CurrentPatrolTarget = ChoosePatrolTarget();
+		const float WaitTime = FMath::RandRange(5.f, 10.f);
+		GetWorldTimerManager().SetTimer(PatrolTimer, this, &ANPC::PatrolTimerFinished, WaitTime);
+	}
+}
+
+void ANPC::MoveToTarget(FVector Target)
+{
+	AAIController* NPCController = Cast<AAIController>(GetController());
+	if (NPCController == nullptr)
+		return;
+
+	FAIMoveRequest MoveRequest;
+	MoveRequest.SetGoalLocation(Target);
+	MoveRequest.SetAcceptanceRadius(50.f);
+	NPCController->MoveTo(MoveRequest);
+}
+
+bool ANPC::IsInTargetRange(FVector Target, double AcceptanceRadius)
+{
+	if (Target == FVector::ZeroVector) return false;
+	const double DistanceToTarget = (Target - this->GetActorLocation()).Size();
+	return DistanceToTarget <= AcceptanceRadius;
+}
+
 // Called every frame
 void ANPC::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	CheckPatrolTarget();
 }
 
 void ANPC::Interact()
