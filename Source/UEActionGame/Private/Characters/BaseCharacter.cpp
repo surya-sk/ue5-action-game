@@ -88,8 +88,10 @@ void ABaseCharacter::PlayRandomDialogueAnimation()
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (AnimInstance && DialogueMontage)
 	{
-		int random = FMath::RandRange(0, DialogueMontageSections.Num());
-		FName SelectedSection = DialogueMontageSections[random];
+		int index = 0;
+		if(DialogueMontageSections.Num() > 1)
+			index = FMath::RandRange(0, DialogueMontageSections.Num());
+		FName SelectedSection = DialogueMontageSections[index];
 		AnimInstance->Montage_Play(DialogueMontage);
 		AnimInstance->Montage_JumpToSection(SelectedSection, DialogueMontage);
 	}
