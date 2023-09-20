@@ -156,6 +156,12 @@ void ANPC::MoveToTarget(FVector Target)
 	if (NPCController == nullptr)
 		return;
 
+	FVector Direction = Target - GetActorLocation();
+
+	FRotator TargetRotation = Direction.Rotation();
+	TargetRotation.Yaw = GetActorRotation().Yaw;
+	SetActorRotation(FMath::RInterpTo(GetActorRotation(), TargetRotation, GetWorld()->GetDeltaSeconds(), 10.f));
+
 	FAIMoveRequest MoveRequest;
 	MoveRequest.SetGoalLocation(Target);
 	MoveRequest.SetAcceptanceRadius(50.f);
