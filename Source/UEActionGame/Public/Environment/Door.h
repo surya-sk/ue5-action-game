@@ -30,12 +30,6 @@ protected:
 	UPROPERTY(VisibleAnywhere,  BlueprintReadWrite)
 	class UBoxComponent* OpenTrigger;
 
-	UPROPERTY(EditAnywhere)
-	float OpenRotationValue;
-
-	UPROPERTY(EditAnywhere)
-	float CloseRotationValue;
-
 	UFUNCTION()
 	void OnOpenTriggerOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
@@ -46,6 +40,8 @@ private:
 	bool bIsClosed;
 	float CurrentRotation;
 	float TargetRotation;
+	float OpenRotationValue;
+	float CloseRotationValue;
 
 	void RotateDoor(float DeltaTime);
 
