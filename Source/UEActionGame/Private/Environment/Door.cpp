@@ -4,6 +4,7 @@
 #include "Environment/Door.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ADoor::ADoor()
@@ -42,6 +43,8 @@ void ADoor::OnOpenTriggerOverlapBegin(UPrimitiveComponent* OverlappedComp, AActo
 	if (OtherActor->ActorHasTag(FName("PlayerCharacter")))
 	{
 		TargetRotation = OpenRotationValue;
+		if (OpenSound)
+			UGameplayStatics::PlaySoundAtLocation(this, OpenSound, GetActorLocation());
 	}
 }
 
@@ -50,6 +53,8 @@ void ADoor::OnCloseTriggerOverlapBegin(UPrimitiveComponent* OverlappedComp, AAct
 	if (OtherActor->ActorHasTag(FName("PlayerCharacter")))
 	{
 		TargetRotation = CloseRotationValue;
+		if (CloseSound)
+			UGameplayStatics::PlaySoundAtLocation(this, CloseSound, GetActorLocation());
 	}
 }
 
