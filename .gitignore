@@ -112,6 +112,11 @@ Content/Characters/
 Content/ParagonMorigesh/
 Content/Audio/Dialogue/
 Content/Medieval_Prison/
+Content/PhysMat/
+Content/Audio/Attenuation/
+Content/Audio/Modulation/
+Content/Audio/Submixes/
+Content/Audio/_Content/SFX/
 
 **/BlackAlder
 **/Landscape
