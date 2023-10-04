@@ -51,6 +51,9 @@ protected:
 	UFUNCTION()
 	void ItemFound();
 
+	UFUNCTION()
+	virtual void OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
 	UPROPERTY(EditInstanceOnly)
 	FText ObjectiveText;
 
@@ -68,6 +71,9 @@ protected:
 
 	UPROPERTY(EditInstanceOnly)
 	bool bForcePlayerFollow;
+
+	UPROPERTY(EditAnywhere)
+	class USphereComponent* MissionBounds;
 
 private:
 	class AMainCharacter* Player;

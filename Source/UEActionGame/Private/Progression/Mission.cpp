@@ -6,6 +6,7 @@
 #include "Enemy/Enemy.h"
 #include "Items/ExpositionNote.h"
 #include "Components/BoxComponent.h"
+#include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Characters/MainCharacter.h"
 
@@ -15,10 +16,14 @@ AMission::AMission()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
+	MissionBounds = CreateDefaultSubobject<USphereComponent>(TEXT("MissionBounds"));
+	MissionBounds->SetupAttachment(RootComponent);
+
 }
 
 void AMission::Activate()
 {
+	MissionBounds->OnComponentEndOverlap.AddDynamic(this, &AMission::OnSphereEndOverlap);
 	if (bForcePlayerFollow)
 	{
 		if (Player == nullptr)
@@ -75,6 +80,14 @@ void AMission::ItemFound()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Item found"));
 	Complete();
+}
+
+void AMission::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (OtherActor->ActorHasTag("PlayerCharacter"))
+	{
+		Player->SetFollowState(false);
+	}
 }
 
 
