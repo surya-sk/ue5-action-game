@@ -36,22 +36,26 @@ void EnemyCoordinator::Reset()
 	AlertedEnemies.Empty();
 }
 
-TArray<AEnemy*> EnemyCoordinator::GetAlertedEnemies() const
-{
-	return AlertedEnemies;
-}
-
 void EnemyCoordinator::RequestToken()
 {
-	if (Token != 0)
+	const int32 ATTACK_TOKEN = 1;
+
+	if (AlertedEnemies.Num() == 0)
 		return;
+
+	// Check if the token has already been taken
+	if (Token == ATTACK_TOKEN) 
+		return;
+
 	int32 EnemyToAssign = 0;
 	if (AlertedEnemies.Num() > 1)
-		EnemyToAssign = FMath::RandRange(0, AlertedEnemies.Num());
+		EnemyToAssign = FMath::RandHelper(AlertedEnemies.Num());
 
-	Token = 1;
+	Token = ATTACK_TOKEN;
 	EnemyWithToken = AlertedEnemies[EnemyToAssign];
-	EnemyWithToken->SetTurnToAttack(true);
+
+	if(IsValid(EnemyWithToken))
+		EnemyWithToken->SetTurnToAttack(true);
 }
 
 void EnemyCoordinator::ReturnToken()

@@ -33,12 +33,6 @@ public:
 	/// Resets the array, ie, empties it
 	/// </summary>
 	void Reset();
-
-	/// <summary>
-	/// Return alerted enemies
-	/// </summary>
-	/// <returns></returns>
-	TArray<AEnemy*> GetAlertedEnemies() const;
 	
 	/// <summary>
 	/// Assign token to a random enemy if not taken
