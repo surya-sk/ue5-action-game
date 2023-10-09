@@ -27,6 +27,8 @@ public:
 
 	void PlayAssassinationMontage();
 
+	FORCEINLINE void SetTurnToAttack(bool bShouldAttack) { this->bIsTurnToAttack = bShouldAttack; }
+
 	FEnemyKilled OnEnemyKilled;
 
 protected:
@@ -190,4 +192,8 @@ private:
 	class USoundBase* AlertSound;
 
 	bool bChasing;
+
+	bool bIsTurnToAttack;
+
+	class EnemyCoordinator* Coordinator;
 };

@@ -158,7 +158,8 @@ bool AEnemy::CanAttack()
 	return IsInTargetRange(CombatTarget->GetActorLocation(), AttackRadius) &&
 		EnemyState != EEnemyState::EES_Attacking &&
 		EnemyState != EEnemyState::EES_Engaged &&
-		EnemyState != EEnemyState::EES_Dead;
+		EnemyState != EEnemyState::EES_Dead &&
+		bIsTurnToAttack;
 }
 
 void AEnemy::HandleDamage(float DamageAmount)
@@ -169,6 +170,7 @@ void AEnemy::HandleDamage(float DamageAmount)
 void AEnemy::AttackEnd()
 {
 	EnemyState = EEnemyState::EES_NoState;
+	bIsTurnToAttack = false; // TODO: Call coordinator class
 	CheckCombatTarget();
 }
 

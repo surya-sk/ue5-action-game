@@ -22,6 +22,8 @@ void EnemyCoordinator::AddEnemy(AEnemy* Enemy)
 
 void EnemyCoordinator::RemoveEnemy(AEnemy* Enemy)
 {
+	if (Enemy == EnemyWithToken)
+		Token = 0;
 	AlertedEnemies.Remove(Enemy);
 }
 
@@ -35,8 +37,18 @@ TArray<AEnemy*> EnemyCoordinator::GetAlertedEnemies() const
 	return AlertedEnemies;
 }
 
+void EnemyCoordinator::RequestToken()
+{
+	if (Token != 0)
+		return;
+	int32 EnemyToAssign = FMath::RandRange(0, AlertedEnemies.Num());
+	Token = 1;
+	EnemyWithToken = AlertedEnemies[EnemyToAssign];
+}
+
 EnemyCoordinator::EnemyCoordinator()
 {
+	Token = 0;
 }
 
 EnemyCoordinator::~EnemyCoordinator()

@@ -39,6 +39,8 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	TArray<AEnemy*> GetAlertedEnemies() const;
+	
+	void RequestToken();
 
 private:
 	EnemyCoordinator();
@@ -46,4 +48,6 @@ private:
 
 	static EnemyCoordinator* Instance;
 	TArray<AEnemy*> AlertedEnemies;
+	int32 Token;
+	AEnemy* EnemyWithToken;
 };
