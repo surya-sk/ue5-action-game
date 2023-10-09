@@ -13,6 +13,7 @@
 #include "Characters/MainCharacter.h"
 #include "NavigationSystem.h"
 #include "Kismet/GameplayStatics.h"
+#include "Enemy/EnemyCoordinator.h"
 
 
 // Sets default values
@@ -135,6 +136,7 @@ void AEnemy::Die()
 {
 	Super::Die();
 	GetWorldTimerManager().ClearTimer(AttackTimer);
+	Coordinator->GetInstance()->RemoveEnemy(this);
 	EnemyState = EEnemyState::EES_Dead;
 	DisableCapsule();
 	GetCharacterMovement()->bOrientRotationToMovement = false;
@@ -155,6 +157,7 @@ void AEnemy::Attack()
 
 bool AEnemy::CanAttack()
 {
+	Coordinator->GetInstance()->RequestToken();
 	return IsInTargetRange(CombatTarget->GetActorLocation(), AttackRadius) &&
 		EnemyState != EEnemyState::EES_Attacking &&
 		EnemyState != EEnemyState::EES_Engaged &&
@@ -170,7 +173,7 @@ void AEnemy::HandleDamage(float DamageAmount)
 void AEnemy::AttackEnd()
 {
 	EnemyState = EEnemyState::EES_NoState;
-	bIsTurnToAttack = false; // TODO: Call coordinator class
+	Coordinator->GetInstance()->ReturnToken();
 	CheckCombatTarget();
 }
 
@@ -223,12 +226,14 @@ void AEnemy::CheckPatrolTarget()
 void AEnemy::CheckCombatTarget()
 {
 	if (CombatTarget == nullptr) return;
+	Coordinator->GetInstance()->AddEnemy(this);
 	if (EnemyState == EEnemyState::EES_Chasing && !bChasing)
 		ChaseTarget();
 	if (!IsInTargetRange(CombatTarget->GetActorLocation(), CombatRadius))
 	{
 		GetWorldTimerManager().ClearTimer(AttackTimer);
 		CombatTarget = nullptr;
+		Coordinator->GetInstance()->RemoveEnemy(this);
 		if (EnemyState != EEnemyState::EES_Engaged)
 			StartPatrolling();
 	}

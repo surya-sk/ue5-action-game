@@ -17,11 +17,15 @@ EnemyCoordinator* EnemyCoordinator::GetInstance()
 
 void EnemyCoordinator::AddEnemy(AEnemy* Enemy)
 {
+	if (AlertedEnemies.Contains(Enemy))
+		return;
 	AlertedEnemies.Add(Enemy);
 }
 
 void EnemyCoordinator::RemoveEnemy(AEnemy* Enemy)
 {
+	if (!AlertedEnemies.Contains(Enemy))
+		return;
 	if (Enemy == EnemyWithToken)
 		Token = 0;
 	AlertedEnemies.Remove(Enemy);
@@ -41,9 +45,19 @@ void EnemyCoordinator::RequestToken()
 {
 	if (Token != 0)
 		return;
-	int32 EnemyToAssign = FMath::RandRange(0, AlertedEnemies.Num());
+	int32 EnemyToAssign = 0;
+	if (AlertedEnemies.Num() > 1)
+		EnemyToAssign = FMath::RandRange(0, AlertedEnemies.Num());
+
 	Token = 1;
 	EnemyWithToken = AlertedEnemies[EnemyToAssign];
+	EnemyWithToken->SetTurnToAttack(true);
+}
+
+void EnemyCoordinator::ReturnToken()
+{
+	Token = 0;
+	EnemyWithToken->SetTurnToAttack(false);
 }
 
 EnemyCoordinator::EnemyCoordinator()

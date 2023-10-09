@@ -40,7 +40,15 @@ public:
 	/// <returns></returns>
 	TArray<AEnemy*> GetAlertedEnemies() const;
 	
+	/// <summary>
+	/// Assign token to a random enemy if not taken
+	/// </summary>
 	void RequestToken();
+
+	/// <summary>
+	/// Take the token back from the enemy
+	/// </summary>
+	void ReturnToken();
 
 private:
 	EnemyCoordinator();
