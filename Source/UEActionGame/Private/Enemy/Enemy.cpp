@@ -288,7 +288,7 @@ void AEnemy::MoveToTarget(FVector Target)
 
 FVector AEnemy::ChoosePatrolTarget()
 {
-	if (PatrolTargets.Num() > 0 && !bShouldPatrol)
+	if (PatrolTargets.Num() > 0)
 	{
 		TArray<AActor*> ValidTargets;
 		for (auto Target : PatrolTargets)
