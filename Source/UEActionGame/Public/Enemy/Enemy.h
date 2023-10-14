@@ -136,7 +136,7 @@ private:
 	FVector CurrentPatrolTarget;
 
 	UPROPERTY(EditInstanceOnly, Category = AI)
-	TArray<AActor*> PatrolTargets;
+	TArray<AActor*> PatrolPointActors; // These are just so it's easy to drop in actors to the details panel
 
 	UPROPERTY(EditAnywhere, Category = AI)
 	double PatrolRadius = 200.f;
@@ -179,6 +179,8 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = AI)
 	float ReachablePatrolRadius;
+
+	TArray<FVector> PatrolTargets;
 
 	UPROPERTY(EditAnywhere, Category = AI)
 	bool bShouldPatrol = true;

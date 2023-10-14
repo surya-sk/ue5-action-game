@@ -106,6 +106,15 @@ void AEnemy::BeginPlay()
 	NearbyEnemyTrigger->OnComponentEndOverlap.AddDynamic(this, &AEnemy::OnSphereEndOverlap);
 	
 	EnemyController = Cast<AAIController>(GetController());
+
+	if (PatrolPointActors.Num() > 0)
+	{
+		for (AActor* PatrolActor : PatrolPointActors)
+		{
+			PatrolTargets.Add(PatrolActor->GetActorLocation());
+		}
+	}
+
 	if (bShouldPatrol)
 	{
 		CurrentPatrolTarget = ChoosePatrolTarget();
@@ -290,17 +299,16 @@ FVector AEnemy::ChoosePatrolTarget()
 {
 	if (PatrolTargets.Num() > 0)
 	{
-		TArray<AActor*> ValidTargets;
+		TArray<FVector> ValidTargets;
 		for (auto Target : PatrolTargets)
 		{
-			if (Target->GetActorLocation() != CurrentPatrolTarget)
+			if (Target != CurrentPatrolTarget)
 			{
 				ValidTargets.AddUnique(Target);
 			}
 		}
-
 		const auto RandomTargetIndex = FMath::RandRange(0, ValidTargets.Num() - 1);
-		return ValidTargets[RandomTargetIndex]->GetActorLocation();
+		return ValidTargets[RandomTargetIndex];
 	}
 	else
 	{
@@ -324,10 +332,9 @@ void AEnemy::PawnSeen(APawn* SeenPawn)
 	const bool bShouldChase =
 		EnemyState != EEnemyState::EES_Dead &&
 		EnemyState != EEnemyState::EES_Chasing &&
-		EnemyState < EEnemyState::EES_Attacking&&
-		SeenPawn->ActorHasTag(FName("PlayerCharacter")) && 
-		Player && !Player->IsFollwing();
-
+		EnemyState < EEnemyState::EES_Attacking &&
+		SeenPawn->ActorHasTag(FName("PlayerCharacter")) &&
+		Player && !Player->IsFollowing();
 	if (bShouldChase)
 	{
 		CombatTarget = SeenPawn;

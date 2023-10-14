@@ -38,7 +38,7 @@ public:
 		else
 			CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
 	}
-	FORCEINLINE bool IsFollwing() { return CharacterActionState == ECharacterActionState::ECAS_Following; }
+	FORCEINLINE bool IsFollowing() { return CharacterActionState == ECharacterActionState::ECAS_Following; }
 	void SetDialogueState(bool bDialogue, class ANPC* ActiveNPC = nullptr);
 	void SetDialogueText(FText Dialogue);
 	void PlayDialogueAudio(USoundBase* DialogueAudio);
