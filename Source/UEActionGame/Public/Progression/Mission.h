@@ -75,6 +75,12 @@ protected:
 	UPROPERTY(EditAnywhere)
 	class USphereComponent* MissionBounds;
 
+	UPROPERTY(EditInstanceOnly)
+	class ACharacter* CharacterToFollow;
+
+	UPROPERTY(EditInstanceOnly)
+	TArray<AActor*> FollowPointsActors;
+
 private:
 	class AMainCharacter* Player;
 

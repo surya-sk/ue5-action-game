@@ -9,6 +9,7 @@
 
 class UPawnSensingComponent;
 class UAnimMontage;
+class AMainCharacter;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FEnemyKilled);
 
@@ -26,6 +27,8 @@ public:
 	virtual void GetHit(const FVector& ImpactPoint, AActor* Hitter) override;
 
 	void PlayAssassinationMontage();
+
+	void SetFollowPath(AMainCharacter* Player, TArray<FVector> FollowPoints);
 
 	FORCEINLINE void SetTurnToAttack(bool bShouldAttack) { this->bIsTurnToAttack = bShouldAttack; }
 
@@ -198,4 +201,17 @@ private:
 	bool bIsTurnToAttack;
 
 	class EnemyCoordinator* Coordinator;
+
+
+	/* FOLLOWING */
+
+	/// <summary>
+	/// Moves the enemy to the next follow point
+	/// </summary>
+	void MoveToNextFollowPoint();
+
+	TArray<FVector> FollowPathPoints;
+	AMainCharacter* TargetPlayer;
+	int32 CurrentFollowPointIndex;
+	float FollowDistanceThreshold;
 };

@@ -35,6 +35,20 @@ void AMission::Activate()
 			Player->SetFollowState(true);
 		else
 			UE_LOG(LogTemp, Error, TEXT("Player is null"));
+
+		if (CharacterToFollow)
+		{
+			TArray<FVector> FollowPoints;
+			for (AActor* FollowActor : FollowPointsActors)
+			{
+				FollowPoints.Add(FollowActor->GetActorLocation());
+			}
+			AEnemy* EnemyToFollow = Cast<AEnemy>(CharacterToFollow);
+			if (EnemyToFollow)
+			{
+				EnemyToFollow->SetFollowPath(Player, FollowPoints);
+			}
+		}
 	}
 
 	if (EnemyToKill)

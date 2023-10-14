@@ -42,6 +42,8 @@ AEnemy::AEnemy()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
+
+	FollowDistanceThreshold = 500.f;
 }
 
 void AEnemy::Tick(float DeltaTime)
@@ -49,6 +51,17 @@ void AEnemy::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	if (EnemyState == EEnemyState::EES_Dead) return;
+
+	if (TargetPlayer && FollowPathPoints.Num() > 0)
+	{
+		// Follow the follow path
+		float DistanceToPlayer = FVector::Distance(GetActorLocation(), TargetPlayer->GetActorLocation());
+		if (DistanceToPlayer <= FollowDistanceThreshold)
+		{
+			MoveToNextFollowPoint();
+		}
+	}
+
 	if (EnemyState > EEnemyState::EES_Patrolling)
 	{
 		CheckCombatTarget();
@@ -77,6 +90,31 @@ void AEnemy::PlayAssassinationMontage()
 	{
 		AnimInstance->Montage_Play(AssassinationMontage);
 	}
+}
+
+void AEnemy::SetFollowPath(AMainCharacter* Player, TArray<FVector> FollowPoints)
+{
+	FollowPathPoints = FollowPoints;
+	CurrentFollowPointIndex = 0;
+	TargetPlayer = Player;
+
+	MoveToNextFollowPoint();
+}
+
+void AEnemy::MoveToNextFollowPoint()
+{
+	if (CurrentFollowPointIndex >= FollowPathPoints.Num())
+		return;
+
+	FVector TargetLocation = FollowPathPoints[CurrentFollowPointIndex];
+	float DistanceToTarget = FVector::Distance(GetActorLocation(), TargetLocation);
+	
+	if (DistanceToTarget <= FollowDistanceThreshold)
+	{
+		CurrentFollowPointIndex++;
+	}
+
+	MoveToTarget(TargetLocation);
 }
 
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, 
@@ -379,6 +417,8 @@ void AEnemy::StartAttackTimer()
 	const float AttackDelay = FMath::RandRange(AttacDelayMin, AttackDelayMax);
 	GetWorldTimerManager().SetTimer(AttackTimer, this, &AEnemy::Attack, AttackDelay);
 }
+
+
 
 
 
