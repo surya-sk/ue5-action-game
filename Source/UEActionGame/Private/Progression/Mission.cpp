@@ -23,7 +23,9 @@ AMission::AMission()
 
 void AMission::Activate()
 {
+	bActive = true;
 	MissionBounds->OnComponentEndOverlap.AddDynamic(this, &AMission::OnSphereEndOverlap);
+	MissionBounds->OnComponentBeginOverlap.AddDynamic(this, &AMission::OnSphereBeginOverlap);
 	if (bForcePlayerFollow)
 	{
 		if (Player == nullptr)
@@ -75,6 +77,10 @@ void AMission::Complete()
 	{
 		OnMissionFinished.Broadcast();
 	}
+	bActive = false;
+	MissionBounds->SetGenerateOverlapEvents(false);
+	MissionBounds->OnComponentEndOverlap.RemoveAll(this);
+	Destroy();
 }
 
 void AMission::EnemyKilled()
@@ -98,9 +104,17 @@ void AMission::ItemFound()
 
 void AMission::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if (OtherActor->ActorHasTag("PlayerCharacter"))
+	if (bActive && OtherActor->ActorHasTag("PlayerCharacter"))
 	{
 		Player->SetFollowState(false);
+	}
+}
+
+void AMission::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (bActive && OtherActor->ActorHasTag("PlayerCharacter"))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Yes"));
 	}
 }
 
