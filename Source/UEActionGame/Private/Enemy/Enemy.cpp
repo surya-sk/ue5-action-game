@@ -375,7 +375,6 @@ void AEnemy::PawnSeen(APawn* SeenPawn)
 		Player && !Player->IsFollowing();
 	if (bShouldChase)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%d"), Player->IsFollowing());
 		CombatTarget = SeenPawn;
 		GetWorldTimerManager().ClearTimer(PatrolTimer);
 		ChaseTarget();
