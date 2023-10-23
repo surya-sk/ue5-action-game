@@ -108,7 +108,7 @@ protected:
 	/// <summary>
 	/// Unequips the torch
 	/// </summary>
-	void UnequipTorch();
+	void UnequipItem();
 
 	/// <summary>
 	/// Performs a dodge
