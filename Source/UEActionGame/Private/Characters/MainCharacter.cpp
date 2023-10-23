@@ -330,7 +330,7 @@ void AMainCharacter::Equip()
 	}
 	else if (bCanEquip)
 	{
-		UnequipTorch();
+		UnequipItem();
 		PlayEquipMontage(FName("Equip"));
 		CharacterWeaponState = ECharacterWeaponState::ECWS_Equipped;
 		CharacterActionState = ECharacterActionState::ECAS_EquippingWeapon;
@@ -381,7 +381,7 @@ void AMainCharacter::PerformTakedown()
 	}
 }
 
-void AMainCharacter::UnequipTorch()
+void AMainCharacter::UnequipItem()
 {
 	if (EquippedTorch)
 	{
@@ -517,7 +517,7 @@ void AMainCharacter::Tick(float DeltaTime)
 		{
 			WaterAudio = UGameplayStatics::SpawnSound2D(GetWorld(), WaterSound);
 		}
-		UnequipTorch();
+		UnequipItem();
 		Equip();
 	}
 
@@ -550,7 +550,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction(FName("Interact"), IE_Pressed, this, &AMainCharacter::InteractKeyPressed);
 	PlayerInputComponent->BindAction(FName("Attack"), IE_Pressed, this, &AMainCharacter::Attack);
 	PlayerInputComponent->BindAction(FName("Equip"), IE_Pressed, this, &AMainCharacter::Equip);
-	PlayerInputComponent->BindAction(FName("Unequip"), IE_Pressed, this, &AMainCharacter::UnequipTorch);
+	PlayerInputComponent->BindAction(FName("Unequip"), IE_Pressed, this, &AMainCharacter::UnequipItem);
 	PlayerInputComponent->BindAction(FName("Sprint"), IE_Pressed, this, &AMainCharacter::Sprint);
 	PlayerInputComponent->BindAction(FName("Sprint"), IE_Released, this, &AMainCharacter::StopSprinting);
 	PlayerInputComponent->BindAction(FName("Crouch"), IE_Pressed, this, &AMainCharacter::StartCrouch);
