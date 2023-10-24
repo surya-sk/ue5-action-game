@@ -193,6 +193,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	AEnemy* EnemyToAssassinate;
 
+	UFUNCTION(BlueprintCallable)
+	void SetSwimming(bool bSwimming);
+
 private:
 
 	/// <summary>

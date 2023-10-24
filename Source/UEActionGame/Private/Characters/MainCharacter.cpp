@@ -24,6 +24,7 @@
 #include "HUD/PlayerOverlay.h"
 #include "Progression/Quest.h"
 #include "Characters/NPC.h"
+#include "GameFramework/PhysicsVolume.h"
 
 // Sets default values
 AMainCharacter::AMainCharacter()
@@ -510,7 +511,8 @@ void AMainCharacter::Tick(float DeltaTime)
 		Overlay->SetStaminaBarPercent(Attributes->GetStaminaPercent());
 	}
 
-	if (CharacterActionState != ECharacterActionState::ECAS_Swimming && GetCharacterMovement()->IsSwimming())
+
+	if (CharacterActionState != ECharacterActionState::ECAS_Swimming && GetMovementComponent()->IsSwimming())
 	{
 		CharacterActionState = ECharacterActionState::ECAS_Swimming;
 		if (WaterSound)
@@ -567,6 +569,20 @@ float AMainCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 		Overlay->SetHealthBarPercent(Attributes->GetHealthPercent());
 	}
 	return DamageAmount;
+}
+
+void AMainCharacter::SetSwimming(bool bSwimming)
+{
+	if (bSwimming)
+	{
+		GetCharacterMovement()->GetPhysicsVolume()->bWaterVolume = true;
+		GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Swimming);
+	}
+	else
+	{
+		GetCharacterMovement()->GetPhysicsVolume()->bWaterVolume = false;
+		GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+	}
 }
 
 void AMainCharacter::ResetCollisionAndMovement()
