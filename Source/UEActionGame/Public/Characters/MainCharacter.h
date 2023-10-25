@@ -235,7 +235,7 @@ private:
 	ECharacterActionState CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
 
 	UPROPERTY(VisibleAnywhere)
-	USpringArmComponent* CameraBoom;
+	USpringArmComponent* CamBoom;
 
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* ViewCamera;

@@ -44,12 +44,12 @@ AMainCharacter::AMainCharacter()
 	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Overlap);
 	GetMesh()->SetGenerateOverlapEvents(true);
 
-	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	CameraBoom->SetupAttachment(GetRootComponent());
-	CameraBoom->TargetArmLength = 300.f;
+	CamBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+	CamBoom->SetupAttachment(GetRootComponent());
+	CamBoom->TargetArmLength = 300.f;
 
 	ViewCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ViewCamera"));
-	ViewCamera->SetupAttachment(CameraBoom);
+	ViewCamera->SetupAttachment(CamBoom);
 
 	HairMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("HairMesh"));
 	HairMesh->SetupAttachment(GetMesh(), TEXT("headSocket"));
