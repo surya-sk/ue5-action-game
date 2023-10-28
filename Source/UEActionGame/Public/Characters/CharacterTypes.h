@@ -14,6 +14,7 @@ enum class ECharacterActionState : uint8
 	ECAS_Unoccupied UMETA(DisplayName = "Unoccupied"),
 	ECAS_Swimming UMETA(DisplayName = "Swimming"),
 	ECAS_Following UMETA(DisplayName = "Following"),
+	ECAS_Horseback UMETA(DisplayName = "Horseback"),
 	ECAS_Dialogue UMETA(DisplayName = "Dialogue"),
 	ECAS_Crouching UMETA(DisplayName = "Crouching"),
 	ECAS_HitReaction UMETA(DisplayName = "Hit Reaction"),
