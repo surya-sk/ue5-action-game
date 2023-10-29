@@ -42,6 +42,13 @@ public:
 	void SetDialogueState(bool bDialogue, class ANPC* ActiveNPC = nullptr);
 	void SetDialogueText(FText Dialogue);
 	void PlayDialogueAudio(USoundBase* DialogueAudio);
+	FORCEINLINE void SetHorseState(bool bOnHorseback)
+	{
+		if (bOnHorseback)
+			CharacterActionState = ECharacterActionState::ECAS_Horseback;
+		else
+			CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
+	}
 
 protected:
 	// Called when the game starts or when spawned

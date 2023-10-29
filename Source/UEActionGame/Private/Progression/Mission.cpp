@@ -104,7 +104,7 @@ void AMission::ItemFound()
 
 void AMission::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if (bActive && OtherActor->ActorHasTag("PlayerCharacter"))
+	if (bActive && OtherActor->ActorHasTag("PlayerCharacter") && Player)
 	{
 		Player->SetFollowState(false);
 	}
