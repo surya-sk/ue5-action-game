@@ -366,6 +366,11 @@ FVector AEnemy::ChoosePatrolTarget()
 
 void AEnemy::PawnSeen(APawn* SeenPawn)
 {
+	UE_LOG(LogTemp, Warning, TEXT("%d"), SeenPawn->ActorHasTag(FName("Horse")));
+	if (SeenPawn->ActorHasTag(FName("Horse")))
+	{
+
+	}
 	AMainCharacter* Player = Cast<AMainCharacter>(SeenPawn);
 	const bool bShouldChase =
 		EnemyState != EEnemyState::EES_Dead &&
