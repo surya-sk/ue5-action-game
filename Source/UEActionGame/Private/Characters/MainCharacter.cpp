@@ -585,6 +585,14 @@ void AMainCharacter::SetSwimming(bool bSwimming)
 	}
 }
 
+void AMainCharacter::SetHorseState(bool bOnHorseback)
+{
+	if (bOnHorseback)
+		CharacterActionState = ECharacterActionState::ECAS_Horseback;
+	else
+		CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
+}
+
 void AMainCharacter::ResetCollisionAndMovement()
 {
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
