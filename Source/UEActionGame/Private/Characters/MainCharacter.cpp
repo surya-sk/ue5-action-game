@@ -180,7 +180,7 @@ void AMainCharacter::LookUp(float Value)
 bool AMainCharacter::Vault()
 {
 	if (CharacterActionState > ECharacterActionState::ECAS_Crouching) return false;
-	bool bShouldClimb;
+	bool bShouldSldie;
 	bool bWallThick;
 	bool bCanClimb = true;
 	FVector CWallHeight = FVector(0, 0, 0);
@@ -211,8 +211,8 @@ bool AMainCharacter::Vault()
 			UE_LOG(LogTemp, Warning, TEXT("Second line trace successfull"));
 			FVector WallHeight = HitResult.Location;
 			FVector Diff = WallHeight - WallLocation;
-			bShouldClimb = Diff.Z > 60.f;
-			if (bShouldClimb) return false;
+			bShouldSldie = Diff.Z > 60.f;
+			if (bShouldSldie) return false;
 			const FVector CStart = (ForwardVector * (-50.f)) + WallLocation + FVector(0, 0, 250.f);
 			const FVector CEnd = CStart - FVector(0, 0, 300.f);
 			FHitResult CHitResult;
@@ -225,13 +225,13 @@ bool AMainCharacter::Vault()
 				FVector CDiff = WallHeight - CWallHeight;
 				bWallThick = CDiff.Z < 30.f;
 				
-				VaultOrClimb(bShouldClimb, bWallThick, bCanClimb, ForwardVector, CWallHeight);
+				VaultOrClimb(bShouldSldie, bWallThick, bCanClimb, ForwardVector, CWallHeight);
 				return true;
 			}
 			else
 			{
 				bWallThick = false;
-				VaultOrClimb(bShouldClimb, bWallThick, bCanClimb, ForwardVector, CWallHeight);
+				VaultOrClimb(bShouldSldie, bWallThick, bCanClimb, ForwardVector, CWallHeight);
 				return true;
 			}
 		}
