@@ -63,7 +63,9 @@ protected:
 	/// <summary>
 	/// Vaults over the wall if possible
 	/// </summary>
-	void Vault();
+	bool Vault();
+
+	void VaultOrSlide();
 
 	/// <summary>
 	/// Slides under the object if appropriate 

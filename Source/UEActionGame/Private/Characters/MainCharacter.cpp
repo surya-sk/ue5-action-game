@@ -177,15 +177,15 @@ void AMainCharacter::LookUp(float Value)
 	AddControllerPitchInput(Value);
 }
 
-void AMainCharacter::Vault()
+bool AMainCharacter::Vault()
 {
-	if (CharacterActionState > ECharacterActionState::ECAS_Crouching) return;
+	if (CharacterActionState > ECharacterActionState::ECAS_Crouching) return false;
 	bool bShouldClimb;
 	bool bWallThick;
 	bool bCanClimb = true;
 	FVector CWallHeight = FVector(0, 0, 0);
 	if (bIsClimbing)
-		return;
+		return false;
 	const FVector Start = FVector(GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z - 44.f);
 	const FVector End = (GetActorForwardVector() * 70.f) + Start;
 	TArray<TEnumAsByte<EObjectTypeQuery>> TraceObjects = TArray<TEnumAsByte<EObjectTypeQuery>>();
@@ -212,6 +212,7 @@ void AMainCharacter::Vault()
 			FVector WallHeight = HitResult.Location;
 			FVector Diff = WallHeight - WallLocation;
 			bShouldClimb = Diff.Z > 60.f;
+			if (bShouldClimb) return false;
 			const FVector CStart = (ForwardVector * (-50.f)) + WallLocation + FVector(0, 0, 250.f);
 			const FVector CEnd = CStart - FVector(0, 0, 300.f);
 			FHitResult CHitResult;
@@ -225,14 +226,25 @@ void AMainCharacter::Vault()
 				bWallThick = CDiff.Z < 30.f;
 				
 				VaultOrClimb(bShouldClimb, bWallThick, bCanClimb, ForwardVector, CWallHeight);
+				return true;
 			}
 			else
 			{
 				bWallThick = false;
 				VaultOrClimb(bShouldClimb, bWallThick, bCanClimb, ForwardVector, CWallHeight);
+				return true;
 			}
 		}
 	}
+	return false;
+}
+
+void AMainCharacter::VaultOrSlide()
+{
+	bool bAttemptVault = Vault();
+	UE_LOG(LogTemp, Warning, TEXT("Vault attempt: %d"), bAttemptVault);
+	if (!bAttemptVault)
+		Slide();
 }
 
 void AMainCharacter::Slide()
@@ -547,8 +559,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis(FName("LookUp"), this, &AMainCharacter::LookUp);
 
 	PlayerInputComponent->BindAction(FName("Jump"), IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction(FName("Vault"), IE_Pressed, this, &AMainCharacter::Vault);
-	PlayerInputComponent->BindAction(FName("Slide"), IE_Pressed, this, &AMainCharacter::Slide);
+	PlayerInputComponent->BindAction(FName("Vault"), IE_Pressed, this, &AMainCharacter::VaultOrSlide);
 	PlayerInputComponent->BindAction(FName("Interact"), IE_Pressed, this, &AMainCharacter::InteractKeyPressed);
 	PlayerInputComponent->BindAction(FName("Attack"), IE_Pressed, this, &AMainCharacter::Attack);
 	PlayerInputComponent->BindAction(FName("Equip"), IE_Pressed, this, &AMainCharacter::Equip);
