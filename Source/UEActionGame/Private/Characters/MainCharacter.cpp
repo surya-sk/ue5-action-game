@@ -250,6 +250,11 @@ void AMainCharacter::VaultOrSlide()
 void AMainCharacter::Slide()
 {
 	if (CharacterActionState == ECharacterActionState::ECAS_Swimming) return;
+	if (CharacterWeaponState == ECharacterWeaponState::ECWS_Equipped)
+	{
+		Dodge();
+		return;
+	}
 	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
 	GetCapsuleComponent()->SetCapsuleHalfHeight(30.f);
 
