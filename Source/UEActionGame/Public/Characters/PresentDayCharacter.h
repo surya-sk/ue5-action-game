@@ -29,6 +29,15 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	/// <summary>
+	/// Input axis mapping callbacks
+	/// </summary>
+	/// <param name="Value">The value given by the input</param>
+	void MoveForward(float Value);
+	void MoveRight(float Value);
+	void Turn(float Value);
+	void LookUp(float Value);
+
 private:
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* CamBoom;

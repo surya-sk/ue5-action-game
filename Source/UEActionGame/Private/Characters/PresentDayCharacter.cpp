@@ -37,9 +37,51 @@ void APresentDayCharacter::Tick(float DeltaTime)
 
 void APresentDayCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	PlayerInputComponent->BindAxis(FName("MoveForward"), this, &APresentDayCharacter::MoveForward);
+	PlayerInputComponent->BindAxis(FName("MoveRight"), this, &APresentDayCharacter::MoveRight);
+	PlayerInputComponent->BindAxis(FName("Turn"), this, &APresentDayCharacter::Turn);
+	PlayerInputComponent->BindAxis(FName("LookUp"), this, &APresentDayCharacter::LookUp);
+
+	PlayerInputComponent->BindAction(FName("Jump"), IE_Pressed, this, &ACharacter::Jump);
 }
 
 void APresentDayCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+void APresentDayCharacter::MoveForward(float Value)
+{
+	if (Controller && (Value != 0.f))
+	{
+		const FRotator ControlRotation = GetControlRotation();
+		const FRotator YawRotation(0.f, ControlRotation.Yaw, 0.f); // only need the yaw
+
+		const FVector DirectionVector = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		AddMovementInput(DirectionVector, Value);
+	}
+}
+
+void APresentDayCharacter::MoveRight(float Value)
+{
+	if (Controller && (Value != 0.f))
+	{
+		const FRotator ControlRotation = GetControlRotation();
+		const FRotator YawRotation(0.f, ControlRotation.Yaw, 0.f); // only need the yaw
+
+		const FVector DirectionVector = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+		AddMovementInput(DirectionVector, Value);
+	}
+}
+
+void APresentDayCharacter::Turn(float Value)
+{
+	AddControllerYawInput(Value);
+}
+
+void APresentDayCharacter::LookUp(float Value)
+{
+	AddControllerPitchInput(Value);
 }
