@@ -13,7 +13,7 @@ void UPresentDayCharacterAnimInstance::NativeInitializeAnimation()
 	PlayerCharacter = Cast<APresentDayCharacter>(TryGetPawnOwner());
 	if (PlayerCharacter)
 	{
-		
+		CharacterMovement = PlayerCharacter->GetCharacterMovement();
 	}
 }
 
