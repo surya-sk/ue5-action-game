@@ -45,11 +45,15 @@ void APresentDayCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 	PlayerInputComponent->BindAxis(FName("LookUp"), this, &APresentDayCharacter::LookUp);
 
 	PlayerInputComponent->BindAction(FName("Jump"), IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction(FName("Sprint"), IE_Pressed, this, &APresentDayCharacter::StartSprinting);
+	PlayerInputComponent->BindAction(FName("Sprint"), IE_Released, this, &APresentDayCharacter::StopSprinting);
 }
 
 void APresentDayCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 }
 
 void APresentDayCharacter::MoveForward(float Value)
@@ -84,4 +88,14 @@ void APresentDayCharacter::Turn(float Value)
 void APresentDayCharacter::LookUp(float Value)
 {
 	AddControllerPitchInput(Value);
+}
+
+void APresentDayCharacter::StartSprinting()
+{
+	GetCharacterMovement()->MaxWalkSpeed = JogSpeed;
+}
+
+void APresentDayCharacter::StopSprinting()
+{
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 }

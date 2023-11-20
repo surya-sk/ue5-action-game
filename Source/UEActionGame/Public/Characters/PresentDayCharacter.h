@@ -37,6 +37,14 @@ protected:
 	void MoveRight(float Value);
 	void Turn(float Value);
 	void LookUp(float Value);
+	void StartSprinting();
+	void StopSprinting();
+
+	UPROPERTY(EditAnywhere)
+	float WalkSpeed = 50.f;
+
+	UPROPERTY(EditAnywhere)
+	float JogSpeed = 100.f;
 
 private:
 	UPROPERTY(VisibleAnywhere)
