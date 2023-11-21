@@ -7,7 +7,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/StaticMeshComponent.h"
-#include "Components/LightComponent.h"
+#include "Components/SpotLightComponent.h"
 
 APresentDayCharacter::APresentDayCharacter()
 {
@@ -38,7 +38,7 @@ APresentDayCharacter::APresentDayCharacter()
 	TorchMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TorchMesh"));
 	TorchMesh->SetupAttachment(GetMesh(), TEXT("HeadSocket"));
 
-	TorchLight = CreateDefaultSubobject<ULightComponent>(TEXT("TorchLight"));
+	TorchLight = CreateDefaultSubobject<USpotLightComponent>(TEXT("TorchLight"));
 	TorchLight->SetupAttachment(TorchMesh);
 }
 

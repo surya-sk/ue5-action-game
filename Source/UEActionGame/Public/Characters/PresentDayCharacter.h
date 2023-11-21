@@ -60,7 +60,7 @@ private:
 	UStaticMeshComponent* TorchMesh;
 
 	UPROPERTY(VisibleAnywhere)
-	ULightComponent* TorchLight;
+	class USpotLightComponent* TorchLight;
 
 	UPROPERTY(VisibleInstanceOnly)
 	AItem* OverlappingItem;
