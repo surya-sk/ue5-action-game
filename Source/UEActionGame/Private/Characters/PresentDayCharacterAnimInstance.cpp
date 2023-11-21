@@ -24,5 +24,6 @@ void UPresentDayCharacterAnimInstance::NativeUpdateAnimation(float DeltaTime)
 	if (CharacterMovement)
 	{
 		GroundSpeed = UKismetMathLibrary::VSizeXY(CharacterMovement->Velocity);
+		bIsFalling = CharacterMovement->IsFalling();
 	}
 }
