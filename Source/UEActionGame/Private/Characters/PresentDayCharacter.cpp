@@ -5,6 +5,9 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "Components/StaticMeshComponent.h"
+#include "Components/LightComponent.h"
 
 APresentDayCharacter::APresentDayCharacter()
 {
@@ -28,6 +31,15 @@ APresentDayCharacter::APresentDayCharacter()
 
 	ViewCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ViewCamera"));
 	ViewCamera->SetupAttachment(CamBoom);
+
+	HairMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("HairMesh"));
+	HairMesh->SetupAttachment(GetMesh(), TEXT("HeadSocket"));
+
+	TorchMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TorchMesh"));
+	TorchMesh->SetupAttachment(GetMesh(), TEXT("HeadSocket"));
+
+	TorchLight = CreateDefaultSubobject<ULightComponent>(TEXT("TorchLight"));
+	TorchLight->SetupAttachment(TorchMesh);
 }
 
 void APresentDayCharacter::Tick(float DeltaTime)

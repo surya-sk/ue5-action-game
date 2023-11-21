@@ -41,10 +41,10 @@ protected:
 	void StopSprinting();
 
 	UPROPERTY(EditAnywhere)
-	float WalkSpeed = 50.f;
+	float WalkSpeed = 200.f;
 
 	UPROPERTY(EditAnywhere)
-	float JogSpeed = 100.f;
+	float JogSpeed = 500.f;
 
 private:
 	UPROPERTY(VisibleAnywhere)
@@ -52,6 +52,15 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* ViewCamera;
+
+	UPROPERTY(VisibleAnywhere)
+	USkeletalMeshComponent* HairMesh;
+
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* TorchMesh;
+
+	UPROPERTY(VisibleAnywhere)
+	ULightComponent* TorchLight;
 
 	UPROPERTY(VisibleInstanceOnly)
 	AItem* OverlappingItem;
