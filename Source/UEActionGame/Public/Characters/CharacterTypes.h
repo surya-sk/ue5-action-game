@@ -48,3 +48,11 @@ enum class EEnemyState : uint8
 	EES_Engaged UMETA(DisplayName = "Engaged")
 };
 
+UENUM(BlueprintType)
+enum class EGhostState : uint8
+{
+	EGS_Patrolling UMETA(DisplayName = "Patrolling"),
+	EGS_Chasing UMETA(DisplayName = "Chasing"),
+	EGS_Attacking UMETA(DisplayName = "Attacking")
+};
+
