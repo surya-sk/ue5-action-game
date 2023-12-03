@@ -6,6 +6,14 @@
 #include "GameFramework/Actor.h"
 #include "GhostTrigger.generated.h"
 
+UENUM(BlueprintType)
+enum class EGhostAction
+{
+	EGA_AppearAndDisappear UMETA(DisplayName = "Appear and Disappear"),
+	EGA_WalkBy UMETA(DisplayName = "Walk By"),
+	EGA_Patrol UMETA(DisplayName = "Patrol")
+};
+
 UCLASS()
 class UEACTIONGAME_API AGhostTrigger : public AActor
 {
