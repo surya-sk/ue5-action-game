@@ -56,10 +56,3 @@ enum class EGhostState : uint8
 	EGS_Attacking UMETA(DisplayName = "Attacking")
 };
 
-UENUM(BlueprintType)
-enum class EGhostAction
-{
-	EGA_AppearAndDisappear UMETA(DisplayName = "Appear and Disappear"),
-	EGA_WalkBy UMETA(DisplayName = "Walk By"),
-	EGA_Patrol UMETA(DisplayName = "Patrol")
-};

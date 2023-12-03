@@ -39,10 +39,6 @@ void AGhostTrigger::BeginPlay()
 
 void AGhostTrigger::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor->IsA<APresentDayCharacter>())
-	{
-		GhostToSpawn->SetActorHiddenInGame(false);
-	}
 }
 
 void AGhostTrigger::OnBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
