@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Characters/BaseCharacter.h"
+#include "Characters/CharacterTypes.h"
 #include "Ghost.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGhostKilled);
@@ -23,5 +24,14 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+	virtual void Die() override;
+	virtual void Attack() override;
+	virtual bool CanAttack() override;
+	virtual void HandleDamage(float DamageAmount) override;
+	virtual void AttackEnd() override;
+
+	UPROPERTY(BlueprintReadOnly)
+	EGhostState State = EGhostState::EGS_Patrolling;
 
 };
