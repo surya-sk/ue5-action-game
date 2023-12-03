@@ -34,6 +34,7 @@ void AGhostTrigger::BeginPlay()
 	if (GhostToSpawn)
 	{
 		GhostToSpawn->SetActorHiddenInGame(true);
+		GhostToSpawn->SetGhostAction(GhostAction);
 	}
 }
 
