@@ -24,7 +24,7 @@ ABaseCharacter::ABaseCharacter()
 void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 void ABaseCharacter::Attack()

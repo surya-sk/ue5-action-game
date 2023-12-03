@@ -30,6 +30,11 @@ void AGhostTrigger::BeginPlay()
 
 	Trigger->OnComponentBeginOverlap.AddDynamic(this, &AGhostTrigger::OnBoxOverlap);
 	Trigger->OnComponentEndOverlap.AddDynamic(this, &AGhostTrigger::OnBoxEndOverlap);
+
+	if (GhostToSpawn)
+	{
+		GhostToSpawn->SetActorHiddenInGame(true);
+	}
 }
 
 void AGhostTrigger::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
