@@ -42,9 +42,6 @@ protected:
 	UPROPERTY(EditAnywhere)
 	class AGhost* GhostToSpawn;
 
-	UPROPERTY(EditAnywhere)
-	EGhostAction GhostAction;
-
 private:
 	class APresentDayCharacter* MainCharacter;
 };
