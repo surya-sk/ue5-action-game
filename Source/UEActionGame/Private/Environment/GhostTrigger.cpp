@@ -2,6 +2,10 @@
 
 
 #include "Environment/GhostTrigger.h"
+#include "Components/BoxComponent.h"
+#include "Enemy/Ghost.h"
+#include "Characters/PresentDayCharacter.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AGhostTrigger::AGhostTrigger()
@@ -9,6 +13,8 @@ AGhostTrigger::AGhostTrigger()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	Trigger = CreateDefaultSubobject<UBoxComponent>(TEXT("Trigger"));
+	Trigger->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -16,6 +22,22 @@ void AGhostTrigger::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(this, 0);
+	if (PlayerCharacter)
+	{
+		MainCharacter = Cast<APresentDayCharacter>(PlayerCharacter);
+	}
+
+	Trigger->OnComponentBeginOverlap.AddDynamic(this, &AGhostTrigger::OnBoxOverlap);
+	Trigger->OnComponentEndOverlap.AddDynamic(this, &AGhostTrigger::OnBoxEndOverlap);
+}
+
+void AGhostTrigger::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+}
+
+void AGhostTrigger::OnBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
 }
 
 // Called every frame
