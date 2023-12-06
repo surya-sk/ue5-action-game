@@ -25,11 +25,6 @@ void AGhost::GetHit(const FVector& ImpactPoint, AActor* Hitter)
 void AGhost::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (Action == EGhostAction::EGA_AppearAndDisappear)
-	{
-		GetWorldTimerManager().SetTimer(DestroyTimer, this, &AGhost::Disappear, DisappearIn, false);
-	}
 }
 
 void AGhost::Die()
@@ -53,9 +48,4 @@ void AGhost::HandleDamage(float DamageAmount)
 
 void AGhost::AttackEnd()
 {
-}
-
-void AGhost::Disappear()
-{
-	Destroy();
 }

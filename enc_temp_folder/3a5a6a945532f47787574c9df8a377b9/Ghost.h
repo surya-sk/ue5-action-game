@@ -20,6 +20,8 @@ public:
 
 	virtual void GetHit(const FVector& ImpactPoint, AActor* Hitter) override;
 
+	FORCEINLINE void SetGhostAction(EGhostAction GhostAction) { Action = GhostAction; }
+
 	FGhostKilled OnGhostKilled;
 
 protected:
@@ -33,5 +35,8 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly)
 	EGhostState State = EGhostState::EGS_Patrolling;
+
+private:
+	EGhostAction Action;
 
 };

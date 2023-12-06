@@ -48,6 +48,7 @@ void AGhostTrigger::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 
 void AGhostTrigger::OnBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
+	Destroy();
 }
 
 // Called every frame
