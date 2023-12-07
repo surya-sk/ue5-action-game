@@ -48,9 +48,12 @@ private:
 	/// </summary>
 	void Disappear();
 
+	/// <summary>
+	/// Moves the ghost along the spline
+	/// </summary>
+	void MoveAlongSpline();
 
 	EGhostAction Action;
-
 	FTimerHandle DestroyTimer;
 
 };

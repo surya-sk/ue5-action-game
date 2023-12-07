@@ -6,8 +6,6 @@
 #include "GameFramework/Actor.h"
 #include "SplinePath.generated.h"
 
-class USplineComponent;
-
 UCLASS()
 class UEACTIONGAME_API ASplinePath : public AActor
 {
@@ -20,13 +18,11 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	FORCEINLINE USplineComponent* GetSpline() const { return Spline; }
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere)
-	USplineComponent* Spline;
+	class USplineComponent* Spline;
 
 };

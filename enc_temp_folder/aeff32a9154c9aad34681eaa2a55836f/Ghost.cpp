@@ -2,8 +2,6 @@
 
 
 #include "Enemy/Ghost.h"
-#include "Components/SplineComponent.h"
-#include "Environment/SplinePath.h"
 
 AGhost::AGhost()
 {
@@ -64,12 +62,4 @@ void AGhost::AttackEnd()
 void AGhost::Disappear()
 {
 	Destroy();
-}
-
-void AGhost::MoveAlongSpline()
-{
-	if (Spline)
-	{
-		//USplineComponent* SplineComponent = Spline->
-	}
 }
