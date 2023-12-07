@@ -39,8 +39,15 @@ protected:
 	UPROPERTY(EditAnywhere)
 	float DisappearIn = 5.0f;
 
+	UPROPERTY(EditAnywhere)
+	class ASplinePath* Spline;
+
 private:
+	/// <summary>
+	/// Makes the ghost disappear
+	/// </summary>
 	void Disappear();
+
 
 	EGhostAction Action;
 

@@ -35,8 +35,15 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly)
 	EGhostState State = EGhostState::EGS_Patrolling;
+	
+	UPROPERTY(EditAnywhere)
+	float DisappearIn = 5.0f;
 
 private:
+	void Disappear();
+
 	EGhostAction Action;
+
+	FTimerHandle DestroyTimer;
 
 };

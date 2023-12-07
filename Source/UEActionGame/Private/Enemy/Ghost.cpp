@@ -30,6 +30,10 @@ void AGhost::BeginPlay()
 	{
 		GetWorldTimerManager().SetTimer(DestroyTimer, this, &AGhost::Disappear, DisappearIn, false);
 	}
+	else if (Action == EGhostAction::EGA_WalkBy)
+	{
+
+	}
 }
 
 void AGhost::Die()
