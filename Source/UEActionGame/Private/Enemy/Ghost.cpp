@@ -12,6 +12,11 @@ AGhost::AGhost()
 void AGhost::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (bMoveAlongSpline)
+	{
+		MoveAlongSpline();
+	}
 }
 
 float AGhost::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -34,7 +39,7 @@ void AGhost::BeginPlay()
 	}
 	else if (Action == EGhostAction::EGA_WalkBy)
 	{
-
+		bMoveAlongSpline = true;
 	}
 }
 
@@ -68,8 +73,20 @@ void AGhost::Disappear()
 
 void AGhost::MoveAlongSpline()
 {
-	if (Spline)
+	if (SplinePath)
 	{
-		//USplineComponent* SplineComponent = Spline->
+		USplineComponent* Spline = SplinePath->GetSpline();
+		if (Spline)
+		{
+			float SplineLength = Spline->GetSplineLength();
+			CurrentDistance += Speed * GetWorld()->GetDeltaSeconds();
+			CurrentDistance = FMath::Clamp(CurrentDistance, 0.0f, SplineLength);
+
+			FVector SplineLocation = Spline->GetLocationAtDistanceAlongSpline(CurrentDistance, ESplineCoordinateSpace::World);
+			FRotator SplineRotation = Spline->GetRotationAtDistanceAlongSpline(CurrentDistance, ESplineCoordinateSpace::World);
+
+			this->SetActorLocation(SplineLocation);
+			this->SetActorRotation(SplineRotation);
+		}
 	}
 }

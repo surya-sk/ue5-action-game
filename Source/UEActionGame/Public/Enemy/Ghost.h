@@ -40,7 +40,10 @@ protected:
 	float DisappearIn = 5.0f;
 
 	UPROPERTY(EditAnywhere)
-	class ASplinePath* Spline;
+	class ASplinePath* SplinePath;
+
+	UPROPERTY(EditAnywhere)
+	float Speed;
 
 private:
 	/// <summary>
@@ -55,5 +58,8 @@ private:
 
 	EGhostAction Action;
 	FTimerHandle DestroyTimer;
+
+	bool bMoveAlongSpline;
+	float CurrentDistance = 0.f;
 
 };
