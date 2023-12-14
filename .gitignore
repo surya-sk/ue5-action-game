@@ -127,3 +127,13 @@ Content/UltimateHorsePack/
 **/Megascans
 **/StarterContent
 **/Assets
+
+/.git
+/.github
+/.vs
+/.vscode
+/Content
+/DerivedDataCache
+/Intermediate
+/Saved
+
