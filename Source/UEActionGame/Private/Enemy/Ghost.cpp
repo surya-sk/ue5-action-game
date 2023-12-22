@@ -85,8 +85,7 @@ void AGhost::MoveAlongSpline()
 			FVector SplineLocation = Spline->GetLocationAtDistanceAlongSpline(CurrentDistance, ESplineCoordinateSpace::World);
 			FRotator SplineRotation = Spline->GetRotationAtDistanceAlongSpline(CurrentDistance, ESplineCoordinateSpace::World);
 
-			this->SetActorLocation(SplineLocation);
-			this->SetActorRotation(SplineRotation);
+			SetActorLocationAndRotation(SplineLocation, SplineRotation);
 		}
 	}
 }
