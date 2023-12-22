@@ -47,6 +47,9 @@ protected:
 	UPROPERTY(EditAnywhere)
 	float JogSpeed = 500.f;
 
+	UPROPERTY(EditAnywhere)
+	USoundBase* FlashlightSound;
+
 private:
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* CamBoom;

@@ -8,6 +8,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SpotLightComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 APresentDayCharacter::APresentDayCharacter()
 {
@@ -115,4 +116,8 @@ void APresentDayCharacter::StopSprinting()
 void APresentDayCharacter::ToggleFlashlight()
 {
 	TorchLight->ToggleVisibility();
+	if(FlashlightSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, FlashlightSound, GetActorLocation());
+	}
 }
