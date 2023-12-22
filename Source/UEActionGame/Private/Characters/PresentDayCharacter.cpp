@@ -59,6 +59,7 @@ void APresentDayCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 	PlayerInputComponent->BindAction(FName("Jump"), IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction(FName("Sprint"), IE_Pressed, this, &APresentDayCharacter::StartSprinting);
 	PlayerInputComponent->BindAction(FName("Sprint"), IE_Released, this, &APresentDayCharacter::StopSprinting);
+	PlayerInputComponent->BindAction(FName("Equip"), IE_Pressed, this, &APresentDayCharacter::ToggleFlashlight);
 }
 
 void APresentDayCharacter::BeginPlay()
@@ -110,4 +111,8 @@ void APresentDayCharacter::StartSprinting()
 void APresentDayCharacter::StopSprinting()
 {
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+}
+void APresentDayCharacter::ToggleFlashlight()
+{
+	TorchLight->ToggleVisibility();
 }

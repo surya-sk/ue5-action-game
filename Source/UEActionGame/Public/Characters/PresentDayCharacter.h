@@ -39,6 +39,7 @@ protected:
 	void LookUp(float Value);
 	void StartSprinting();
 	void StopSprinting();
+	void ToggleFlashlight();
 
 	UPROPERTY(EditAnywhere)
 	float WalkSpeed = 200.f;
@@ -66,6 +67,5 @@ private:
 	AItem* OverlappingItem;
 
 	UPROPERTY()
-	class AExpositionNote* OverlappingNote;
-	
+	class AExpositionNote* OverlappingNote;	
 };
