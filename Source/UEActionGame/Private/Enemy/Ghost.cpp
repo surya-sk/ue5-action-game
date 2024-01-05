@@ -78,27 +78,45 @@ void AGhost::Disappear()
 
 void AGhost::MoveAlongSpline(bool bLoop)
 {
-	if (SplinePath)
-	{
-		USplineComponent* Spline = SplinePath->GetSpline();
-		if (Spline)
-		{
-			float SplineLength = Spline->GetSplineLength();
-			CurrentDistance += Speed * GetWorld()->GetDeltaSeconds();
+    static bool bForward = true;
 
-			if (bLoop && CurrentDistance > SplineLength)
-			{
-				CurrentDistance = 0.0f;
-			}
-			else
-			{
-				CurrentDistance = FMath::Clamp(CurrentDistance, 0.0f, SplineLength);
-			}
+    if (SplinePath)
+    {
+        USplineComponent* Spline = SplinePath->GetSpline();
+        if (Spline)
+        {
+            float SplineLength = Spline->GetSplineLength();
+            CurrentDistance += (bForward ? 1 : -1) * Speed * GetWorld()->GetDeltaSeconds();
 
-			FVector SplineLocation = Spline->GetLocationAtDistanceAlongSpline(CurrentDistance, ESplineCoordinateSpace::World);
-			FRotator SplineRotation = Spline->GetRotationAtDistanceAlongSpline(CurrentDistance, ESplineCoordinateSpace::World);
+            if (bLoop)
+            {
+                if (CurrentDistance > SplineLength)
+                {
+                    CurrentDistance = SplineLength;
+                    bForward = false;
+                }
+                else if (CurrentDistance < 0.0f)
+                {
+                    CurrentDistance = 0.0f;
+                    bForward = true;
+                }
+            }
+            else
+            {
+                CurrentDistance = FMath::Clamp(CurrentDistance, 0.0f, SplineLength);
+            }
 
-			SetActorLocationAndRotation(SplineLocation, SplineRotation);
-		}
-	}
+            FVector SplineLocation = Spline->GetLocationAtDistanceAlongSpline(CurrentDistance, ESplineCoordinateSpace::World);
+            FVector SplineDirection = Spline->GetDirectionAtDistanceAlongSpline(CurrentDistance, ESplineCoordinateSpace::World);
+
+            if (!bForward)
+            {
+                SplineDirection *= -1;
+            }
+
+            FRotator SplineRotation = SplineDirection.Rotation();
+
+            SetActorLocationAndRotation(SplineLocation, SplineRotation);
+        }
+    }
 }
