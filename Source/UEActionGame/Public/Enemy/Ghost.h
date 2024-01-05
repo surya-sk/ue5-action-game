@@ -54,12 +54,13 @@ private:
 	/// <summary>
 	/// Moves the ghost along the spline
 	/// </summary>
-	void MoveAlongSpline();
+	void MoveAlongSpline(bool bLoop = false);
 
 	EGhostAction Action;
 	FTimerHandle DestroyTimer;
 
 	bool bMoveAlongSpline;
 	float CurrentDistance = 0.f;
+	bool bPatrol;
 
 };

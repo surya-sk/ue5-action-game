@@ -15,7 +15,7 @@ void AGhost::Tick(float DeltaTime)
 
 	if (bMoveAlongSpline)
 	{
-		MoveAlongSpline();
+		MoveAlongSpline(bPatrol);
 	}
 }
 
@@ -40,6 +40,11 @@ void AGhost::BeginPlay()
 	else if (Action == EGhostAction::EGA_WalkBy)
 	{
 		bMoveAlongSpline = true;
+	}
+	else if(Action == EGhostAction::EGA_Patrol)
+	{
+		bMoveAlongSpline = true;
+		bPatrol = true;
 	}
 }
 
@@ -71,7 +76,7 @@ void AGhost::Disappear()
 	Destroy();
 }
 
-void AGhost::MoveAlongSpline()
+void AGhost::MoveAlongSpline(bool bLoop)
 {
 	if (SplinePath)
 	{
@@ -80,7 +85,15 @@ void AGhost::MoveAlongSpline()
 		{
 			float SplineLength = Spline->GetSplineLength();
 			CurrentDistance += Speed * GetWorld()->GetDeltaSeconds();
-			CurrentDistance = FMath::Clamp(CurrentDistance, 0.0f, SplineLength);
+
+			if (bLoop && CurrentDistance > SplineLength)
+			{
+				CurrentDistance = 0.0f;
+			}
+			else
+			{
+				CurrentDistance = FMath::Clamp(CurrentDistance, 0.0f, SplineLength);
+			}
 
 			FVector SplineLocation = Spline->GetLocationAtDistanceAlongSpline(CurrentDistance, ESplineCoordinateSpace::World);
 			FRotator SplineRotation = Spline->GetRotationAtDistanceAlongSpline(CurrentDistance, ESplineCoordinateSpace::World);
