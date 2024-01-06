@@ -29,6 +29,7 @@ void EnemyCoordinator::RemoveEnemy(AEnemy* Enemy)
 	if (Enemy == EnemyWithToken)
 		Token = 0;
 	AlertedEnemies.Remove(Enemy);
+	RequestToken();
 }
 
 void EnemyCoordinator::Reset()
@@ -44,17 +45,23 @@ void EnemyCoordinator::RequestToken()
 		return;
 
 	// Check if the token has already been taken
-	if (Token == ATTACK_TOKEN) 
-		return;
+	if (Token == ATTACK_TOKEN)
+	{
+		// Check if the enemy with the token is still valid and in the alerted enemies array
+		if (IsValid(EnemyWithToken) && AlertedEnemies.Contains(EnemyWithToken))
+			return;
+	}
 
-	int32 EnemyToAssign = 0;
-	if (AlertedEnemies.Num() > 1)
-		EnemyToAssign = FMath::RandHelper(AlertedEnemies.Num());
+	// Keep track of the last enemy that was assigned the token
+	static int32 LastEnemyAssigned = -1;
+
+	// Assign the token to the next enemy in the array
+	LastEnemyAssigned = (LastEnemyAssigned + 1) % AlertedEnemies.Num();
 
 	Token = ATTACK_TOKEN;
-	EnemyWithToken = AlertedEnemies[EnemyToAssign];
+	EnemyWithToken = AlertedEnemies[LastEnemyAssigned];
 
-	if(IsValid(EnemyWithToken))
+	if (IsValid(EnemyWithToken))
 		EnemyWithToken->SetTurnToAttack(true);
 }
 
@@ -62,6 +69,7 @@ void EnemyCoordinator::ReturnToken()
 {
 	Token = 0;
 	EnemyWithToken->SetTurnToAttack(false);
+	RequestToken();
 }
 
 EnemyCoordinator::EnemyCoordinator()
