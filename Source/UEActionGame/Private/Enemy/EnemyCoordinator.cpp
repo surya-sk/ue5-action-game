@@ -31,9 +31,8 @@ void EnemyCoordinator::RemoveEnemy(AEnemy* Enemy)
 {
 	if (!AlertedEnemies.Contains(Enemy))
 		return;
-	if (Enemy == EnemyWithToken)
-		ReturnToken();
 	AlertedEnemies.Remove(Enemy);
+	ReturnToken();
 }
 
 void EnemyCoordinator::Reset()
