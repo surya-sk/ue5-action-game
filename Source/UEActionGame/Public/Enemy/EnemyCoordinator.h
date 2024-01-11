@@ -46,10 +46,10 @@ public:
 
 private:
 	EnemyCoordinator();
-	~EnemyCoordinator();
 
 	static EnemyCoordinator* Instance;
 	TArray<AEnemy*> AlertedEnemies;
 	int32 Token;
 	AEnemy* EnemyWithToken;
+	int32 LastEnemyAssigned;
 };

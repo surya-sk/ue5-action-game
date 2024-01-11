@@ -204,7 +204,7 @@ void AEnemy::Attack()
 
 bool AEnemy::CanAttack()
 {
-	Coordinator->GetInstance()->RequestToken();
+	Coordinator->GetInstance()->AddEnemy(this);
 	return IsInTargetRange(CombatTarget->GetActorLocation(), AttackRadius) &&
 		EnemyState != EEnemyState::EES_Attacking &&
 		EnemyState != EEnemyState::EES_Engaged &&
@@ -273,14 +273,12 @@ void AEnemy::CheckPatrolTarget()
 void AEnemy::CheckCombatTarget()
 {
 	if (CombatTarget == nullptr) return;
-	Coordinator->GetInstance()->AddEnemy(this);
 	if (EnemyState == EEnemyState::EES_Chasing && !bChasing)
 		ChaseTarget();
 	if (!IsInTargetRange(CombatTarget->GetActorLocation(), CombatRadius))
 	{
 		GetWorldTimerManager().ClearTimer(AttackTimer);
 		CombatTarget = nullptr;
-		Coordinator->GetInstance()->RemoveEnemy(this);
 		if (EnemyState != EEnemyState::EES_Engaged)
 			StartPatrolling();
 	}

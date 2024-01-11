@@ -10,16 +10,21 @@ EnemyCoordinator* EnemyCoordinator::Instance = nullptr;
 EnemyCoordinator* EnemyCoordinator::GetInstance()
 {
 	if (Instance == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Creating new instance of EnemyCoordinator"));
 		Instance = new EnemyCoordinator();
+	}
 
 	return Instance;
 }
 
 void EnemyCoordinator::AddEnemy(AEnemy* Enemy)
 {
-	if (AlertedEnemies.Contains(Enemy))
+	if (AlertedEnemies.Contains(Enemy) || EnemyWithToken == Enemy)
 		return;
+	UE_LOG(LogTemp, Warning, TEXT("Adding enemy to coordinator"));	
 	AlertedEnemies.Add(Enemy);
+	RequestToken();
 }
 
 void EnemyCoordinator::RemoveEnemy(AEnemy* Enemy)
@@ -27,9 +32,8 @@ void EnemyCoordinator::RemoveEnemy(AEnemy* Enemy)
 	if (!AlertedEnemies.Contains(Enemy))
 		return;
 	if (Enemy == EnemyWithToken)
-		Token = 0;
+		ReturnToken();
 	AlertedEnemies.Remove(Enemy);
-	RequestToken();
 }
 
 void EnemyCoordinator::Reset()
@@ -42,31 +46,28 @@ void EnemyCoordinator::RequestToken()
 	const int32 ATTACK_TOKEN = 1;
 
 	if (AlertedEnemies.Num() == 0)
-		return;
-
-	// Check if the token has already been taken
-	if (Token == ATTACK_TOKEN)
 	{
-		// Check if the enemy with the token is still valid and in the alerted enemies array
-		if (IsValid(EnemyWithToken) && AlertedEnemies.Contains(EnemyWithToken))
-			return;
+		UE_LOG(LogTemp, Warning, TEXT("No alerted enemies"));
+		return;
 	}
 
-	// Keep track of the last enemy that was assigned the token
-	static int32 LastEnemyAssigned = -1;
+	if (Token == ATTACK_TOKEN)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Token already assigned"));
+		return;
+	}
 
-	// Assign the token to the next enemy in the array
-	LastEnemyAssigned = (LastEnemyAssigned + 1) % AlertedEnemies.Num();
-
+	// Assign token to a random enemy
+	int32 RandomIndex = FMath::RandRange(0, AlertedEnemies.Num() - 1);
+	EnemyWithToken = AlertedEnemies[RandomIndex];
+	EnemyWithToken->SetTurnToAttack(true);
+	UE_LOG(LogTemp, Warning, TEXT("Assigning token to enemy"));
 	Token = ATTACK_TOKEN;
-	EnemyWithToken = AlertedEnemies[LastEnemyAssigned];
-
-	if (IsValid(EnemyWithToken))
-		EnemyWithToken->SetTurnToAttack(true);
 }
 
 void EnemyCoordinator::ReturnToken()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Returning token"));
 	Token = 0;
 	EnemyWithToken->SetTurnToAttack(false);
 	RequestToken();
@@ -75,8 +76,4 @@ void EnemyCoordinator::ReturnToken()
 EnemyCoordinator::EnemyCoordinator()
 {
 	Token = 0;
-}
-
-EnemyCoordinator::~EnemyCoordinator()
-{
 }
