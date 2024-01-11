@@ -11,7 +11,6 @@ EnemyCoordinator* EnemyCoordinator::GetInstance()
 {
 	if (Instance == nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Creating new instance of EnemyCoordinator"));
 		Instance = new EnemyCoordinator();
 	}
 
@@ -22,7 +21,6 @@ void EnemyCoordinator::AddEnemy(AEnemy* Enemy)
 {
 	if (AlertedEnemies.Contains(Enemy) || EnemyWithToken == Enemy)
 		return;
-	UE_LOG(LogTemp, Warning, TEXT("Adding enemy to coordinator"));	
 	AlertedEnemies.Add(Enemy);
 	RequestToken();
 }
@@ -46,13 +44,11 @@ void EnemyCoordinator::RequestToken()
 
 	if (AlertedEnemies.Num() == 0)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("No alerted enemies"));
 		return;
 	}
 
 	if (Token == ATTACK_TOKEN)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Token already assigned"));
 		return;
 	}
 
@@ -60,13 +56,11 @@ void EnemyCoordinator::RequestToken()
 	int32 RandomIndex = FMath::RandRange(0, AlertedEnemies.Num() - 1);
 	EnemyWithToken = AlertedEnemies[RandomIndex];
 	EnemyWithToken->SetTurnToAttack(true);
-	UE_LOG(LogTemp, Warning, TEXT("Assigning token to enemy"));
 	Token = ATTACK_TOKEN;
 }
 
 void EnemyCoordinator::ReturnToken()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Returning token"));
 	Token = 0;
 	EnemyWithToken->SetTurnToAttack(false);
 	RequestToken();
