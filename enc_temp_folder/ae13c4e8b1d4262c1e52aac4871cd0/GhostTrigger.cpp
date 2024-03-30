@@ -52,7 +52,6 @@ void AGhostTrigger::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 
 void AGhostTrigger::OnBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	GhostToSpawn->SetActorHiddenInGame(true);
 	for (AActor* ActorToUnhide : ActorsToHide)
 	{
 		ActorToUnhide->SetActorHiddenInGame(false);

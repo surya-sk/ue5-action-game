@@ -38,6 +38,9 @@ protected:
 	UPROPERTY(EditAnywhere)
 	EGhostAction GhostAction;
 
+	UPROPERTY(EditAnywhere)
+	TArray<AActor*> ActorsToHide;
+
 private:
 	class APresentDayCharacter* MainCharacter;
 };
