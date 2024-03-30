@@ -46,6 +46,10 @@ void AGhost::BeginPlay()
 		bMoveAlongSpline = true;
 		bPatrol = true;
 	}
+    else if (Action == EGhostAction::EGA_TriggerTimeSwitch)
+    {
+        // TODO: Trigger a transition between timeline
+    }
 }
 
 void AGhost::Die()

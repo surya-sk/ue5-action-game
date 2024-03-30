@@ -61,5 +61,6 @@ enum class EGhostAction
 {
 	EGA_AppearAndDisappear UMETA(DisplayName = "Appear and Disappear"),
 	EGA_WalkBy UMETA(DisplayName = "Walk By"),
-	EGA_Patrol UMETA(DisplayName = "Patrol")
+	EGA_Patrol UMETA(DisplayName = "Patrol"),
+	EGA_TriggerTimeSwitch UMETA(DisplayName = "Trigger Time Switch")
 };
