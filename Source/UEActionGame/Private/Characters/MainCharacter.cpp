@@ -25,6 +25,7 @@
 #include "Progression/Quest.h"
 #include "Characters/NPC.h"
 #include "GameFramework/PhysicsVolume.h"
+#include "Blueprint/UserWidget.h"
 
 // Sets default values
 AMainCharacter::AMainCharacter()
@@ -91,9 +92,23 @@ void AMainCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	InitPauseOverlay();
 	InitPlayerOverlay();
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 	Tags.Add(FName("PlayerCharacter"));
+}
+
+void AMainCharacter::InitPauseOverlay()
+{
+	if (WPauseMenu)
+	{
+		PauseMenu = CreateWidget<UUserWidget>(this, WPauseMenu);
+		if (PauseMenu)
+		{
+			PauseMenu->AddToViewport();
+			PauseMenu->SetVisibility(ESlateVisibility::Hidden);
+		}
+	}
 }
 
 void AMainCharacter::InitPlayerOverlay()
