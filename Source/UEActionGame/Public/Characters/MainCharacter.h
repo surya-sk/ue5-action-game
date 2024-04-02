@@ -234,6 +234,10 @@ private:
 
 	void InitPauseOverlay();
 
+	void DisplayPauseMenu();
+
+	bool bPauseMenuVisible;
+
 	bool bIsClimbing = false;
 
 	ECharacterWeaponState CharacterWeaponState = ECharacterWeaponState::ECWS_Unequipped;
