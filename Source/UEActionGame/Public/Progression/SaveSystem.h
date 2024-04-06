@@ -6,6 +6,24 @@
 #include "GameFramework/SaveGame.h"
 #include "SaveSystem.generated.h"
 
+USTRUCT(BlueprintType)
+struct FPlayerData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(VisibleAnywhere, Category="SaveGameData")
+	bool bWeaponEquipped;
+
+	UPROPERTY(VisibleAnywhere, Category="SaveGameData")
+	FString LastMapName;
+
+	UPROPERTY(VisibleAnywhere, Category="SaveGameData")
+	FVector Location;
+
+	UPROPERTY(VisibleAnywhere, Category="SaveGameData")
+	FRotator Rotation;
+};
+
 /**
  * 
  */
