@@ -25,6 +25,7 @@
 #include "Progression/Quest.h"
 #include "Characters/NPC.h"
 #include "GameFramework/PhysicsVolume.h"
+#include "Progression/SaveSystem.h"
 
 // Sets default values
 AMainCharacter::AMainCharacter()
@@ -607,6 +608,30 @@ void AMainCharacter::SetHorseState(bool bOnHorseback)
 		CharacterActionState = ECharacterActionState::ECAS_Horseback;
 	else
 		CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
+}
+
+void AMainCharacter::SaveGame()
+{
+	auto* SaveSystem = Cast<USaveSystem>(UGameplayStatics::CreateSaveGameObject(USaveSystem::StaticClass()));
+
+	SaveSystem->PlayerData.bWeaponEquipped = EquippedWeapon != nullptr;
+	SaveSystem->PlayerData.LastMapName = GetWorld()->GetMapName();
+	SaveSystem->PlayerData.Location = GetActorLocation();
+	SaveSystem->PlayerData.Rotation = GetActorRotation();
+
+	UGameplayStatics::SaveGameToSlot(SaveSystem, SaveSystem->PlayerName, SaveSystem->UserIndex);
+}
+
+void AMainCharacter::LoadGame()
+{
+	auto* SaveSystem = Cast<USaveSystem>(UGameplayStatics::CreateSaveGameObject(USaveSystem::StaticClass()));
+
+	SaveSystem = Cast<USaveSystem>(UGameplayStatics::LoadGameFromSlot(SaveSystem->PlayerName, SaveSystem->UserIndex));
+
+	SetActorLocation(SaveSystem->PlayerData.Location);
+	SetActorRotation(SaveSystem->PlayerData.Rotation);
+
+	// TODO: Equip weapon and load the right map
 }
 
 void AMainCharacter::ResetCollisionAndMovement()

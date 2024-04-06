@@ -201,6 +201,12 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void SetHorseState(bool bOnHorseback);
 
+	UFUNCTION(BlueprintCallable)
+	void SaveGame();
+
+	UFUNCTION(BlueprintCallable)
+	void LoadGame();
+
 private:
 
 	/// <summary>
