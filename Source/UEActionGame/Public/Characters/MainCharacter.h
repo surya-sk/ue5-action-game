@@ -195,6 +195,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	AEnemy* EnemyToAssassinate;
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AWeapon> WeaponToSpawn;
+
 	UFUNCTION(BlueprintCallable)
 	void SetSwimming(bool bSwimming);
 

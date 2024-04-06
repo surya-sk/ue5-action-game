@@ -631,7 +631,13 @@ void AMainCharacter::LoadGame()
 	SetActorLocation(SaveSystem->PlayerData.Location);
 	SetActorRotation(SaveSystem->PlayerData.Rotation);
 
-	// TODO: Equip weapon and load the right map
+	if (SaveSystem->PlayerData.bWeaponEquipped)
+	{
+		EquippedWeapon = GetWorld()->SpawnActor<AWeapon>(AWeapon::StaticClass(), GetActorLocation(), GetActorRotation());
+		EquippedWeapon->Equip(this->GetMesh(), FName("LeftHandSocket"), this, this);
+		CharacterWeaponState = ECharacterWeaponState::ECWS_Equipped;
+	}
+
 }
 
 void AMainCharacter::ResetCollisionAndMovement()
