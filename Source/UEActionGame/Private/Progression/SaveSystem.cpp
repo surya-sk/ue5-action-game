@@ -3,3 +3,8 @@
 
 #include "Progression/SaveSystem.h"
 
+USaveSystem::USaveSystem()
+{
+	PlayerName = TEXT("Default");
+	UserIndex = 0;
+}

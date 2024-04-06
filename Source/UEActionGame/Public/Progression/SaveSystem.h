@@ -13,5 +13,12 @@ UCLASS()
 class UEACTIONGAME_API USaveSystem : public USaveGame
 {
 	GENERATED_BODY()
-	
+public:
+	USaveSystem();
+
+	UPROPERTY(VisibleAnywhere, Category=Basic)
+	FString PlayerName;
+
+	UPROPERTY(VisibleAnywhere, Category=Basic)
+	uint32 UserIndex;
 };
