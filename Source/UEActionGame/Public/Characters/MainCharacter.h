@@ -236,6 +236,8 @@ private:
 
 	void DisplayPauseMenu();
 
+	void HidePauseMenu();
+
 	bool bPauseMenuVisible;
 
 	bool bIsClimbing = false;
