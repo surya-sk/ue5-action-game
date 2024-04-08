@@ -1,0 +1,10 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "Progression/SaveSystem.h"
+
+USaveSystem::USaveSystem()
+{
+	PlayerName = TEXT("Default");
+	UserIndex = 0;
+}

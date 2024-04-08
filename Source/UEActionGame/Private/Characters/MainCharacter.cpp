@@ -25,6 +25,7 @@
 #include "Progression/Quest.h"
 #include "Characters/NPC.h"
 #include "GameFramework/PhysicsVolume.h"
+#include "Progression/SaveSystem.h"
 #include "Blueprint/UserWidget.h"
 
 // Sets default values
@@ -640,6 +641,39 @@ void AMainCharacter::SetHorseState(bool bOnHorseback)
 		CharacterActionState = ECharacterActionState::ECAS_Horseback;
 	else
 		CharacterActionState = ECharacterActionState::ECAS_Unoccupied;
+}
+
+void AMainCharacter::SaveGame()
+{
+	auto* SaveSystem = Cast<USaveSystem>(UGameplayStatics::CreateSaveGameObject(USaveSystem::StaticClass()));
+
+	SaveSystem->PlayerData.bWeaponEquipped = EquippedWeapon != nullptr;
+	SaveSystem->PlayerData.LastMapName = GetWorld()->GetMapName();
+	SaveSystem->PlayerData.Location = GetActorLocation();
+	SaveSystem->PlayerData.Rotation = GetActorRotation();
+
+	UGameplayStatics::SaveGameToSlot(SaveSystem, SaveSystem->PlayerName, SaveSystem->UserIndex);
+}
+
+void AMainCharacter::LoadGame()
+{
+	auto* SaveSystem = Cast<USaveSystem>(UGameplayStatics::CreateSaveGameObject(USaveSystem::StaticClass()));
+
+	SaveSystem = Cast<USaveSystem>(UGameplayStatics::LoadGameFromSlot(SaveSystem->PlayerName, SaveSystem->UserIndex));
+
+	SetActorLocation(SaveSystem->PlayerData.Location);
+	SetActorRotation(SaveSystem->PlayerData.Rotation);
+
+	if (SaveSystem->PlayerData.bWeaponEquipped && IsValid(WeaponToSpawn))
+	{
+		EquippedWeapon = GetWorld()->SpawnActor<AWeapon>(WeaponToSpawn, GetActorLocation(), GetActorRotation());
+		if (IsValid(EquippedWeapon))
+		{
+			AttachWeaponToBack();
+			CharacterWeaponState = ECharacterWeaponState::ECWS_Unequipped;
+		}
+	}
+
 }
 
 void AMainCharacter::ResetCollisionAndMovement()

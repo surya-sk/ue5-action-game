@@ -9,6 +9,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/SpotLightComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Progression/SaveSystem.h"
 
 APresentDayCharacter::APresentDayCharacter()
 {
@@ -120,4 +121,25 @@ void APresentDayCharacter::ToggleFlashlight()
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, FlashlightSound, GetActorLocation());
 	}
+}
+
+void APresentDayCharacter::SaveGame()
+{
+	auto* SaveSystem = Cast<USaveSystem>(UGameplayStatics::CreateSaveGameObject(USaveSystem::StaticClass()));
+
+	SaveSystem->PlayerData.bWeaponEquipped = false;
+	SaveSystem->PlayerData.LastMapName = GetWorld()->GetMapName();
+	SaveSystem->PlayerData.Location = GetActorLocation();
+	SaveSystem->PlayerData.Rotation = GetActorRotation();
+
+	UGameplayStatics::SaveGameToSlot(SaveSystem, SaveSystem->PlayerName, SaveSystem->UserIndex);
+}
+
+void APresentDayCharacter::LoadGame()
+{
+	auto* SaveSystem = Cast<USaveSystem>(UGameplayStatics::CreateSaveGameObject(USaveGame::StaticClass()));
+	SaveSystem = Cast<USaveSystem>(UGameplayStatics::LoadGameFromSlot(SaveSystem->PlayerName, SaveSystem->UserIndex));
+
+	SetActorLocation(SaveSystem->PlayerData.Location);
+	SetActorRotation(SaveSystem->PlayerData.Rotation);
 }

@@ -195,11 +195,20 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	AEnemy* EnemyToAssassinate;
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AWeapon> WeaponToSpawn;
+
 	UFUNCTION(BlueprintCallable)
 	void SetSwimming(bool bSwimming);
 
 	UFUNCTION(BlueprintCallable)
 	void SetHorseState(bool bOnHorseback);
+
+	UFUNCTION(BlueprintCallable)
+	void SaveGame();
+
+	UFUNCTION(BlueprintCallable)
+	void LoadGame();
 
 private:
 
