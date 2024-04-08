@@ -50,6 +50,12 @@ protected:
 	UPROPERTY(EditAnywhere)
 	USoundBase* FlashlightSound;
 
+	UPROPERTY(BlueprintCallable)
+	void SaveGame();
+
+	UPROPERTY(BlueprintCallable)
+	void LoadGame();
+
 private:
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* CamBoom;
