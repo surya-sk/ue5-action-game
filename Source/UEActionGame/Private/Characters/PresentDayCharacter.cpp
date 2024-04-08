@@ -68,6 +68,7 @@ void APresentDayCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	InitPauseOverlay();
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 }
 

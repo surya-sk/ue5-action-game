@@ -7,6 +7,7 @@
 #include "Components/AttributeComponent.h"
 #include "Items/Weapons/Weapon.h"
 #include "Kismet/GameplayStatics.h"
+#include "Blueprint/UserWidget.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()
@@ -236,6 +237,37 @@ void ABaseCharacter::SetWeaponCollision(ECollisionEnabled::Type CollisionEnabled
 void ABaseCharacter::DisableMeshCollision()
 {
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
+
+void ABaseCharacter::InitPauseOverlay()
+{
+	if (WPauseMenu)
+	{
+		PauseMenu = CreateWidget<UUserWidget>(this, WPauseMenu);
+		if (PauseMenu)
+		{
+			PauseMenu->AddToViewport();
+			PauseMenu->SetVisibility(ESlateVisibility::Hidden);
+		}
+	}
+}
+
+void ABaseCharacter::DisplayPauseMenu()
+{
+	if (PauseMenu)
+	{
+		bPauseMenuVisible = true;
+		PauseMenu->SetVisibility(ESlateVisibility::Visible);
+	}
+}
+
+void ABaseCharacter::HidePauseMenu()
+{
+	if (PauseMenu)
+	{
+		bPauseMenuVisible = false;
+		PauseMenu->SetVisibility(ESlateVisibility::Hidden);
+	}
 }
 
 

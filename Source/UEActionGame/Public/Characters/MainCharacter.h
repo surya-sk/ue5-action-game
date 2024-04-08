@@ -241,14 +241,6 @@ private:
 	UFUNCTION()
 	void ObjectiveActivated();
 
-	void InitPauseOverlay();
-
-	void DisplayPauseMenu();
-
-	void HidePauseMenu();
-
-	bool bPauseMenuVisible;
-
 	bool bIsClimbing = false;
 
 	ECharacterWeaponState CharacterWeaponState = ECharacterWeaponState::ECWS_Unequipped;
@@ -312,12 +304,6 @@ private:
 
 	UPROPERTY()
 	class UPlayerOverlay* Overlay;
-
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<class UUserWidget> WPauseMenu;
-
-	UPROPERTY(VisibleAnywhere)
-	UUserWidget* PauseMenu;
 
 	UPROPERTY(EditInstanceOnly)
 	class AQuest* Quest;

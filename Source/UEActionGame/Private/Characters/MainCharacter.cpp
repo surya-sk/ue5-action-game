@@ -99,37 +99,6 @@ void AMainCharacter::BeginPlay()
 	Tags.Add(FName("PlayerCharacter"));
 }
 
-void AMainCharacter::InitPauseOverlay()
-{
-	if (WPauseMenu)
-	{
-		PauseMenu = CreateWidget<UUserWidget>(this, WPauseMenu);
-		if (PauseMenu)
-		{
-			PauseMenu->AddToViewport();
-			PauseMenu->SetVisibility(ESlateVisibility::Hidden);
-		}
-	}
-}
-
-void AMainCharacter::DisplayPauseMenu()
-{
-	if (PauseMenu)
-	{
-		bPauseMenuVisible = true;
-		PauseMenu->SetVisibility(ESlateVisibility::Visible);
-	}
-}
-
-void AMainCharacter::HidePauseMenu()
-{
-	if (PauseMenu)
-	{
-		bPauseMenuVisible = false;
-		PauseMenu->SetVisibility(ESlateVisibility::Hidden);
-	}
-}
-
 void AMainCharacter::InitPlayerOverlay()
 {
 	APlayerController* PlayerController = Cast<APlayerController>(GetController());

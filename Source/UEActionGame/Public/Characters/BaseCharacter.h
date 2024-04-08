@@ -96,6 +96,22 @@ protected:
 
 	void DisableMeshCollision();
 
+	/** PAUSE MENU*/
+
+	/// <summary>
+	/// Initialises the pause menu HUD
+	/// </summary>
+	void InitPauseOverlay();
+
+	/// <summary>
+	/// Pulls up the pause menu
+	/// </summary>
+	void DisplayPauseMenu();
+
+	/// <summary>
+	/// Hides the pause menu
+	/// </summary>
+	void HidePauseMenu();
 
 	/** MONTAGE FUNCTIONS*/
 
@@ -158,6 +174,12 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	TEnumAsByte<EDeathPose> DeathPose;
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UUserWidget> WPauseMenu;
+
+	UPROPERTY(VisibleAnywhere)
+	UUserWidget* PauseMenu;
+
 private:
 	/// <summary>
 	/// Plays the specified montage and jumps to the specified section
@@ -200,5 +222,7 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = Dialogue)
 	TArray<FName> DialogueMontageSections;
+
+	bool bPauseMenuVisible;
 
 };
