@@ -631,11 +631,14 @@ void AMainCharacter::LoadGame()
 	SetActorLocation(SaveSystem->PlayerData.Location);
 	SetActorRotation(SaveSystem->PlayerData.Rotation);
 
-	if (SaveSystem->PlayerData.bWeaponEquipped)
+	if (SaveSystem->PlayerData.bWeaponEquipped && IsValid(WeaponToSpawn))
 	{
-		EquippedWeapon = GetWorld()->SpawnActor<AWeapon>(AWeapon::StaticClass(), GetActorLocation(), GetActorRotation());
-		EquippedWeapon->Equip(this->GetMesh(), FName("LeftHandSocket"), this, this);
-		CharacterWeaponState = ECharacterWeaponState::ECWS_Equipped;
+		EquippedWeapon = GetWorld()->SpawnActor<AWeapon>(WeaponToSpawn, GetActorLocation(), GetActorRotation());
+		if (IsValid(EquippedWeapon))
+		{
+			AttachWeaponToBack();
+			CharacterWeaponState = ECharacterWeaponState::ECWS_Unequipped;
+		}
 	}
 
 }
