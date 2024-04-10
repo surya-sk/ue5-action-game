@@ -124,7 +124,7 @@ void APresentDayCharacter::ToggleFlashlight()
 	}
 }
 
-void APresentDayCharacter::SaveGame()
+void APresentDayCharacter::SaveGame() const
 {
 	auto* SaveSystem = Cast<USaveSystem>(UGameplayStatics::CreateSaveGameObject(USaveSystem::StaticClass()));
 

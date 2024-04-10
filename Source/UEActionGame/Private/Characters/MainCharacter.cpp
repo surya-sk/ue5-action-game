@@ -431,6 +431,18 @@ void AMainCharacter::HideBlade()
 	BladeMesh->SetHiddenInGame(true);
 }
 
+void AMainCharacter::TogglePauseMenu()
+{
+	if (bPauseMenuVisible)
+	{
+		HidePauseMenu();
+	}
+	else
+	{
+		DisplayPauseMenu();
+	}
+}
+
 void AMainCharacter::PlayEquipMontage(const FName Section)
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
@@ -578,6 +590,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction(FName("Crouch"), IE_Released, this, &AMainCharacter::StopCrouching);
 	PlayerInputComponent->BindAction(FName("Takedown"), IE_Pressed, this, &AMainCharacter::PerformTakedown);
 	PlayerInputComponent->BindAction(FName("Dodge"), IE_Pressed, this, &AMainCharacter::Dodge);
+	PlayerInputComponent->BindAction(FName("Pause"), IE_Pressed, this, &AMainCharacter::TogglePauseMenu);
 }
 
 float AMainCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)

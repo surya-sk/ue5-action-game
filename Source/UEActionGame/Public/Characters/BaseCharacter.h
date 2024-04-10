@@ -180,6 +180,8 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	UUserWidget* PauseMenu;
 
+	bool bPauseMenuVisible;
+
 private:
 	/// <summary>
 	/// Plays the specified montage and jumps to the specified section
@@ -222,7 +224,5 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = Dialogue)
 	TArray<FName> DialogueMontageSections;
-
-	bool bPauseMenuVisible;
 
 };

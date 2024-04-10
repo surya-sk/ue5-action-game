@@ -50,10 +50,10 @@ protected:
 	UPROPERTY(EditAnywhere)
 	USoundBase* FlashlightSound;
 
-	UPROPERTY(BlueprintCallable)
-	void SaveGame();
+	UFUNCTION(BlueprintCallable)
+	void SaveGame() const;
 
-	UPROPERTY(BlueprintCallable)
+	UFUNCTION(BlueprintCallable)
 	void LoadGame();
 
 private:

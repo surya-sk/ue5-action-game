@@ -243,7 +243,7 @@ void ABaseCharacter::InitPauseOverlay()
 {
 	if (WPauseMenu)
 	{
-		PauseMenu = CreateWidget<UUserWidget>(this, WPauseMenu);
+		PauseMenu = CreateWidget<UUserWidget>(GetWorld(), WPauseMenu);
 		if (PauseMenu)
 		{
 			PauseMenu->AddToViewport();
@@ -258,6 +258,11 @@ void ABaseCharacter::DisplayPauseMenu()
 	{
 		bPauseMenuVisible = true;
 		PauseMenu->SetVisibility(ESlateVisibility::Visible);
+		auto* PlayerController = Cast<APlayerController>(GetController());
+		if (PlayerController)
+		{
+			PlayerController->SetInputMode(FInputModeGameAndUI());
+		}
 	}
 }
 
@@ -267,6 +272,11 @@ void ABaseCharacter::HidePauseMenu()
 	{
 		bPauseMenuVisible = false;
 		PauseMenu->SetVisibility(ESlateVisibility::Hidden);
+		auto* PlayerController = Cast<APlayerController>(GetController());
+		if (PlayerController)
+		{
+			PlayerController->SetInputMode(FInputModeGameOnly());
+		}
 	}
 }
 

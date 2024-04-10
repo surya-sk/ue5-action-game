@@ -123,6 +123,10 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void HideBlade();
 
+	/// <summary>
+	/// Show or hide the pause menu
+	/// </summary>
+	void TogglePauseMenu();
 
 	/** COMBAT*/
 
