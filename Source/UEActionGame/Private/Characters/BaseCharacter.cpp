@@ -8,6 +8,7 @@
 #include "Items/Weapons/Weapon.h"
 #include "Kismet/GameplayStatics.h"
 #include "Blueprint/UserWidget.h"
+#include "HUD/PauseWidget.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()
@@ -243,7 +244,7 @@ void ABaseCharacter::InitPauseOverlay()
 {
 	if (WPauseMenu)
 	{
-		PauseMenu = CreateWidget<UUserWidget>(GetWorld(), WPauseMenu);
+		PauseMenu = Cast<UPauseWidget>(CreateWidget<UUserWidget>(GetWorld(), WPauseMenu));
 		if (PauseMenu)
 		{
 			PauseMenu->AddToViewport();

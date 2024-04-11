@@ -175,10 +175,10 @@ protected:
 	TEnumAsByte<EDeathPose> DeathPose;
 
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<class UUserWidget> WPauseMenu;
+	TSubclassOf<class UPauseWidget> WPauseMenu;
 
 	UPROPERTY(VisibleAnywhere)
-	UUserWidget* PauseMenu;
+	UPauseWidget* PauseMenu;
 
 	bool bPauseMenuVisible;
 
