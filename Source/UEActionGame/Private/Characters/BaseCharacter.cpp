@@ -258,11 +258,14 @@ void ABaseCharacter::DisplayPauseMenu()
 	{
 		bPauseMenuVisible = true;
 		PauseMenu->SetVisibility(ESlateVisibility::Visible);
+		PauseMenu->bIsFocusable = true;
 		auto* PlayerController = Cast<APlayerController>(GetController());
 		if (PlayerController)
 		{
 			PlayerController->SetInputMode(FInputModeGameAndUI());
+			PauseMenu->SetUserFocus(PlayerController);
 		}
+		PauseMenu->SetKeyboardFocus();
 	}
 }
 
