@@ -21,6 +21,12 @@ public:
 	ABaseCharacter();
 	virtual void Tick(float DeltaTime) override;
 
+	/// <summary>
+	/// Hides the pause menu
+	/// </summary>
+	void HidePauseMenu();
+
+
 	FORCEINLINE TEnumAsByte<EDeathPose> GetDeathPose() const { return DeathPose;  }
 
 protected:
@@ -107,11 +113,6 @@ protected:
 	/// Pulls up the pause menu
 	/// </summary>
 	void DisplayPauseMenu();
-
-	/// <summary>
-	/// Hides the pause menu
-	/// </summary>
-	void HidePauseMenu();
 
 	/** MONTAGE FUNCTIONS*/
 

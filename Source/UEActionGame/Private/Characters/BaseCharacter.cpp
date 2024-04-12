@@ -10,6 +10,7 @@
 #include "Blueprint/UserWidget.h"
 #include "HUD/PauseWidget.h"
 #include "Components/Button.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()
@@ -268,6 +269,7 @@ void ABaseCharacter::DisplayPauseMenu()
 			PauseMenu->SetFocusOnButtons();
 		}
 		PauseMenu->SetKeyboardFocus();
+		GetCharacterMovement()->DisableMovement();
 	}
 }
 
@@ -282,6 +284,7 @@ void ABaseCharacter::HidePauseMenu()
 		{
 			PlayerController->SetInputMode(FInputModeGameOnly());
 		}
+		GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 	}
 }
 

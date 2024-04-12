@@ -43,6 +43,12 @@ public:
 	void SetDialogueText(FText Dialogue);
 	void PlayDialogueAudio(USoundBase* DialogueAudio);
 
+	UFUNCTION(BlueprintCallable)
+	void SaveGame();
+
+	UFUNCTION(BlueprintCallable)
+	void LoadGame();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -207,12 +213,6 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void SetHorseState(bool bOnHorseback);
-
-	UFUNCTION(BlueprintCallable)
-	void SaveGame();
-
-	UFUNCTION(BlueprintCallable)
-	void LoadGame();
 
 private:
 

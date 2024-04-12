@@ -25,6 +25,11 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UFUNCTION(BlueprintCallable)
+	void SaveGame() const;
+
+	UFUNCTION(BlueprintCallable)
+	void LoadGame();
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -49,12 +54,6 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	USoundBase* FlashlightSound;
-
-	UFUNCTION(BlueprintCallable)
-	void SaveGame() const;
-
-	UFUNCTION(BlueprintCallable)
-	void LoadGame();
 
 private:
 	UPROPERTY(VisibleAnywhere)

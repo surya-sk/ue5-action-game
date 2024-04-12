@@ -17,6 +17,16 @@ class UEACTIONGAME_API UPauseWidget : public UUserWidget
 
 public:
 	void SetFocusOnButtons();
+
+protected:
+	UFUNCTION(BlueprintCallable)
+	void Resume();
+	UFUNCTION(BlueprintCallable)
+	void SaveGame();
+	UFUNCTION(BlueprintCallable)
+	void LoadGame();
+	UFUNCTION(BlueprintCallable)
+	void QuitGame();
 	
 private:
 	UPROPERTY(meta = (BindWidget))
@@ -30,4 +40,10 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	UButton* QuitButton;
+
+	class AMainCharacter* PastCharacter;
+
+	class APresentDayCharacter* PresentCharacter;
+
+	void GetCharacterReferences();
 };
