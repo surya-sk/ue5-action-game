@@ -4,15 +4,7 @@
 #include "HUD/PauseWidget.h"
 #include "Components/Button.h"
 
-void UPauseWidget::GetButtons(TArray<UButton*>& Buttons)
-{
-	Buttons.Add(ResumeButton);
-	Buttons.Add(SaveButton);
-	Buttons.Add(LoadButton);
-	Buttons.Add(QuitButton);
-}
-
-void UPauseWidget::SetFocusOnButtons(APlayerController* PC)
+void UPauseWidget::SetFocusOnButtons()
 {
 	ResumeButton->SetFocus();
 	ResumeButton->SetKeyboardFocus();

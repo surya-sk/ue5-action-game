@@ -16,9 +16,7 @@ class UEACTIONGAME_API UPauseWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	void GetButtons(TArray<UButton*>& Buttons);
-
-	void SetFocusOnButtons(class APlayerController* PC);
+	void SetFocusOnButtons();
 	
 private:
 	UPROPERTY(meta = (BindWidget))

@@ -265,7 +265,7 @@ void ABaseCharacter::DisplayPauseMenu()
 		if (PlayerController)
 		{
 			PlayerController->SetInputMode(FInputModeGameAndUI());
-			PauseMenu->SetFocusOnButtons(PlayerController);
+			PauseMenu->SetFocusOnButtons();
 		}
 		PauseMenu->SetKeyboardFocus();
 	}
