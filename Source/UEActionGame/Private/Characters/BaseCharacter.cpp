@@ -9,6 +9,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Blueprint/UserWidget.h"
 #include "HUD/PauseWidget.h"
+#include "Components/Button.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()
@@ -259,12 +260,12 @@ void ABaseCharacter::DisplayPauseMenu()
 	{
 		bPauseMenuVisible = true;
 		PauseMenu->SetVisibility(ESlateVisibility::Visible);
-		PauseMenu->bIsFocusable = true;
+		PauseMenu->SetIsFocusable(true);
 		auto* PlayerController = Cast<APlayerController>(GetController());
 		if (PlayerController)
 		{
 			PlayerController->SetInputMode(FInputModeGameAndUI());
-			PauseMenu->SetUserFocus(PlayerController);
+			PauseMenu->SetFocusOnButtons(PlayerController);
 		}
 		PauseMenu->SetKeyboardFocus();
 	}
