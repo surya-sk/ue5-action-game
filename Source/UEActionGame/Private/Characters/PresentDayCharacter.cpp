@@ -70,6 +70,8 @@ void APresentDayCharacter::BeginPlay()
 
 	InitPauseOverlay();
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+
+	Tags.Add(FName("PlayerCharacter"));
 }
 
 void APresentDayCharacter::MoveForward(float Value)

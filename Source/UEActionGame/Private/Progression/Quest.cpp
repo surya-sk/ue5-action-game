@@ -4,6 +4,8 @@
 #include "Progression/Quest.h"
 #include "Progression/Mission.h"
 #include "Kismet/GameplayStatics.h"
+#include "Characters/MainCharacter.h"
+#include "Characters/PresentDayCharacter.h"
 
 // Sets default values
 AQuest::AQuest()
@@ -26,6 +28,16 @@ void AQuest::BeginPlay()
 void AQuest::ActivateNewObjective()
 {
 	Objectives[ActiveObjectiveIndex]->Activate();
+	auto* PastCharacter = Cast<AMainCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+	if (PastCharacter)
+	{
+		PastCharacter->CurrentObjectiveIndex = ActiveObjectiveIndex;
+	}
+	else
+	{
+		auto* PresentCharacter = Cast<APresentDayCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+		PresentCharacter->CurrentObjectiveIndex = ActiveObjectiveIndex;
+	}
 	Objectives[ActiveObjectiveIndex]->OnMissionFinished.AddDynamic(this, &AQuest::EndCurrentObjective);
 	if (OnObjectiveUpdated.IsBound())
 	{
