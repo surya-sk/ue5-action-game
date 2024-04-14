@@ -18,6 +18,14 @@ void ATimeJump::BeginPlay()
 	
 }
 
+void ATimeJump::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+}
+
+void ATimeJump::OnBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+}
+
 // Called every frame
 void ATimeJump::Tick(float DeltaTime)
 {
