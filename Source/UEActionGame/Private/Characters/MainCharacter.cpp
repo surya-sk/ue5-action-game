@@ -646,7 +646,6 @@ void AMainCharacter::LoadGame()
 
 	SetActorLocation(SaveSystem->PlayerData.Location);
 	SetActorRotation(SaveSystem->PlayerData.Rotation);
-	CurrentObjectiveIndex = SaveSystem->PlayerData.PastCurrentObjectiveIndex;
 
 	if (SaveSystem->PlayerData.bWeaponEquipped && IsValid(WeaponToSpawn))
 	{

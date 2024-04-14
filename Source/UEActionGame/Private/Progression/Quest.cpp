@@ -6,6 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Characters/MainCharacter.h"
 #include "Characters/PresentDayCharacter.h"
+#include "Progression/SaveSystem.h"
 
 // Sets default values
 AQuest::AQuest()
@@ -20,6 +21,25 @@ void AQuest::BeginPlay()
 	Super::BeginPlay();
 	if (Objectives.Num() > 0)
 	{
+		auto* SaveSystem = Cast<USaveSystem>(UGameplayStatics::CreateSaveGameObject(USaveGame::StaticClass()));
+		SaveSystem = Cast<USaveSystem>(UGameplayStatics::LoadGameFromSlot(SaveSystem->PlayerName, SaveSystem->UserIndex));
+		auto* PastCharacter = Cast<AMainCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+		if (PastCharacter)
+		{
+			if (SaveSystem->PlayerData.PastCurrentObjectiveIndex >= 0)
+			{
+				ActiveObjectiveIndex = SaveSystem->PlayerData.PastCurrentObjectiveIndex;
+			}
+		}
+		else
+		{
+			auto* PresentCharacter = Cast<APresentDayCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+			if (SaveSystem->PlayerData.PresentCurrentObjectiveIndex >= 0)
+			{
+				ActiveObjectiveIndex = SaveSystem->PlayerData.PresentCurrentObjectiveIndex;
+			}
+		}
+
 		ActivateNewObjective();
 	}
 	

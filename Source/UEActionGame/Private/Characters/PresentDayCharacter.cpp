@@ -146,5 +146,4 @@ void APresentDayCharacter::LoadGame()
 
 	SetActorLocation(SaveSystem->PlayerData.Location);
 	SetActorRotation(SaveSystem->PlayerData.Rotation);
-	CurrentObjectiveIndex = SaveSystem->PlayerData.PresentCurrentObjectiveIndex;
 }
