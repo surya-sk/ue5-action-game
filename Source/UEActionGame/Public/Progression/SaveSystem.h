@@ -22,6 +22,12 @@ struct FPlayerData
 
 	UPROPERTY(VisibleAnywhere, Category="SaveGameData")
 	FRotator Rotation;
+
+	UPROPERTY(VisibleAnywhere, Category = "SaveGameData")
+	int PresentCurrentObjectiveIndex;
+
+	UPROPERTY(VisibleAnywhere, Category = "SaveGameData")
+	int PastCurrentObjectiveIndex;
 };
 
 /**

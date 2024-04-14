@@ -633,6 +633,7 @@ void AMainCharacter::SaveGame()
 	SaveSystem->PlayerData.LastMapName = GetWorld()->GetMapName();
 	SaveSystem->PlayerData.Location = GetActorLocation();
 	SaveSystem->PlayerData.Rotation = GetActorRotation();
+	SaveSystem->PlayerData.PastCurrentObjectiveIndex = CurrentObjectiveIndex;
 
 	UGameplayStatics::SaveGameToSlot(SaveSystem, SaveSystem->PlayerName, SaveSystem->UserIndex);
 }
@@ -645,6 +646,7 @@ void AMainCharacter::LoadGame()
 
 	SetActorLocation(SaveSystem->PlayerData.Location);
 	SetActorRotation(SaveSystem->PlayerData.Rotation);
+	CurrentObjectiveIndex = SaveSystem->PlayerData.PastCurrentObjectiveIndex;
 
 	if (SaveSystem->PlayerData.bWeaponEquipped && IsValid(WeaponToSpawn))
 	{

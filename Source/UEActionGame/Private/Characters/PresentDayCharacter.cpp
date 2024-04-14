@@ -134,6 +134,7 @@ void APresentDayCharacter::SaveGame() const
 	SaveSystem->PlayerData.LastMapName = GetWorld()->GetMapName();
 	SaveSystem->PlayerData.Location = GetActorLocation();
 	SaveSystem->PlayerData.Rotation = GetActorRotation();
+	SaveSystem->PlayerData.PresentCurrentObjectiveIndex = CurrentObjectiveIndex;
 
 	UGameplayStatics::SaveGameToSlot(SaveSystem, SaveSystem->PlayerName, SaveSystem->UserIndex);
 }
@@ -145,4 +146,5 @@ void APresentDayCharacter::LoadGame()
 
 	SetActorLocation(SaveSystem->PlayerData.Location);
 	SetActorRotation(SaveSystem->PlayerData.Rotation);
+	CurrentObjectiveIndex = SaveSystem->PlayerData.PresentCurrentObjectiveIndex;
 }
