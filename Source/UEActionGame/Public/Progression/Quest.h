@@ -7,8 +7,6 @@
 #include "Mission.h"
 #include "Quest.generated.h"
 
-class UObjective;
-
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FObjectiveUpdated);
 
 UCLASS()
