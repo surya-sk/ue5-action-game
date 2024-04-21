@@ -18,6 +18,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void SwitchTimePeriod();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -28,8 +30,17 @@ protected:
 	UFUNCTION()
 	virtual void OnBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	UPROPERTY(EditInstanceOnly)
+	FName MapToNavigate;
+
+	UPROPERTY(EditInstanceOnly)
+	float TimeDelay = 2.0f;
+
 private:
 	UPROPERTY(EditAnywhere)
 	class UBoxComponent* Trigger;
 
+	FTimerHandle DelayHandle;
+
+	void LoadMap();
 };

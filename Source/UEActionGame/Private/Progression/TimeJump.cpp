@@ -3,6 +3,7 @@
 
 #include "Progression/TimeJump.h"
 #include "Components/BoxComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ATimeJump::ATimeJump()
@@ -25,10 +26,28 @@ void ATimeJump::BeginPlay()
 
 void ATimeJump::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	if (OtherActor->ActorHasTag("PlayerCharacter"))
+	{
+		SwitchTimePeriod();
+	}
 }
 
 void ATimeJump::OnBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
+	if (OtherActor->ActorHasTag("PlayerCharacter"))
+	{
+		Destroy();
+	}
+}
+
+void ATimeJump::SwitchTimePeriod()
+{
+	GetWorldTimerManager().SetTimer(DelayHandle, this, &ATimeJump::LoadMap, TimeDelay, false);
+}
+
+void ATimeJump::LoadMap()
+{
+	UGameplayStatics::OpenLevel(this, MapToNavigate, true, "LoadAsync");
 }
 
 // Called every frame
