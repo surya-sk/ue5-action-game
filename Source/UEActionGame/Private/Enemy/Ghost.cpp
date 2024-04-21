@@ -4,6 +4,7 @@
 #include "Enemy/Ghost.h"
 #include "Components/SplineComponent.h"
 #include "Environment/SplinePath.h"
+#include "Progression/TimeJump.h"
 
 AGhost::AGhost()
 {
@@ -48,7 +49,8 @@ void AGhost::BeginPlay()
 	}
     else if (Action == EGhostAction::EGA_TriggerTimeSwitch)
     {
-        // TODO: Trigger a transition between timelines
+        TimeJump = NewObject<ATimeJump>();
+        TimeJump->SwitchTimePeriod();
     }
 }
 

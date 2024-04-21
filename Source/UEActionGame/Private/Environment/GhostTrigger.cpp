@@ -6,7 +6,6 @@
 #include "Enemy/Ghost.h"
 #include "Characters/PresentDayCharacter.h"
 #include "Kismet/GameplayStatics.h"
-
 // Sets default values
 AGhostTrigger::AGhostTrigger()
 {

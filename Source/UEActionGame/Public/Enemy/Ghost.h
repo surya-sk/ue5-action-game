@@ -45,6 +45,9 @@ protected:
 	UPROPERTY(EditAnywhere)
 	float Speed;
 
+	UPROPERTY(EditInstanceOnly)
+	class ATimeJump* TimeJump;
+
 private:
 	/// <summary>
 	/// Makes the ghost disappear
