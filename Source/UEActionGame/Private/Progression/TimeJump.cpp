@@ -10,39 +10,18 @@ ATimeJump::ATimeJump()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	Trigger = CreateDefaultSubobject<UBoxComponent>(TEXT("TimeJumpBox"));
-	Trigger->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
 void ATimeJump::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	Trigger->OnComponentBeginOverlap.AddDynamic(this, &ATimeJump::OnBoxOverlap);
-	Trigger->OnComponentEndOverlap.AddDynamic(this, &ATimeJump::OnBoxEndOverlap);
 }
 
-void ATimeJump::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void ATimeJump::SwitchTimePeriod(FName& InMapToNavigate, float InTimeDelay)
 {
-	if (OtherActor->ActorHasTag("PlayerCharacter"))
-	{
-		SwitchTimePeriod();
-	}
-}
-
-void ATimeJump::OnBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-	if (OtherActor->ActorHasTag("PlayerCharacter"))
-	{
-		Destroy();
-	}
-}
-
-void ATimeJump::SwitchTimePeriod()
-{
-	GetWorldTimerManager().SetTimer(DelayHandle, this, &ATimeJump::LoadMap, TimeDelay, false);
+	MapToNavigate = InMapToNavigate;
+	GetWorldTimerManager().SetTimer(DelayHandle, this, &ATimeJump::LoadMap, InTimeDelay, false);
 }
 
 void ATimeJump::LoadMap()

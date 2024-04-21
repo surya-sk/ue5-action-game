@@ -48,6 +48,12 @@ protected:
 	UPROPERTY(EditInstanceOnly)
 	class ATimeJump* TimeJump;
 
+	UPROPERTY(EditAnywhere)
+	FName MapToNavigate;
+
+	UPROPERTY(EditAnywhere)
+	float TimeDelay;
+
 private:
 	/// <summary>
 	/// Makes the ghost disappear

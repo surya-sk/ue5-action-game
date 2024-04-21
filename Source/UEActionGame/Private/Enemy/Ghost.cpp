@@ -49,8 +49,8 @@ void AGhost::BeginPlay()
 	}
     else if (Action == EGhostAction::EGA_TriggerTimeSwitch)
     {
-        TimeJump = NewObject<ATimeJump>();
-        TimeJump->SwitchTimePeriod();
+        TimeJump = NewObject<ATimeJump>(this);
+        TimeJump->SwitchTimePeriod(MapToNavigate, TimeDelay);
     }
 }
 
