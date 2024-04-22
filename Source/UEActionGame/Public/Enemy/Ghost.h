@@ -45,6 +45,9 @@ protected:
 	UPROPERTY(EditAnywhere)
 	float Speed;
 
+	UPROPERTY(EditInstanceOnly)
+	class ATimeJump* TimeJump;
+
 	UPROPERTY(EditAnywhere)
 	FName MapToNavigate;
 
