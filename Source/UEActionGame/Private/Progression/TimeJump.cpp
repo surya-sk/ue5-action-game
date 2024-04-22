@@ -4,6 +4,8 @@
 #include "Progression/TimeJump.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Characters/MainCharacter.h"
+#include "Characters/PresentDayCharacter.h"
 
 // Sets default values
 ATimeJump::ATimeJump()
@@ -21,12 +23,26 @@ void ATimeJump::BeginPlay()
 void ATimeJump::SwitchTimePeriod(FName& InMapToNavigate, float InTimeDelay)
 {
 	MapToNavigate = InMapToNavigate;
+	UE_LOG(LogTemp, Warning, TEXT("!!!!"));
+	auto* PlayerCharacter = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+	auto* PastCharacter = Cast<AMainCharacter>(PlayerCharacter);
+	if (PastCharacter)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Past character!!!!"));
+		PastCharacter->SaveGame();
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Present character!!!!"));
+		auto* PresentCharacter = Cast<APresentDayCharacter>(PlayerCharacter);
+		PresentCharacter->SaveGame();
+	}
 	GetWorldTimerManager().SetTimer(DelayHandle, this, &ATimeJump::LoadMap, InTimeDelay, false);
 }
 
 void ATimeJump::LoadMap()
 {
-	UGameplayStatics::OpenLevel(this, MapToNavigate, true, "LoadAsync");
+	UGameplayStatics::OpenLevel(this, MapToNavigate, true);
 }
 
 // Called every frame
