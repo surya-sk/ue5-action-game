@@ -21,22 +21,24 @@ void AQuest::BeginPlay()
 	Super::BeginPlay();
 	if (Objectives.Num() > 0)
 	{
-		auto* SaveSystem = Cast<USaveSystem>(UGameplayStatics::CreateSaveGameObject(USaveGame::StaticClass()));
-		SaveSystem = Cast<USaveSystem>(UGameplayStatics::LoadGameFromSlot(SaveSystem->PlayerName, SaveSystem->UserIndex));
-		auto* PastCharacter = Cast<AMainCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
-		if (PastCharacter)
+		if (auto* SaveSystem = Cast<USaveSystem>(UGameplayStatics::CreateSaveGameObject(USaveGame::StaticClass())))
 		{
-			if (SaveSystem->PlayerData.PastCurrentObjectiveIndex >= 0)
+			SaveSystem = Cast<USaveSystem>(UGameplayStatics::LoadGameFromSlot(SaveSystem->PlayerName, SaveSystem->UserIndex));
+			auto* PastCharacter = Cast<AMainCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+			if (PastCharacter)
 			{
-				ActiveObjectiveIndex = SaveSystem->PlayerData.PastCurrentObjectiveIndex;
+				if (SaveSystem->PlayerData.PastCurrentObjectiveIndex >= 0)
+				{
+					ActiveObjectiveIndex = SaveSystem->PlayerData.PastCurrentObjectiveIndex;
+				}
 			}
-		}
-		else
-		{
-			auto* PresentCharacter = Cast<APresentDayCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
-			if (SaveSystem->PlayerData.PresentCurrentObjectiveIndex >= 0)
+			else
 			{
-				ActiveObjectiveIndex = SaveSystem->PlayerData.PresentCurrentObjectiveIndex;
+				auto* PresentCharacter = Cast<APresentDayCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+				if (SaveSystem->PlayerData.PresentCurrentObjectiveIndex >= 0)
+				{
+					ActiveObjectiveIndex = SaveSystem->PlayerData.PresentCurrentObjectiveIndex;
+				}
 			}
 		}
 
