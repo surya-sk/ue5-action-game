@@ -93,6 +93,7 @@ void AMainCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	LoadGame();
 	InitPauseOverlay();
 	InitPlayerOverlay();
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
@@ -640,23 +641,23 @@ void AMainCharacter::SaveGame()
 
 void AMainCharacter::LoadGame()
 {
-	auto* SaveSystem = Cast<USaveSystem>(UGameplayStatics::CreateSaveGameObject(USaveSystem::StaticClass()));
-
-	SaveSystem = Cast<USaveSystem>(UGameplayStatics::LoadGameFromSlot(SaveSystem->PlayerName, SaveSystem->UserIndex));
-
-	SetActorLocation(SaveSystem->PlayerData.Location);
-	SetActorRotation(SaveSystem->PlayerData.Rotation);
-
-	if (SaveSystem->PlayerData.bWeaponEquipped && IsValid(WeaponToSpawn))
+	if (auto* SaveSystem = Cast<USaveSystem>(UGameplayStatics::CreateSaveGameObject(USaveSystem::StaticClass())))
 	{
-		EquippedWeapon = GetWorld()->SpawnActor<AWeapon>(WeaponToSpawn, GetActorLocation(), GetActorRotation());
-		if (IsValid(EquippedWeapon))
+		SaveSystem = Cast<USaveSystem>(UGameplayStatics::LoadGameFromSlot(SaveSystem->PlayerName, SaveSystem->UserIndex));
+
+		SetActorLocation(SaveSystem->PlayerData.Location);
+		SetActorRotation(SaveSystem->PlayerData.Rotation);
+
+		if (SaveSystem->PlayerData.bWeaponEquipped && IsValid(WeaponToSpawn))
 		{
-			AttachWeaponToBack();
-			CharacterWeaponState = ECharacterWeaponState::ECWS_Unequipped;
+			EquippedWeapon = GetWorld()->SpawnActor<AWeapon>(WeaponToSpawn, GetActorLocation(), GetActorRotation());
+			if (IsValid(EquippedWeapon))
+			{
+				AttachWeaponToBack();
+				CharacterWeaponState = ECharacterWeaponState::ECWS_Unequipped;
+			}
 		}
 	}
-
 }
 
 void AMainCharacter::ResetCollisionAndMovement()

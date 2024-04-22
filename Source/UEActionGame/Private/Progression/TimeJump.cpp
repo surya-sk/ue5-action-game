@@ -23,17 +23,14 @@ void ATimeJump::BeginPlay()
 void ATimeJump::SwitchTimePeriod(FName& InMapToNavigate, float InTimeDelay)
 {
 	MapToNavigate = InMapToNavigate;
-	UE_LOG(LogTemp, Warning, TEXT("!!!!"));
 	auto* PlayerCharacter = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
 	auto* PastCharacter = Cast<AMainCharacter>(PlayerCharacter);
 	if (PastCharacter)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Past character!!!!"));
 		PastCharacter->SaveGame();
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Present character!!!!"));
 		auto* PresentCharacter = Cast<APresentDayCharacter>(PlayerCharacter);
 		PresentCharacter->SaveGame();
 	}

@@ -67,7 +67,8 @@ void APresentDayCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 void APresentDayCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
+	LoadGame();
 	InitPauseOverlay();
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 
@@ -141,9 +142,11 @@ void APresentDayCharacter::SaveGame() const
 
 void APresentDayCharacter::LoadGame()
 {
-	auto* SaveSystem = Cast<USaveSystem>(UGameplayStatics::CreateSaveGameObject(USaveGame::StaticClass()));
-	SaveSystem = Cast<USaveSystem>(UGameplayStatics::LoadGameFromSlot(SaveSystem->PlayerName, SaveSystem->UserIndex));
+	if (auto* SaveSystem = Cast<USaveSystem>(UGameplayStatics::CreateSaveGameObject(USaveGame::StaticClass())))
+	{
+		SaveSystem = Cast<USaveSystem>(UGameplayStatics::LoadGameFromSlot(SaveSystem->PlayerName, SaveSystem->UserIndex));
 
-	SetActorLocation(SaveSystem->PlayerData.Location);
-	SetActorRotation(SaveSystem->PlayerData.Rotation);
+		SetActorLocation(SaveSystem->PlayerData.Location);
+		SetActorRotation(SaveSystem->PlayerData.Rotation);
+	}
 }
