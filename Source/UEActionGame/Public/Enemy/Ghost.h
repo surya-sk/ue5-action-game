@@ -22,6 +22,8 @@ public:
 
 	FORCEINLINE void SetGhostAction(EGhostAction GhostAction) { Action = GhostAction; }
 
+	void TriggerTimeSwitch();
+
 	FGhostKilled OnGhostKilled;
 
 protected:

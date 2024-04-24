@@ -83,6 +83,15 @@ protected:
 
 	UPROPERTY(EditInstanceOnly)
 	TArray<AActor*> FollowPointsActors;
+	
+	UPROPERTY(EditInstanceOnly)
+	bool bSwitchTimePeriod;
+
+	UPROPERTY(EditInstanceOnly)
+	FName MapToNavigate;
+
+	UPROPERTY(EditInstanceOnly)
+	float DelayTime = 2.0f;
 
 private:
 	class AMainCharacter* Player;

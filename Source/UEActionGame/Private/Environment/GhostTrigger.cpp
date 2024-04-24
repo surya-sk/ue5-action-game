@@ -46,6 +46,7 @@ void AGhostTrigger::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 		{
 			ActorToHide->SetActorHiddenInGame(true);
 		}
+		GhostToSpawn->TriggerTimeSwitch();
 	}
 }
 

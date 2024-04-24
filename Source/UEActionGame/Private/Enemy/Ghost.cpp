@@ -30,6 +30,14 @@ void AGhost::GetHit(const FVector& ImpactPoint, AActor* Hitter)
 	Super::GetHit(ImpactPoint, Hitter);
 }
 
+void AGhost::TriggerTimeSwitch()
+{
+    if (TimeJump)
+    {
+        TimeJump->SwitchTimePeriod(MapToNavigate, TimeDelay);
+    }
+}
+
 void AGhost::BeginPlay()
 {
 	Super::BeginPlay();
@@ -50,7 +58,6 @@ void AGhost::BeginPlay()
     else if (Action == EGhostAction::EGA_TriggerTimeSwitch)
     {
         TimeJump = NewObject<ATimeJump>(this);
-        TimeJump->SwitchTimePeriod(MapToNavigate, TimeDelay);
     }
 }
 

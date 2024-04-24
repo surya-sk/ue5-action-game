@@ -9,6 +9,7 @@
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Characters/MainCharacter.h"
+#include "Progression/TimeJump.h"
 
 // Sets default values
 AMission::AMission()
@@ -78,6 +79,13 @@ void AMission::Complete()
 	{
 		OnMissionFinished.Broadcast();
 	}
+
+	if (bSwitchTimePeriod)
+	{
+		ATimeJump* TimeJump = NewObject<ATimeJump>(GetTransientPackage());
+		TimeJump->SwitchTimePeriod(MapToNavigate, DelayTime);
+	}
+
 	bActive = false;
 	MissionBounds->SetGenerateOverlapEvents(false);
 	MissionBounds->OnComponentEndOverlap.RemoveAll(this);
