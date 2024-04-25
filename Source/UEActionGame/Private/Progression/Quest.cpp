@@ -49,6 +49,7 @@ void AQuest::BeginPlay()
 
 void AQuest::ActivateNewObjective()
 {
+	UE_LOG(LogTemp, Warning, TEXT("New Objective"));
 	Objectives[ActiveObjectiveIndex]->Activate();
 	auto* PastCharacter = Cast<AMainCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 	if (PastCharacter)

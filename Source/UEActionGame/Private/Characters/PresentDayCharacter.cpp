@@ -10,6 +10,9 @@
 #include "Components/SpotLightComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Progression/SaveSystem.h"
+#include "HUD/MainHUD.h"
+#include "Progression/Quest.h"
+#include "HUD/PlayerOverlay.h"
 
 APresentDayCharacter::APresentDayCharacter()
 {
@@ -69,6 +72,7 @@ void APresentDayCharacter::BeginPlay()
 	Super::BeginPlay();
 	
 	LoadGame();
+	InitObjectiveText();
 	InitPauseOverlay();
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 
@@ -110,7 +114,7 @@ void APresentDayCharacter::LookUp(float Value)
 }
 
 void APresentDayCharacter::StartSprinting()
-{
+{ 
 	GetCharacterMovement()->MaxWalkSpeed = JogSpeed;
 }
 
@@ -124,6 +128,50 @@ void APresentDayCharacter::ToggleFlashlight()
 	if(FlashlightSound)
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, FlashlightSound, GetActorLocation());
+	}
+}
+
+void APresentDayCharacter::InitObjectiveText()
+{
+	if (auto* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0))
+	{
+		AMainHUD* MainHUD = Cast<AMainHUD>(PlayerController->GetHUD());
+		if (MainHUD)
+		{
+			Overlay = MainHUD->GetPlayerOverlay();
+			if (Overlay)
+			{
+				if (QuestRef == nullptr)
+				{
+					TArray<AActor*> ActorsToFind;
+					if (UWorld* World = GetWorld())
+					{
+						UGameplayStatics::GetAllActorsOfClass(GetWorld(), AQuest::StaticClass(), ActorsToFind);
+						if (ActorsToFind.Num() > 0)
+						{
+							AQuest* QuestToFind = Cast<AQuest>(ActorsToFind[0]);
+							if (QuestToFind)
+							{
+								QuestRef= QuestToFind;
+							}
+						}
+					}
+				}
+				if (QuestRef)
+				{
+					QuestRef->OnObjectiveUpdated.AddDynamic(this, &APresentDayCharacter::OnObjectiveActivated);
+					Overlay->SetObjectiveText(QuestRef->GetCurrentObjective());
+				}
+			}
+		}
+	}
+}
+
+void APresentDayCharacter::OnObjectiveActivated()
+{
+	if (Overlay)
+	{
+		Overlay->SetObjectiveText(QuestRef->GetCurrentObjective());
 	}
 }
 

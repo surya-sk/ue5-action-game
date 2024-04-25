@@ -78,4 +78,12 @@ private:
 
 	UPROPERTY()
 	class AExpositionNote* OverlappingNote;	
+
+	class UPlayerOverlay* Overlay;
+
+	class AQuest* QuestRef;
+
+	void InitObjectiveText();
+
+	void OnObjectiveActivated();
 };
