@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Progression/MapNames.h"
 #include "TimeJump.generated.h"
 
 UCLASS()
@@ -17,7 +18,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void SwitchTimePeriod(FName& MapToNavigate, float TimeDelay);
+	void SwitchTimePeriod(EMapName MapToNavigate, float TimeDelay);
 
 protected:
 	// Called when the game starts or when spawned
@@ -27,5 +28,5 @@ private:
 	FTimerHandle DelayHandle;
 	void LoadMap();
 
-	FName MapToNavigate = FName();
+	EMapName MapToNavigate = EMapName::Ravenswood;
 };

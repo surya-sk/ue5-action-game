@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Progression/MapNames.h"
 #include "Mission.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMissionFinished);
@@ -88,7 +89,7 @@ protected:
 	bool bSwitchTimePeriod;
 
 	UPROPERTY(EditInstanceOnly)
-	FName MapToNavigate;
+	EMapName MapToNavigate;
 
 	UPROPERTY(EditInstanceOnly)
 	float DelayTime = 2.0f;

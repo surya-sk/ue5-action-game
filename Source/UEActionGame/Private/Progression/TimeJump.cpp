@@ -6,6 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Characters/MainCharacter.h"
 #include "Characters/PresentDayCharacter.h"
+#include "Progression/MapNames.h"
 
 // Sets default values
 ATimeJump::ATimeJump()
@@ -20,7 +21,7 @@ void ATimeJump::BeginPlay()
 	Super::BeginPlay();
 }
 
-void ATimeJump::SwitchTimePeriod(FName& InMapToNavigate, float InTimeDelay)
+void ATimeJump::SwitchTimePeriod(EMapName InMapToNavigate, float InTimeDelay)
 {
 	MapToNavigate = InMapToNavigate;
 	auto* PlayerCharacter = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
@@ -39,7 +40,8 @@ void ATimeJump::SwitchTimePeriod(FName& InMapToNavigate, float InTimeDelay)
 
 void ATimeJump::LoadMap()
 {
-	UGameplayStatics::OpenLevel(this, MapToNavigate, true);
+	FName MapName = FName(*UEnum::GetValueAsString(MapToNavigate));
+	UGameplayStatics::OpenLevel(this, MapName, true);
 }
 
 // Called every frame

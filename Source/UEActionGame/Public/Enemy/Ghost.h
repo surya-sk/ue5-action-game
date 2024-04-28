@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Characters/BaseCharacter.h"
 #include "Characters/CharacterTypes.h"
+#include "Progression/MapNames.h"
 #include "Ghost.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGhostKilled);
@@ -51,7 +52,7 @@ protected:
 	class ATimeJump* TimeJump;
 
 	UPROPERTY(EditAnywhere)
-	FName MapToNavigate;
+	EMapName MapToNavigate;
 
 	UPROPERTY(EditAnywhere)
 	float TimeDelay;

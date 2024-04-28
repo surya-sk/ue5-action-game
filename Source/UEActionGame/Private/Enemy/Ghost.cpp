@@ -5,6 +5,7 @@
 #include "Components/SplineComponent.h"
 #include "Environment/SplinePath.h"
 #include "Progression/TimeJump.h"
+#include "Progression/MapNames.h"
 
 AGhost::AGhost()
 {
