@@ -21,7 +21,7 @@ void ATimeJump::BeginPlay()
 	Super::BeginPlay();
 }
 
-void ATimeJump::SwitchTimePeriod(EMapName InMapToNavigate, float InTimeDelay)
+void ATimeJump::SwitchTimePeriod(EMapName InMapToNavigate, float InTimeDelay, bool bLoadPosition)
 {
 	MapToNavigate = InMapToNavigate;
 	auto* PlayerCharacter = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
@@ -33,7 +33,7 @@ void ATimeJump::SwitchTimePeriod(EMapName InMapToNavigate, float InTimeDelay)
 	else
 	{
 		auto* PresentCharacter = Cast<APresentDayCharacter>(PlayerCharacter);
-		PresentCharacter->SaveGame();
+		PresentCharacter->SaveGame(bLoadPosition);
 	}
 	GetWorldTimerManager().SetTimer(DelayHandle, this, &ATimeJump::LoadMap, InTimeDelay, false);
 }

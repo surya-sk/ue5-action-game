@@ -57,6 +57,9 @@ protected:
 	UPROPERTY(EditAnywhere)
 	float TimeDelay;
 
+	UPROPERTY(EditAnywhere)
+	bool bLoadPosition = true;
+
 private:
 	/// <summary>
 	/// Makes the ghost disappear
