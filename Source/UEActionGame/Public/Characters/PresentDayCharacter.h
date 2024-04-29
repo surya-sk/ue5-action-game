@@ -26,7 +26,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UFUNCTION(BlueprintCallable)
-	void SaveGame() const;
+	void SaveGame(bool bSavePosition = true) const;
 
 	UFUNCTION(BlueprintCallable)
 	void LoadGame();

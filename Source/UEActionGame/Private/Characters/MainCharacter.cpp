@@ -639,14 +639,17 @@ void AMainCharacter::SaveGame()
 	UGameplayStatics::SaveGameToSlot(SaveSystem, SaveSystem->PlayerName, SaveSystem->UserIndex);
 }
 
-void AMainCharacter::LoadGame(bool bLoadPosition)
+void AMainCharacter::LoadGame()
 {
 	if (auto* SaveSystem = Cast<USaveSystem>(UGameplayStatics::CreateSaveGameObject(USaveSystem::StaticClass())))
 	{
 		SaveSystem = Cast<USaveSystem>(UGameplayStatics::LoadGameFromSlot(SaveSystem->PlayerName, SaveSystem->UserIndex));
 
-		SetActorLocation(SaveSystem->PlayerData.Location);
-		SetActorRotation(SaveSystem->PlayerData.Rotation);
+		if (SaveSystem->PlayerData.bLoadPosition)
+		{
+			SetActorLocation(SaveSystem->PlayerData.Location);
+			SetActorRotation(SaveSystem->PlayerData.Rotation);
+		}
 
 		if (SaveSystem->PlayerData.bWeaponEquipped && IsValid(WeaponToSpawn))
 		{

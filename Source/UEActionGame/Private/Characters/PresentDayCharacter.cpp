@@ -175,7 +175,7 @@ void APresentDayCharacter::OnObjectiveActivated()
 	}
 }
 
-void APresentDayCharacter::SaveGame() const
+void APresentDayCharacter::SaveGame(bool bSavePosition) const
 {
 	auto* SaveSystem = Cast<USaveSystem>(UGameplayStatics::CreateSaveGameObject(USaveSystem::StaticClass()));
 
@@ -184,6 +184,7 @@ void APresentDayCharacter::SaveGame() const
 	SaveSystem->PlayerData.Location = GetActorLocation();
 	SaveSystem->PlayerData.Rotation = GetActorRotation();
 	SaveSystem->PlayerData.PresentCurrentObjectiveIndex = CurrentObjectiveIndex;
+	SaveSystem->PlayerData.bLoadPosition = bSavePosition;
 
 	UGameplayStatics::SaveGameToSlot(SaveSystem, SaveSystem->PlayerName, SaveSystem->UserIndex);
 }

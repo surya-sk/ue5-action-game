@@ -47,7 +47,7 @@ public:
 	void SaveGame();
 
 	UFUNCTION(BlueprintCallable)
-	void LoadGame(bool bLoadPosition = true);
+	void LoadGame();
 
 	int CurrentObjectiveIndex = -1;
 
