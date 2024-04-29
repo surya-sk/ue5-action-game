@@ -28,6 +28,9 @@ struct FPlayerData
 
 	UPROPERTY(VisibleAnywhere, Category = "SaveGameData")
 	int PastCurrentObjectiveIndex;
+
+	UPROPERTY(VisibleAnywhere, Category = "SaveGameData")
+	bool bLoadPosition = true;
 };
 
 /**

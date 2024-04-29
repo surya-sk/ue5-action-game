@@ -639,7 +639,7 @@ void AMainCharacter::SaveGame()
 	UGameplayStatics::SaveGameToSlot(SaveSystem, SaveSystem->PlayerName, SaveSystem->UserIndex);
 }
 
-void AMainCharacter::LoadGame()
+void AMainCharacter::LoadGame(bool bLoadPosition)
 {
 	if (auto* SaveSystem = Cast<USaveSystem>(UGameplayStatics::CreateSaveGameObject(USaveSystem::StaticClass())))
 	{
