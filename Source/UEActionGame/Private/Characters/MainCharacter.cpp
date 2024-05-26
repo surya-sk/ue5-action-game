@@ -645,6 +645,11 @@ void AMainCharacter::LoadGame()
 	{
 		SaveSystem = Cast<USaveSystem>(UGameplayStatics::LoadGameFromSlot(SaveSystem->PlayerName, SaveSystem->UserIndex));
 
+		if (SaveSystem == nullptr)
+		{
+			return;
+		}
+
 		if (SaveSystem->PlayerData.bLoadPosition)
 		{
 			SetActorLocation(SaveSystem->PlayerData.Location);
