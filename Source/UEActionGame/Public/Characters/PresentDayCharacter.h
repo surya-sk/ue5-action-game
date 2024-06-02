@@ -85,5 +85,6 @@ private:
 
 	void InitObjectiveText();
 
+	UFUNCTION()
 	void OnObjectiveActivated();
 };
