@@ -49,7 +49,6 @@ void AQuest::BeginPlay()
 
 void AQuest::ActivateNewObjective()
 {
-	UE_LOG(LogTemp, Warning, TEXT("New Objective"));
 	Objectives[ActiveObjectiveIndex]->Activate();
 	if (auto* PastCharacter = Cast<AMainCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0)))
 	{
@@ -69,7 +68,6 @@ void AQuest::ActivateNewObjective()
 
 void AQuest::EndCurrentObjective()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Objective complete"));
 	if (ActiveObjectiveIndex + 1 < Objectives.Num())
 	{
 		ActiveObjectiveIndex++;

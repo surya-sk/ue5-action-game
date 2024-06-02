@@ -169,10 +169,8 @@ void APresentDayCharacter::InitObjectiveText()
 
 void APresentDayCharacter::OnObjectiveActivated()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Delegate! "));
 	if (Overlay)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Activated"));
 		Overlay->SetObjectiveText(QuestRef->GetCurrentObjective());
 	}
 }

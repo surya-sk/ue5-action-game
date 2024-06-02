@@ -124,7 +124,6 @@ void AMission::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 
 void AMission::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *OtherActor->GetName());
 	if (bActive && OtherActor->ActorHasTag("PlayerCharacter"))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Player"));
