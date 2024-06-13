@@ -24,23 +24,26 @@ void ATimeJump::BeginPlay()
 void ATimeJump::SwitchTimePeriod(EMapName InMapToNavigate, float InTimeDelay, bool bLoadPosition)
 {
 	MapToNavigate = InMapToNavigate;
-	auto* PlayerCharacter = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
-	auto* PastCharacter = Cast<AMainCharacter>(PlayerCharacter);
-	if (PastCharacter)
+	auto* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	if (auto* PastCharacter = Cast<AMainCharacter>(PlayerCharacter))
 	{
 		PastCharacter->SaveGame();
 	}
+	else if(auto* PresentCharacter = Cast<APresentDayCharacter>(PlayerCharacter))
+	{
+		PresentCharacter->SaveGame(bLoadPosition);
+	}
 	else
 	{
-		auto* PresentCharacter = Cast<APresentDayCharacter>(PlayerCharacter);
-		PresentCharacter->SaveGame(bLoadPosition);
+		UE_LOG(LogTemp, Error, TEXT("Player character is empty"));
+		return;
 	}
 	GetWorldTimerManager().SetTimer(DelayHandle, this, &ATimeJump::LoadMap, InTimeDelay, false);
 }
 
 void ATimeJump::LoadMap()
 {
-	FName MapName = FName(*UEnum::GetValueAsString(MapToNavigate));
+	FName MapName = FMapUtils::GetMapName(MapToNavigate);
 	UGameplayStatics::OpenLevel(this, MapName, true);
 }
 

@@ -3,3 +3,16 @@
 
 #include "Progression/MapNames.h"
 
+FName FMapUtils::GetMapName(EMapName Map)
+{
+	FName Result;
+	if (Map == EMapName::Demo_Ravenswood_Present)
+	{
+		Result = FName("Demo_Ravenswood_Present");
+	}
+	else
+	{
+		Result = FName("Ravenswood");
+	}
+	return Result;
+}
