@@ -24,7 +24,8 @@ void ATimeJump::BeginPlay()
 void ATimeJump::SwitchTimePeriod(EMapName InMapToNavigate, float InTimeDelay, bool bLoadPosition)
 {
 	MapToNavigate = InMapToNavigate;
-	auto* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	UWorld* World = GEngine->GameViewport->GetWorld(); // DONT SHIP WITH THIS, get a WorldContextObject passed in
+	auto* PlayerCharacter = World->GetFirstPlayerController()->GetPawn();
 	if (auto* PastCharacter = Cast<AMainCharacter>(PlayerCharacter))
 	{
 		PastCharacter->SaveGame();
@@ -38,7 +39,7 @@ void ATimeJump::SwitchTimePeriod(EMapName InMapToNavigate, float InTimeDelay, bo
 		UE_LOG(LogTemp, Error, TEXT("Player character is empty"));
 		return;
 	}
-	GetWorldTimerManager().SetTimer(DelayHandle, this, &ATimeJump::LoadMap, InTimeDelay, false);
+	PlayerCharacter->GetWorldTimerManager().SetTimer(DelayHandle, this, &ATimeJump::LoadMap, InTimeDelay, false);
 }
 
 void ATimeJump::LoadMap()
