@@ -19,29 +19,10 @@ AQuest::AQuest()
 void AQuest::BeginPlay()
 {
 	Super::BeginPlay();
+	UE_LOG(LogTemp, Warning, TEXT("Quest BeginPlay"));
+
 	if (Objectives.Num() > 0)
 	{
-		if (auto* SaveSystem = Cast<USaveSystem>(UGameplayStatics::CreateSaveGameObject(USaveGame::StaticClass())))
-		{
-			SaveSystem = Cast<USaveSystem>(UGameplayStatics::LoadGameFromSlot(SaveSystem->PlayerName, SaveSystem->UserIndex));
-			auto* PastCharacter = Cast<AMainCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
-			if (PastCharacter)
-			{
-				if (SaveSystem->PlayerData.PastCurrentObjectiveIndex >= 0)
-				{
-					ActiveObjectiveIndex = SaveSystem->PlayerData.PastCurrentObjectiveIndex;
-				}
-			}
-			else
-			{
-				auto* PresentCharacter = Cast<APresentDayCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
-				if (SaveSystem->PlayerData.PresentCurrentObjectiveIndex >= 0)
-				{
-					ActiveObjectiveIndex = SaveSystem->PlayerData.PresentCurrentObjectiveIndex;
-				}
-			}
-		}
-
 		ActivateNewObjective();
 	}
 	
@@ -54,14 +35,18 @@ void AQuest::ActivateNewObjective()
 	{
 		PastCharacter->CurrentObjectiveIndex = ActiveObjectiveIndex;
 	}
+	else if(auto* PresentCharacter = Cast<APresentDayCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0)))
+	{
+		PresentCharacter->CurrentObjectiveIndex = ActiveObjectiveIndex;
+	}
 	else
 	{
-		auto* PresentCharacter = Cast<APresentDayCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
-		PresentCharacter->CurrentObjectiveIndex = ActiveObjectiveIndex;
+		UE_LOG(LogTemp, Error, TEXT("No character found"));
 	}
 	Objectives[ActiveObjectiveIndex]->OnMissionFinished.AddDynamic(this, &AQuest::EndCurrentObjective);
 	if (OnObjectiveUpdated.IsBound())
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Objective delegate bound"));
 		OnObjectiveUpdated.Broadcast();
 	}
 }

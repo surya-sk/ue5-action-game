@@ -92,7 +92,7 @@ void AMainCharacter::PlayDialogueAudio(USoundBase* DialogueAudio)
 void AMainCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	UE_LOG(LogTemp, Warning, TEXT("Character BeginPlay"));
 	LoadGame();
 	InitPauseOverlay();
 	InitPlayerOverlay();
@@ -127,10 +127,15 @@ void AMainCharacter::InitPlayerOverlay()
 								Quest = QuestToFind;
 							}
 						}
+						else
+						{
+							UE_LOG(LogTemp, Error, TEXT("No quest objects found!"));
+						}
 					}
 				}
 				if (Quest)
 				{
+					UE_LOG(LogTemp, Warning, TEXT("Quest found!"));
 					Quest->OnObjectiveUpdated.AddDynamic(this, &AMainCharacter::ObjectiveActivated);
 					Overlay->SetObjectiveText(Quest->GetCurrentObjective());
 				}
