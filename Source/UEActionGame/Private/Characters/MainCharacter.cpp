@@ -520,7 +520,6 @@ void AMainCharacter::Tick(float DeltaTime)
 	{
 		if (!bQuestInitialized)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Quest found!"));
 			Quest->OnObjectiveUpdated.AddDynamic(this, &AMainCharacter::ObjectiveActivated);
 			if (Overlay)
 			{
@@ -699,7 +698,6 @@ void AMainCharacter::VaultOrClimb(bool bShouldClimb, bool bWallThick, bool bCanC
 		FTimerDelegate Delegate;
 		Delegate.BindLambda([&]()
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Delegate!"));
 		ResetCollisionAndMovement();
 		bIsClimbing = false;
 			}

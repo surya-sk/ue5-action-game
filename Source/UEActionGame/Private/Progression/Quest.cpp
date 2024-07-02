@@ -19,7 +19,6 @@ AQuest::AQuest()
 void AQuest::BeginPlay()
 {
 	Super::BeginPlay();
-	UE_LOG(LogTemp, Warning, TEXT("Quest BeginPlay"));
 
 	if (Objectives.Num() > 0)
 	{
@@ -46,7 +45,6 @@ void AQuest::ActivateNewObjective()
 	Objectives[ActiveObjectiveIndex]->OnMissionFinished.AddDynamic(this, &AQuest::EndCurrentObjective);
 	if (OnObjectiveUpdated.IsBound())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Objective delegate bound"));
 		OnObjectiveUpdated.Broadcast();
 	}
 }
