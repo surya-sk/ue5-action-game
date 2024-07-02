@@ -92,7 +92,6 @@ void AMainCharacter::PlayDialogueAudio(USoundBase* DialogueAudio)
 void AMainCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	UE_LOG(LogTemp, Warning, TEXT("Character BeginPlay"));
 	LoadGame();
 	InitPauseOverlay();
 	InitPlayerOverlay();
