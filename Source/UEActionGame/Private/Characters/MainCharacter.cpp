@@ -113,32 +113,6 @@ void AMainCharacter::InitPlayerOverlay()
 			{
 				Overlay->SetHealthBarPercent(Attributes->GetHealthPercent());
 				Overlay->SetStaminaBarPercent(Attributes->GetStaminaPercent());
-				if (Quest == nullptr)
-				{
-					TArray<AActor*> ActorsToFind;
-					if (UWorld* World = GetWorld())
-					{
-						UGameplayStatics::GetAllActorsOfClass(GetWorld(), AQuest::StaticClass(), ActorsToFind);
-						if (ActorsToFind.Num() > 0)
-						{
-							AQuest* QuestToFind = Cast<AQuest>(ActorsToFind[0]);
-							if (QuestToFind)
-							{
-								Quest = QuestToFind;
-							}
-						}
-						else
-						{
-							UE_LOG(LogTemp, Error, TEXT("No quest objects found!"));
-						}
-					}
-				}
-				if (Quest)
-				{
-					UE_LOG(LogTemp, Warning, TEXT("Quest found!"));
-					Quest->OnObjectiveUpdated.AddDynamic(this, &AMainCharacter::ObjectiveActivated);
-					Overlay->SetObjectiveText(Quest->GetCurrentObjective());
-				}
 			}
 		}
 	}
@@ -538,6 +512,24 @@ void AMainCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (Quest == nullptr)
+	{
+		GetQuestReference();
+	}
+	else
+	{
+		if (!bQuestInitialized)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Quest found!"));
+			Quest->OnObjectiveUpdated.AddDynamic(this, &AMainCharacter::ObjectiveActivated);
+			if (Overlay)
+			{
+				Overlay->SetObjectiveText(Quest->GetCurrentObjective());
+			}
+			bQuestInitialized = true;
+		}
+	}
+
 	Attributes->RegenrateHealth();
 	if (!Attributes->HasEnoughStamina())
 	{
@@ -730,6 +722,27 @@ void AMainCharacter::ObjectiveActivated()
 	if (Overlay)
 	{
 		Overlay->SetObjectiveText(Quest->GetCurrentObjective());
+	}
+}
+
+void AMainCharacter::GetQuestReference()
+{
+	TArray<AActor*> ActorsToFind;
+	if (UWorld* World = GetWorld())
+	{
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AQuest::StaticClass(), ActorsToFind);
+		if (ActorsToFind.Num() > 0)
+		{
+			AQuest* QuestToFind = Cast<AQuest>(ActorsToFind[0]);
+			if (QuestToFind)
+			{
+				Quest = QuestToFind;
+			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("No quest objects found!"));
+		}
 	}
 }
 

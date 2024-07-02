@@ -87,4 +87,8 @@ private:
 
 	UFUNCTION()
 	void OnObjectiveActivated();
+
+	void GetQuestReference();
+
+	bool bQuestInitialized = false;
 };

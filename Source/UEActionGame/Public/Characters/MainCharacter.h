@@ -247,7 +247,11 @@ private:
 	UFUNCTION()
 	void ObjectiveActivated();
 
+	void GetQuestReference();
+
 	bool bIsClimbing = false;
+
+	bool bQuestInitialized = false;
 
 	ECharacterWeaponState CharacterWeaponState = ECharacterWeaponState::ECWS_Unequipped;
 

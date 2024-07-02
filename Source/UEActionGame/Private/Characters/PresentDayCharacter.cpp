@@ -50,6 +50,18 @@ APresentDayCharacter::APresentDayCharacter()
 void APresentDayCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (QuestRef == nullptr)
+	{
+		GetQuestReference();
+	}
+	else
+	{
+		if (!bQuestInitialized)
+		{
+			InitObjectiveText();
+		}
+	}
 }
 
 void APresentDayCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -72,7 +84,6 @@ void APresentDayCharacter::BeginPlay()
 	Super::BeginPlay();
 	
 	LoadGame();
-	InitObjectiveText();
 	InitPauseOverlay();
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 
@@ -141,28 +152,13 @@ void APresentDayCharacter::InitObjectiveText()
 			Overlay = MainHUD->GetPlayerOverlay();
 			if (Overlay)
 			{
-				if (QuestRef == nullptr)
-				{
-					TArray<AActor*> ActorsToFind;
-					if (UWorld* World = GetWorld())
-					{
-						UGameplayStatics::GetAllActorsOfClass(GetWorld(), AQuest::StaticClass(), ActorsToFind);
-						if (ActorsToFind.Num() > 0)
-						{
-							AQuest* QuestToFind = Cast<AQuest>(ActorsToFind[0]);
-							if (QuestToFind)
-							{
-								QuestRef= QuestToFind;
-							}
-						}
-					}
-				}
 				if (QuestRef)
 				{
 					QuestRef->OnObjectiveUpdated.AddDynamic(this, &APresentDayCharacter::OnObjectiveActivated);
 					Overlay->SetObjectiveText(QuestRef->GetCurrentObjective());
 				}
 			}
+			bQuestInitialized = true;
 		}
 	}
 }
@@ -172,6 +168,23 @@ void APresentDayCharacter::OnObjectiveActivated()
 	if (Overlay)
 	{
 		Overlay->SetObjectiveText(QuestRef->GetCurrentObjective());
+	}
+}
+
+void APresentDayCharacter::GetQuestReference()
+{
+	TArray<AActor*> ActorsToFind;
+	if (UWorld* World = GetWorld())
+	{
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AQuest::StaticClass(), ActorsToFind);
+		if (ActorsToFind.Num() > 0)
+		{
+			AQuest* QuestToFind = Cast<AQuest>(ActorsToFind[0]);
+			if (QuestToFind)
+			{
+				QuestRef = QuestToFind;
+			}
+		}
 	}
 }
 
