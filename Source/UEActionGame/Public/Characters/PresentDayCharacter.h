@@ -30,8 +30,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void LoadGame();
-
-	int CurrentObjectiveIndex = -1;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -91,4 +89,6 @@ private:
 	void GetQuestReference();
 
 	bool bQuestInitialized = false;
+
+	int32 CurrentObjectiveIndex = 0;
 };

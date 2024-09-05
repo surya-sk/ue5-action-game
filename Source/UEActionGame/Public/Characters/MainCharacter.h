@@ -49,8 +49,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void LoadGame();
 
-	int CurrentObjectiveIndex = -1;
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -249,6 +247,8 @@ private:
 
 	void GetQuestReference();
 
+	void InitObjectiveText();
+
 	bool bIsClimbing = false;
 
 	bool bQuestInitialized = false;
@@ -319,4 +319,6 @@ private:
 	class AQuest* Quest;
 
 	class ANPC* NPC;
+
+	int CurrentObjectiveIndex = 0;
 };

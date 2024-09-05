@@ -154,6 +154,8 @@ void APresentDayCharacter::InitObjectiveText()
 			{
 				if (QuestRef)
 				{
+					QuestRef->SetActiveObjectiveIndex(CurrentObjectiveIndex);
+					QuestRef->InitObjectives();
 					QuestRef->OnObjectiveUpdated.AddDynamic(this, &APresentDayCharacter::OnObjectiveActivated);
 					Overlay->SetObjectiveText(QuestRef->GetCurrentObjective());
 				}
@@ -168,6 +170,7 @@ void APresentDayCharacter::OnObjectiveActivated()
 	if (Overlay)
 	{
 		Overlay->SetObjectiveText(QuestRef->GetCurrentObjective());
+		CurrentObjectiveIndex = QuestRef->GetActiveObjectiveIndex();
 	}
 }
 
@@ -210,6 +213,5 @@ void APresentDayCharacter::LoadGame()
 
 		SetActorLocation(SaveSystem->PlayerData.Location);
 		SetActorRotation(SaveSystem->PlayerData.Rotation);
-		InitObjectiveText();
 	}
 }

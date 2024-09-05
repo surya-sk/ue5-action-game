@@ -4,8 +4,6 @@
 #include "Progression/Quest.h"
 #include "Progression/Mission.h"
 #include "Kismet/GameplayStatics.h"
-#include "Characters/MainCharacter.h"
-#include "Characters/PresentDayCharacter.h"
 #include "Progression/SaveSystem.h"
 
 // Sets default values
@@ -15,33 +13,26 @@ AQuest::AQuest()
 	PrimaryActorTick.bCanEverTick = false;
 }
 
+void AQuest::InitObjectives()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Init objectives"));
+	UE_LOG(LogTemp, Warning, TEXT("Objective count: %d"), Objectives.Num());
+	UE_LOG(LogTemp, Warning, TEXT("Active objective index: %d"), Objectives.Num());
+	ActivateNewObjective();
+}
+
 // Called when the game starts or when spawned
 void AQuest::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (Objectives.Num() > 0)
-	{
-		ActivateNewObjective();
-	}
+	UE_LOG(LogTemp, Warning, TEXT("Begin play"));
 	
 }
 
 void AQuest::ActivateNewObjective()
 {
 	Objectives[ActiveObjectiveIndex]->Activate();
-	if (auto* PastCharacter = Cast<AMainCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0)))
-	{
-		PastCharacter->CurrentObjectiveIndex = ActiveObjectiveIndex;
-	}
-	else if(auto* PresentCharacter = Cast<APresentDayCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0)))
-	{
-		PresentCharacter->CurrentObjectiveIndex = ActiveObjectiveIndex;
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("No character found"));
-	}
 	Objectives[ActiveObjectiveIndex]->OnMissionFinished.AddDynamic(this, &AQuest::EndCurrentObjective);
 	if (OnObjectiveUpdated.IsBound())
 	{

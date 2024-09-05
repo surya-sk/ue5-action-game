@@ -511,23 +511,6 @@ void AMainCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (Quest == nullptr)
-	{
-		GetQuestReference();
-	}
-	else
-	{
-		if (!bQuestInitialized)
-		{
-			Quest->OnObjectiveUpdated.AddDynamic(this, &AMainCharacter::ObjectiveActivated);
-			if (Overlay)
-			{
-				Overlay->SetObjectiveText(Quest->GetCurrentObjective());
-			}
-			bQuestInitialized = true;
-		}
-	}
-
 	Attributes->RegenrateHealth();
 	if (!Attributes->HasEnoughStamina())
 	{
@@ -539,6 +522,19 @@ void AMainCharacter::Tick(float DeltaTime)
 		Overlay->SetStaminaBarPercent(Attributes->GetStaminaPercent());
 	}
 
+	if (Quest == nullptr)
+	{
+		GetQuestReference();
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Got quest ref"));
+		if (!bQuestInitialized)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Quest not initialized"));
+			InitObjectiveText();
+		}
+	}
 
 	if (CharacterActionState != ECharacterActionState::ECAS_Swimming && GetMovementComponent()->IsSwimming())
 	{
@@ -718,6 +714,7 @@ void AMainCharacter::ObjectiveActivated()
 {
 	if (Overlay)
 	{
+		CurrentObjectiveIndex = Quest->GetActiveObjectiveIndex();
 		Overlay->SetObjectiveText(Quest->GetCurrentObjective());
 	}
 }
@@ -740,6 +737,30 @@ void AMainCharacter::GetQuestReference()
 		{
 			UE_LOG(LogTemp, Error, TEXT("No quest objects found!"));
 		}
+	}
+}
+
+void AMainCharacter::InitObjectiveText()
+{
+	if (auto* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0))
+	{
+		if (Overlay)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Overlay found"));
+			if (Quest)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Quest ref valid"));
+				Quest->SetActiveObjectiveIndex(CurrentObjectiveIndex);
+				Quest->InitObjectives();
+				Quest->OnObjectiveUpdated.AddDynamic(this, &AMainCharacter::ObjectiveActivated);
+				Overlay->SetObjectiveText(Quest->GetCurrentObjective());
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Quest ref invalid"));
+			}
+		}
+		bQuestInitialized = true;
 	}
 }
 

@@ -19,9 +19,15 @@ public:
 	AQuest();
 
 	virtual void Tick(float DeltaTime) override;
-	FORCEINLINE FText GetCurrentObjective() const { return Objectives[ActiveObjectiveIndex]->GetText(); }
+	inline FText GetCurrentObjective() const { return Objectives[ActiveObjectiveIndex]->GetText(); }
+
+	inline int32 GetActiveObjectiveIndex() const { return ActiveObjectiveIndex; }
+
+	inline void SetActiveObjectiveIndex(int32 ActiveObjective) { ActiveObjectiveIndex = ActiveObjective; }
 
 	FObjectiveUpdated OnObjectiveUpdated;
+
+	void InitObjectives();
 
 protected:
 	// Called when the game starts or when spawned
@@ -45,6 +51,6 @@ private:
 	UFUNCTION()
 	void EndCurrentObjective();
 
-	int ActiveObjectiveIndex = 0;
+	int32 ActiveObjectiveIndex = 0;
 
 };
