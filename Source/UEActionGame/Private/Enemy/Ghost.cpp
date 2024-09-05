@@ -35,7 +35,7 @@ void AGhost::TriggerTimeSwitch()
 {
     if (TimeJump)
     {
-        TimeJump->SwitchTimePeriod(MapToNavigate, TimeDelay, bLoadPosition);
+        TimeJump->SwitchTimePeriod(this, MapToNavigate, TimeDelay, bLoadPosition);
     }
 }
 

@@ -18,7 +18,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void SwitchTimePeriod(EMapName MapToNavigate, float TimeDelay, bool bLoadPosition = true);
+	void SwitchTimePeriod(const UObject* WorldContextObject, EMapName MapToNavigate, float TimeDelay, bool bLoadPosition = true);
 
 protected:
 	// Called when the game starts or when spawned
@@ -29,4 +29,6 @@ private:
 	void LoadMap();
 
 	EMapName MapToNavigate = EMapName::Ravenswood;
+
+	UWorld* CurrentWorld;
 };

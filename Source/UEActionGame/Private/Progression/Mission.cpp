@@ -82,8 +82,8 @@ void AMission::Complete()
 
 	if (bSwitchTimePeriod)
 	{
-		ATimeJump* TimeJump = NewObject<ATimeJump>(GetTransientPackage());
-		TimeJump->SwitchTimePeriod(MapToNavigate, DelayTime);
+		ATimeJump* TimeJump = NewObject<ATimeJump>(GEngine->GameViewport->GetWorld());
+		TimeJump->SwitchTimePeriod(this, MapToNavigate, DelayTime);
 	}
 
 	bActive = false;

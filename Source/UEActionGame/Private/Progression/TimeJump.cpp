@@ -21,11 +21,12 @@ void ATimeJump::BeginPlay()
 	Super::BeginPlay();
 }
 
-void ATimeJump::SwitchTimePeriod(EMapName InMapToNavigate, float InTimeDelay, bool bLoadPosition)
+void ATimeJump::SwitchTimePeriod(const UObject* WorldContextObject, EMapName InMapToNavigate, float InTimeDelay, bool bLoadPosition)
 {
 	MapToNavigate = InMapToNavigate;
-	UWorld* World = GEngine->GameViewport->GetWorld(); // DONT SHIP WITH THIS, get a WorldContextObject passed in
-	auto* PlayerCharacter = World->GetFirstPlayerController()->GetPawn();
+	CurrentWorld = GEngine->GetWorldFromContextObjectChecked(WorldContextObject);
+	
+	auto* PlayerCharacter = CurrentWorld->GetFirstPlayerController()->GetPawn();
 	if (auto* PastCharacter = Cast<AMainCharacter>(PlayerCharacter))
 	{
 		PastCharacter->SaveGame();
@@ -36,16 +37,17 @@ void ATimeJump::SwitchTimePeriod(EMapName InMapToNavigate, float InTimeDelay, bo
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("Player character is empty"));
 		return;
 	}
+	
 	PlayerCharacter->GetWorldTimerManager().SetTimer(DelayHandle, this, &ATimeJump::LoadMap, InTimeDelay, false);
 }
 
 void ATimeJump::LoadMap()
 {
 	FName MapName = FMapUtils::GetMapName(MapToNavigate);
-	UGameplayStatics::OpenLevel(this, MapName, true);
+	UE_LOG(LogTemp, Warning, TEXT("Loading map: %s"), *MapName.ToString());
+	UGameplayStatics::OpenLevel(CurrentWorld, MapName, true);
 }
 
 // Called every frame
