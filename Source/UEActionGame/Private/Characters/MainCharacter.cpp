@@ -528,10 +528,8 @@ void AMainCharacter::Tick(float DeltaTime)
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Got quest ref"));
 		if (!bQuestInitialized)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Quest not initialized"));
 			InitObjectiveText();
 		}
 	}
@@ -656,6 +654,8 @@ void AMainCharacter::LoadGame()
 				CharacterWeaponState = ECharacterWeaponState::ECWS_Unequipped;
 			}
 		}
+
+		//InitObjectiveText();
 	}
 }
 

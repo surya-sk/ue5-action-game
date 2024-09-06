@@ -91,4 +91,6 @@ private:
 	bool bQuestInitialized = false;
 
 	int32 CurrentObjectiveIndex = 0;
+
+	FString PlayerName = TEXT("Present");
 };
