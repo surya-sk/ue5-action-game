@@ -18,10 +18,16 @@ struct FPlayerData
 	FString LastMapName;
 
 	UPROPERTY(VisibleAnywhere, Category="SaveGameData")
-	FVector Location;
+	FVector PastLocation;
 
 	UPROPERTY(VisibleAnywhere, Category="SaveGameData")
-	FRotator Rotation;
+	FRotator PastRotation;
+
+	UPROPERTY(VisibleAnywhere, Category = "SaveGameData")
+	FVector PresentLocation;
+
+	UPROPERTY(VisibleAnywhere, Category = "SaveGameData")
+	FRotator PresentRotation;
 
 	UPROPERTY(VisibleAnywhere, Category = "SaveGameData")
 	int PresentCurrentObjectiveIndex;

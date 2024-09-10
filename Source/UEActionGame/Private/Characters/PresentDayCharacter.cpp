@@ -197,8 +197,8 @@ void APresentDayCharacter::SaveGame(bool bSavePosition) const
 
 	SaveSystem->PlayerData.bWeaponEquipped = false;
 	SaveSystem->PlayerData.LastMapName = GetWorld()->GetMapName();
-	SaveSystem->PlayerData.Location = GetActorLocation();
-	SaveSystem->PlayerData.Rotation = GetActorRotation();
+	SaveSystem->PlayerData.PresentLocation = GetActorLocation();
+	SaveSystem->PlayerData.PresentRotation = GetActorRotation();
 	SaveSystem->PlayerData.PresentCurrentObjectiveIndex = CurrentObjectiveIndex;
 	SaveSystem->PlayerData.bLoadPosition = bSavePosition;
 
@@ -210,8 +210,14 @@ void APresentDayCharacter::LoadGame()
 	if (auto* SaveSystem = Cast<USaveSystem>(UGameplayStatics::CreateSaveGameObject(USaveSystem::StaticClass())))
 	{
 		SaveSystem = Cast<USaveSystem>(UGameplayStatics::LoadGameFromSlot(SaveSystem->PlayerName, SaveSystem->UserIndex));
-
-		SetActorLocation(SaveSystem->PlayerData.Location);
-		SetActorRotation(SaveSystem->PlayerData.Rotation);
+		
+		if (!IsValid(SaveSystem))
+		{
+			UE_LOG(LogTemp, Error, TEXT("Save system is invalid!"));
+			return;
+		}
+		
+		SetActorLocation(SaveSystem->PlayerData.PresentLocation);
+		SetActorRotation(SaveSystem->PlayerData.PresentRotation);
 	}
 }

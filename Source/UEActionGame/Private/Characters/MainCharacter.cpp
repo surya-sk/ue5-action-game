@@ -621,8 +621,8 @@ void AMainCharacter::SaveGame()
 
 	SaveSystem->PlayerData.bWeaponEquipped = EquippedWeapon != nullptr;
 	SaveSystem->PlayerData.LastMapName = GetWorld()->GetMapName();
-	SaveSystem->PlayerData.Location = GetActorLocation();
-	SaveSystem->PlayerData.Rotation = GetActorRotation();
+	SaveSystem->PlayerData.PastLocation = GetActorLocation();
+	SaveSystem->PlayerData.PastRotation = GetActorRotation();
 	SaveSystem->PlayerData.PastCurrentObjectiveIndex = CurrentObjectiveIndex;
 
 	UGameplayStatics::SaveGameToSlot(SaveSystem, SaveSystem->PlayerName, SaveSystem->UserIndex);
@@ -641,8 +641,13 @@ void AMainCharacter::LoadGame()
 
 		if (SaveSystem->PlayerData.bLoadPosition)
 		{
-			SetActorLocation(SaveSystem->PlayerData.Location);
-			SetActorRotation(SaveSystem->PlayerData.Rotation);
+			SetActorLocation(SaveSystem->PlayerData.PresentLocation);
+			SetActorRotation(SaveSystem->PlayerData.PresentRotation);
+		}
+		else
+		{
+			SetActorLocation(SaveSystem->PlayerData.PastLocation);
+			SetActorRotation(SaveSystem->PlayerData.PastRotation);
 		}
 
 		if (SaveSystem->PlayerData.bWeaponEquipped && IsValid(WeaponToSpawn))
